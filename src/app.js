@@ -146,12 +146,21 @@ async function getSummonerRank(channel, userstate, message) {
     // Assuming the summoner has a ranked record, you can return their rank
     if (rankData.length > 0) {
       const rankedSoloQ = rankData.find((entry) => entry.queueType === 'RANKED_SOLO_5x5');
+      const rankedFlexQ = rankData.find((entry) => entry.queueType === 'RANKED_FLEX_SR');
+      let rankMessage = `${summonerName}: `
       if (rankedSoloQ) {
         let rank = capitalizeFirstLetter(rankedSoloQ.tier) + ' ' + rankedSoloQ.rank;
-        client.say(channel, `${summonerName}: ${rank} (${rankedSoloQ.leaguePoints} LP) || ${rankedSoloQ.wins}W/${rankedSoloQ.losses}L 
-        WR: ${Math.round(rankedSoloQ.wins / (rankedSoloQ.wins + rankedSoloQ.losses) * 100)}%`);
-        return
+        rankMessage += `[SOLOQ ${rank} (${rankedSoloQ.leaguePoints} LP) | ${rankedSoloQ.wins}W/${rankedSoloQ.losses}L 
+        WR: ${Math.round(rankedSoloQ.wins / (rankedSoloQ.wins + rankedSoloQ.losses) * 100)}%]`;
       }
+      if (rankedFlexQ) {
+        rankMessage = rankedSoloQ ? rankMessage + ' || ' : rankMessage;
+        let rank = capitalizeFirstLetter(rankedFlexQ.tier) + ' ' + rankedFlexQ.rank;
+        rankMessage += `[FlexQ ${rank} (${rankedFlexQ.leaguePoints} LP) | ${rankedFlexQ.wins}W/${rankedFlexQ.losses}L 
+        WR: ${Math.round(rankedFlexQ.wins / (rankedFlexQ.wins + rankedFlexQ.losses) * 100)}%]`;
+      }
+      client.say(channel, rankMessage)
+      return
     }
 
     // If the summoner has no ranked record, return unranked
