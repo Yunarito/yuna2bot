@@ -1,5 +1,5 @@
 import tmi from 'tmi.js'
-import { BOT_USERNAME , OAUTH_TOKEN, CHANNEL_NAME, BLOCKED_WORDS } from './constants'
+import { BOT_USERNAME , OAUTH_TOKEN, CHANNEL_NAME, BLOCKED_WORDS, RIOT_API_TOKEN } from './constants'
 
 const options = {
 	options: { debug: true },
@@ -21,51 +21,6 @@ const client = new tmi.Client(options)
 
 client.connect()
 
-// events
-client.on('disconnected', (reason) => {
-  onDisconnectedHandler(reason)
-})
-
-client.on('connected', (address, port) => {
-  onConnectedHandler(address, port)
-})
-
-client.on('hosted', (channel, username, viewers, autohost) => {
-  onHostedHandler(channel, username, viewers, autohost)
-})
-
-client.on('subscription', (channel, username, method, message, userstate) => {
-  onSubscriptionHandler(channel, username, method, message, userstate)
-})
-
-client.on('raided', (channel, username, viewers) => {
-  onRaidedHandler(channel, username, viewers)
-})
-
-client.on('cheer', (channel, userstate, message) => {
-  onCheerHandler(channel, userstate, message)
-})
-
-client.on('giftpaidupgrade', (channel, username, sender, userstate) => {
-  onGiftPaidUpgradeHandler(channel, username, sender, userstate)
-})
-
-client.on('hosting', (channel, target, viewers) => {
-  onHostingHandler(channel, target, viewers)
-})
-
-client.on('reconnect', () => {
-  reconnectHandler()
-})
-
-client.on('resub', (channel, username, months, message, userstate, methods) => {
-  resubHandler(channel, username, months, message, userstate, methods)
-})
-
-client.on('subgift', (channel, username, streakMonths, recipient, methods, userstate) => {
-  subGiftHandler(channel, username, streakMonths, recipient, methods, userstate)
-})
-
 // event handlers
 
 client.on('message', (channel, userstate, message, self) => {
@@ -78,11 +33,36 @@ client.on('message', (channel, userstate, message, self) => {
     return
   }
 
-	if(message.toLowerCase() === '!hello') {
+	if(message.toLowerCase() === 'hello' 
+  || message.toLowerCase() === 'hallo' 
+   || message.toLowerCase() === 'hey' 
+    || message.toLowerCase() === 'hi' 
+    ||message.toLowerCase() === 'moin'
+    ||message.toLowerCase() === 'mmeowdy'
+    ||message.toLowerCase() === 'haudi') {
     hello(channel, userstate)
     return
   }
 
+  if(message.toLowerCase() === 'uwu') {
+    uwu(channel, userstate)
+    return
+  }
+
+  if(message.toLowerCase().includes('moo')) {
+    moo(channel, userstate)
+    return
+  }
+
+  if(message.toLowerCase() === 'ara ara') {
+    goodgirl(channel, userstate)
+    return
+  }
+
+  if(message.toLowerCase().includes('!rank')) {
+    getSummonerRank(channel, userstate, message)
+    return
+  }
   onMessageHandler(channel, userstate, message, self)
 })
 
@@ -90,79 +70,104 @@ function onMessageHandler (channel, userstate, message, self) {
   checkTwitchChat(userstate, message, channel)
 }
 
-function onDisconnectedHandler(reason) {
-  console.log(`Disconnected: ${reason}`)
-}
-
-function onConnectedHandler(address, port) {
-  console.log(`Connected: ${address}:${port}`)
-}
-
-function onHostedHandler (channel, username, viewers, autohost) {
-  client.say(channel,
-    `Thank you @${username} for the host of ${viewers}!`
-  )
-}
-
-function onRaidedHandler(channel, username, viewers) {
-  client.say(channel,
-    `Thank you @${username} for the raid of ${viewers}!`
-  )
-}
-
-function onSubscriptionHandler(channel, username, method, message, userstate) {
-  client.say(channel,
-    `Thank you @${username} for subscribing!`
-  )
-}
-
-function onCheerHandler(channel, userstate, message)  {
-  client.say(channel,
-    `Thank you @${userstate.username} for the ${userstate.bits} bits!`
-  )
-}
-
-function onGiftPaidUpgradeHandler(channel, username, sender, userstate) {
-  client.say(channel,
-    `Thank you @${username} for continuing your gifted sub!`
-  )
-}
-
-function onHostingHandler(channel, target, viewers) {
-  client.say(channel,
-    `We are now hosting ${target} with ${viewers} viewers!`
-  )
-}
-
-function reconnectHandler () {
-  console.log('Reconnecting...')
-}
-
-function resubHandler(channel, username, months, message, userstate, methods) {
-  const cumulativeMonths = userstate['msg-param-cumulative-months']
-  client.say(channel,
-    `Thank you @${username} for the ${cumulativeMonths} sub!`
-  )
-}
-
-function subGiftHandler(channel, username, streakMonths, recipient, methods, userstate) {
-
-  client.say(channel,
-    `Thank you @${username} for gifting a sub to ${recipient}}.`
-  )
-
-  // this comes back as a boolean from twitch, disabling for now
-  // "msg-param-sender-count": false
-  // const senderCount =  ~~userstate["msg-param-sender-count"];
-  // client.say(channel,
-  //   `${username} has gifted ${senderCount} subs!`
-  // )
-}
 
 // commands
 
 function hello (channel, userstate) {
-  client.say(channel, `@${userstate.username}, heya!`)
+  client.say(channel, `@${userstate.username}, alooo !`)
+}
+
+function uwu (channel, userstate) {
+  client.say(channel, `/me ⎝⎠ ╲╱╲╱ ⎝⎠`)
+}
+
+function moo (channel, userstate) {
+  client.say(channel, `moo`)
+}
+
+function goodgirl (channel, userstate) {
+  client.say(channel, ` GoodGirl `);
+}
+
+async function getSummonerRank(channel, userstate, message) {
+
+  let summonerName = message.replace('!rank', '') === '' ? channel.replace('#', '') : message.replace('!rank ', '');
+
+  console.log(summonerName)
+
+  if(summonerName.toLowerCase() === 'luci3fer'){
+    let rank = capitalizeFirstLetter('Challenger ') + ' I';
+    let wins = 69;
+    let losses = 31;
+    client.say(channel, `${summonerName}: ${rank} (1337 LP) || ${wins}W/${losses}L 
+    WR: ${Math.round(wins / (wins + losses) * 100)}%`);
+    return
+  }
+
+  try {
+    const apiKey = RIOT_API_TOKEN; // Replace with your League of Legends API key
+    const region = 'euw1'
+    const apiUrl = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`
+    
+    // Make a request to get the summoner's ID
+    const summonerResponse = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'X-Riot-Token': apiKey,
+      },
+    });
+
+    if (!summonerResponse.ok) {
+      client.say(channel, `Summoner not found`);
+    }
+
+    const summonerData = await summonerResponse.json();
+
+    const summonerId = summonerData.id;
+
+    // Make a request to get the summoner's rank
+    const rankUrl = `https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/${summonerId}`;
+    const rankResponse = await fetch(rankUrl, {
+      method: 'GET',
+      headers: {
+        'X-Riot-Token': apiKey,
+      },
+    });
+
+    if (!rankResponse.ok) {
+      throw new Error('Unable to fetch summoner rank data');
+    }
+
+    const rankData = await rankResponse.json();
+    console.log(rankData);
+
+    // Assuming the summoner has a ranked record, you can return their rank
+    if (rankData.length > 0) {
+      const rankedSoloQ = rankData.find((entry) => entry.queueType === 'RANKED_SOLO_5x5');
+      if (rankedSoloQ) {
+        let rank = capitalizeFirstLetter(rankedSoloQ.tier) + ' ' + rankedSoloQ.rank;
+        client.say(channel, `${summonerName}: ${rank} (${rankedSoloQ.leaguePoints} LP) || ${rankedSoloQ.wins}W/${rankedSoloQ.losses}L 
+        WR: ${Math.round(rankedSoloQ.wins / (rankedSoloQ.wins + rankedSoloQ.losses) * 100)}%`);
+      }
+    }
+
+    // If the summoner has no ranked record, return unranked
+    return 'Unranked';
+  } catch (error) {
+    console.error('Error:', error);
+    return 'Error fetching data';
+  }
+}
+
+function capitalizeFirstLetter(inputString) {
+  // Check if the input string is not empty
+  inputString = inputString.toLowerCase();
+  if (inputString.length === 0) {
+    return inputString; // Return the empty string as is
+  }
+
+  // Convert the first character to uppercase and concatenate it with the rest of the string
+  return inputString.charAt(0).toUpperCase() + inputString.slice(1);
 }
 
 function checkTwitchChat(userstate, message, channel) {
