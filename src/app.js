@@ -93,6 +93,8 @@ async function getSummonerRank(channel, userstate, message) {
 
   let summonerName = message.replace('!rank', '') === '' ? channel.replace('#', '') : message.replace('!rank ', '');
 
+  summonerName = summonerName === 'chris5560' ? 'Hashira Kyojuro' : summonerName;
+
   console.log(summonerName)
 
   if(summonerName.toLowerCase() === 'luci3fer'){
@@ -148,11 +150,13 @@ async function getSummonerRank(channel, userstate, message) {
         let rank = capitalizeFirstLetter(rankedSoloQ.tier) + ' ' + rankedSoloQ.rank;
         client.say(channel, `${summonerName}: ${rank} (${rankedSoloQ.leaguePoints} LP) || ${rankedSoloQ.wins}W/${rankedSoloQ.losses}L 
         WR: ${Math.round(rankedSoloQ.wins / (rankedSoloQ.wins + rankedSoloQ.losses) * 100)}%`);
+        return
       }
     }
 
     // If the summoner has no ranked record, return unranked
-    return 'Unranked';
+      client.say(channel, `Summoner unranked`);
+    return;
   } catch (error) {
     console.error('Error:', error);
     return 'Error fetching data';
