@@ -94,8 +94,8 @@ async function getSummonerRank(channel, userstate, message) {
   let summonerName = message.replace('!rank', '') === '' ? channel.replace('#', '') : message.replace('!rank ', '');
 
   summonerName = summonerName === 'chris5560' ? 'Hashira Kyojuro' : summonerName;
-
-  console.log(summonerName)
+  summonerName = summonerName === 'amaar270' ? 'WHY Ekoko' : summonerName;
+  
 
   if(summonerName.toLowerCase() === 'luci3fer'){
     let rank = capitalizeFirstLetter('Challenger ') + ' I';
