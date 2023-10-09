@@ -122,7 +122,6 @@ async function getSummonerRank(channel, userstate, message) {
     });
 
     if (!summonerResponse.ok) {
-      console.log(summonerResponse);
       throw new Error('Summoner not found');
       client.say(channel, `Summoner not found`);
       return;
@@ -148,7 +147,6 @@ async function getSummonerRank(channel, userstate, message) {
     }
 
     const rankData = await rankResponse.json();
-    console.log(rankData);
 
     // Assuming the summoner has a ranked record, you can return their rank
     if (rankData.length > 0) {
