@@ -1,4 +1,6 @@
 import tmi from 'tmi.js'
+import fetch from 'node-fetch';
+
 import { BOT_USERNAME , OAUTH_TOKEN, CHANNEL_NAME, BLOCKED_WORDS, RIOT_API_TOKEN } from './constants'
 
 const options = {
