@@ -119,14 +119,10 @@ async function getSummonerRank(channel, userstate, message) {
       headers: {
         'X-Riot-Token': apiKey,
       },
-    })  .then(data => {
-    console.log(data);
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
+    });
 
     if (!summonerResponse.ok) {
+      console.log(summonerResponse);
       throw new Error('Summoner not found');
       client.say(channel, `Summoner not found`);
       return;
