@@ -122,7 +122,9 @@ async function getSummonerRank(channel, userstate, message) {
     });
 
     if (!summonerResponse.ok) {
+      throw new Error('Summoner not found');
       client.say(channel, `Summoner not found`);
+      return;
     }
 
     const summonerData = await summonerResponse.json();
@@ -140,6 +142,8 @@ async function getSummonerRank(channel, userstate, message) {
 
     if (!rankResponse.ok) {
       throw new Error('Unable to fetch summoner rank data');
+      client.say(channel, `Unable to fetch summoner rank data`);
+      return;
     }
 
     const rankData = await rankResponse.json();
