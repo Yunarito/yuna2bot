@@ -1,4 +1,6 @@
 import tmi from 'tmi.js'
+import fetch from 'node-fetch';
+
 import { BOT_USERNAME , OAUTH_TOKEN, CHANNEL_NAME, BLOCKED_WORDS, RIOT_API_TOKEN } from './constants'
 
 const options = {
@@ -123,7 +125,9 @@ async function getSummonerRank(channel, userstate, message) {
     });
 
     if (!summonerResponse.ok) {
+      throw new Error('Summoner not found');
       client.say(channel, `Summoner not found`);
+      return;
     }
 
     const summonerData = await summonerResponse.json();
@@ -141,10 +145,11 @@ async function getSummonerRank(channel, userstate, message) {
 
     if (!rankResponse.ok) {
       throw new Error('Unable to fetch summoner rank data');
+      client.say(channel, `Unable to fetch summoner rank data`);
+      return;
     }
 
     const rankData = await rankResponse.json();
-    console.log(rankData);
 
     // Assuming the summoner has a ranked record, you can return their rank
     if (rankData.length > 0) {
