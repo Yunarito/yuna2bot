@@ -33,30 +33,32 @@ client.on('message', (channel, userstate, message, self) => {
     return
   }
 
-	if(message.toLowerCase() === 'hello' 
-  || message.toLowerCase() === 'hallo' 
-   || message.toLowerCase() === 'hey' 
-    || message.toLowerCase() === 'hi' 
-    ||message.toLowerCase() === 'moin'
-    ||message.toLowerCase() === 'mmeowdy'
-    ||message.toLowerCase() === 'haudi') {
-    hello(channel, userstate)
-    return
-  }
+  if(channel !== '#catzzi' || channel !== '#amaar270') {
+    if(message.toLowerCase() === 'hello' 
+    || message.toLowerCase() === 'hallo' 
+    || message.toLowerCase() === 'hey' 
+      || message.toLowerCase() === 'hi' 
+      ||message.toLowerCase() === 'moin'
+      ||message.toLowerCase() === 'mmeowdy'
+      ||message.toLowerCase() === 'haudi') {
+      hello(channel, userstate)
+      return
+    }
 
-  if(message.toLowerCase() === 'uwu') {
-    uwu(channel, userstate)
-    return
-  }
+    if(message.toLowerCase() === 'uwu') {
+      uwu(channel, userstate)
+      return
+    }
 
-  if(message.toLowerCase().includes('moo')) {
-    moo(channel, userstate)
-    return
-  }
+    if(message.toLowerCase().includes('moo')) {
+      moo(channel, userstate)
+      return
+    }
 
-  if(message.toLowerCase() === 'ara ara') {
-    goodgirl(channel, userstate)
-    return
+    if(message.toLowerCase() === 'ara ara') {
+      goodgirl(channel, userstate)
+      return
+    }
   }
 
   if(message.toLowerCase().includes('!rank')) {
@@ -95,6 +97,7 @@ async function getSummonerRank(channel, userstate, message) {
 
   summonerName = summonerName === 'chris5560' ? 'Hashira Kyojuro' : summonerName;
   summonerName = summonerName === 'amaar270' ? 'WHY Ekoko' : summonerName;
+  summonerName = summonerName === 'yuuukix3' ? 'xYukix' : summonerName;
   
 
   if(summonerName.toLowerCase() === 'luci3fer'){
