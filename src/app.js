@@ -67,6 +67,11 @@ client.on('message', (channel, userstate, message, self) => {
     getSummonerRank(channel, userstate, message)
     return
   }
+
+  if(message.toLowerCase().includes('!lastgame')) {
+    getLastGameData(channel, userstate, message)
+    return
+  }
   onMessageHandler(channel, userstate, message, self)
 })
 
@@ -177,6 +182,94 @@ async function getSummonerRank(channel, userstate, message) {
   } catch (error) {
     console.error('Error:', error);
     return 'Error fetching data';
+  }
+}
+
+
+async function getLastGameData(channel, userstate, message) {
+
+  let summonerName = message.replace('!lastgame', '') === '' ? channel.replace('#', '') : message.replace('!lastgame ', '');
+
+  summonerName = summonerName === 'chris5560' ? 'Hashira Kyojuro' : summonerName;
+  summonerName = summonerName === 'amaar270' ? 'WHY Ekoko' : summonerName;
+  summonerName = summonerName === 'yuuukix3' ? 'xYukix' : summonerName;
+
+  try {
+    const apiKey = RIOT_API_TOKEN;
+    const apiUrl = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`
+    
+    // Make a request to get the summoner's ID
+    const summonerResponse = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'X-Riot-Token': apiKey,
+      },
+    });
+
+    if (!summonerResponse.ok) {
+      throw new Error('Summoner not found');
+      return;
+    }
+
+    const summonerData = await summonerResponse.json();
+
+    if (summonerData) {
+      const summonerId = summonerData.puuid;
+      const gameResponse = await fetch(
+        `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${summonerId}/ids?start=0&count=5`, {
+          method: 'GET',
+          headers: {
+            'X-Riot-Token': apiKey,
+          },
+        }
+      );
+
+      if (!gameResponse.ok) {
+        console.log(gameResponse);
+        throw new Error('gameResponsebad');
+        return;
+      }
+
+      const gameData = await gameResponse.json();
+
+
+      if (gameData.length > 0) {
+        // Get the most recent game
+        const lastGame = gameData[0];
+
+        // Fetch detailed statistics for the last game
+        const matchResponse = await fetch(
+          `https://europe.api.riotgames.com/lol/match/v5/matches/${lastGame}`, {
+            method: 'GET',
+            headers: {
+              'X-Riot-Token': apiKey,
+            },
+          }
+        );
+        const matchData = await matchResponse.json();
+
+
+        // Extract the desired statistics
+        const participants = matchData.info.participants;
+      
+        const participantId = participants.find(participant => participant.puuid === summonerId)
+
+        const kda = `${participantId.kills}/${participantId.deaths}/${participantId.assists}`;
+        const csPerMinute = ((participantId.totalMinionsKilled + participantId.totalEnemyJungleMinionsKilled + participantId.totalAllyJungleMinionsKilled) / (matchData.info.gameDuration / 60)).toFixed(2);
+        const goldPerMinute = (participantId.goldEarned / (matchData.info.gameDuration / 60)).toFixed(2);
+        const totalDamageDealtToChampions = participantId.totalDamageDealtToChampions;
+        const championId = participantId.championName;
+
+        
+        client.say(channel, `${participantId.summonerName}: Champion: ${championId} | KDA: ${kda} | CS/minute: ${csPerMinute} | Gold/minute: ${goldPerMinute} | Total Damage Dealt to Champions: ${totalDamageDealtToChampions}`)
+      } else {
+        client.say(channel, `${summonerName} has no recent games.`);
+      }
+    } else {
+      client.say(channel, `Summoner ${summonerName} not found.`);
+    }
+  } catch (error) {
+    console.error('Error:', error);
   }
 }
 
