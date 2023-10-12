@@ -259,9 +259,13 @@ async function getLastGameData(channel, userstate, message) {
         const goldPerMinute = (participantId.goldEarned / (matchData.info.gameDuration / 60)).toFixed(2);
         const totalDamageDealtToChampions = participantId.totalDamageDealtToChampions;
         const championId = participantId.championName;
+        const win = matchData.info.win ? 'Victory' : 'Defeat';
 
         
-        client.say(channel, `${participantId.summonerName}: Champion: ${championId} | KDA: ${kda} | CS/minute: ${csPerMinute} | Gold/minute: ${goldPerMinute} | Total Damage Dealt to Champions: ${totalDamageDealtToChampions}`)
+        client.say(channel, `${participantId.summonerName}: ${championId} 
+        | KDA: ${kda} | CS/minute: ${csPerMinute} | Gold/minute: ${goldPerMinute} 
+        | Total Damage Dealt to Champions: ${totalDamageDealtToChampions} 
+        | ${win} | ${matchData.info.gameDuration / 60}`)
       } else {
         client.say(channel, `${summonerName} has no recent games.`);
       }
