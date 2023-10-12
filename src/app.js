@@ -260,8 +260,8 @@ async function getLastGameData(channel, userstate, message) {
         const totalDamageDealtToChampions = participantId.totalDamageDealtToChampions;
         const championId = participantId.championName;
         const win = matchData.info.win ? 'Victory' : 'Defeat';
-        const hours = Math.floor(gameDurationMinutes / 60);
-        const minutes = gameDurationMinutes % 60;
+        const hours = Math.floor(matchData.info.gameDuration / 60);
+        const minutes = matchData.info.gameDuration % 60;
 
         
         client.say(channel, `${participantId.summonerName}: ${championId} 
