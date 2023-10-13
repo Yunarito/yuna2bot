@@ -35,7 +35,7 @@ client.on('message', (channel, userstate, message, self) => {
     return
   }
 
-  if(channel !== '#catzzi' || channel !== '#amaar270') {
+  if(!channel.toLowerCase().includes('catzzi') || !channel.toLowerCase().includes('amaar')) {
     if(message.toLowerCase() === 'hello' 
     || message.toLowerCase() === 'hallo' 
     || message.toLowerCase() === 'hey' 
