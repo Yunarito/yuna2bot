@@ -318,6 +318,7 @@ async function masteryscore(channel, userstate, message) {
         // The champion with the highest mastery points is now at masteryData[0].
         const championId = masteryData[0].championId;
         const championPoints = masteryData[0].championPoints;
+        const championLevel = masteryData[0].championLevel;
         
         // Construct the URL for fetching the latest game version.
         const versionURL = 'https://ddragon.leagueoflegends.com/api/versions.json';
@@ -336,7 +337,7 @@ async function masteryscore(channel, userstate, message) {
             .then(response => response.json())
             .then(championData => {
               let champion = Object.values(championData.data).find(champ => champ.key == championId).name
-              client.say(channel, `${summonerName}: ${champion} (${championPoints}) .`)
+              client.say(channel, `${summonerName}: ${champion} Lvl ${championLevel} (${championPoints}) Punkte`)
             })
           })
           .catch(error => console.log('Error fetching latest version:', error));
