@@ -337,7 +337,7 @@ async function masteryscore(channel, userstate, message) {
             .then(response => response.json())
             .then(championData => {
               let champion = Object.values(championData.data).find(champ => champ.key == championId).name
-              client.say(channel, `${summonerName}: ${champion} Lvl ${championLevel} (${championPoints}) Punkte`)
+              client.say(channel, `${summonerName}: ${champion} Lvl ${championLevel} (${championPoints.toLocaleString()}) Punkte`)
             })
           })
           .catch(error => console.log('Error fetching latest version:', error));
