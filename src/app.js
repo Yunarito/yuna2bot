@@ -111,6 +111,7 @@ async function getSummonerRank(channel, userstate, message) {
   summonerName = summonerName === 'chris5560' ? 'Hashira Kyojuro' : summonerName;
   summonerName = summonerName === 'amaar270' ? 'WHY Ekoko' : summonerName;
   summonerName = summonerName === 'yuuukix3' ? 'xYukix' : summonerName;
+  summonerName = summonerName === 'callme_chilli' ? 'Chìllì' : summonerName;
   
 
   if(summonerName.toLowerCase() === 'luci3fer'){
@@ -198,6 +199,7 @@ async function getLastGameData(channel, userstate, message) {
   summonerName = summonerName === 'chris5560' ? 'Hashira Kyojuro' : summonerName;
   summonerName = summonerName === 'amaar270' ? 'WHY Ekoko' : summonerName;
   summonerName = summonerName === 'yuuukix3' ? 'xYukix' : summonerName;
+  summonerName = summonerName === 'callme_chilli' ? 'Chìllì' : summonerName;
 
   try {
     const apiKey = RIOT_API_TOKEN;
@@ -290,6 +292,7 @@ async function masteryscore(channel, userstate, message) {
   summonerName = summonerName === 'chris5560' ? 'Hashira Kyojuro' : summonerName;
   summonerName = summonerName === 'amaar270' ? 'WHY Ekoko' : summonerName;
   summonerName = summonerName === 'yuuukix3' ? 'xYukix' : summonerName;
+  summonerName = summonerName === 'callme_chilli' ? 'Chìllì' : summonerName;
 
   try {
     const apiKey = RIOT_API_TOKEN;
