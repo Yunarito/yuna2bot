@@ -207,6 +207,7 @@ async function getLastGameData(channel, userstate, message) {
     });
 
     if (!summonerResponse.ok) {
+      client.say(channel, 'Summoner not found');
       throw new Error('Summoner not found');
       return;
     }
@@ -225,7 +226,7 @@ async function getLastGameData(channel, userstate, message) {
       );
 
       if (!gameResponse.ok) {
-        console.log(gameResponse);
+        client.say(channel, 'No recent games found');
         throw new Error('gameResponsebad');
         return;
       }
@@ -247,8 +248,6 @@ async function getLastGameData(channel, userstate, message) {
           }
         );
         const matchData = await matchResponse.json();
-
-
         // Extract the desired statistics
         const participants = matchData.info.participants;
       
