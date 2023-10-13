@@ -258,10 +258,11 @@ async function getLastGameData(channel, userstate, message) {
         const goldPerMinute = (participantId.goldEarned / (matchData.info.gameDuration / 60)).toFixed(2);
         const totalDamageDealtToChampions = participantId.totalDamageDealtToChampions;
         const championId = participantId.championName;
-        const win = matchData.info.win == 1 ? 'Victory' : 'Defeat';
+        const win = participantId.win == 1 ? 'Victory' : 'Defeat';
         const hours = Math.floor(matchData.info.gameDuration / 60);
         const minutes = matchData.info.gameDuration % 60;
 
+        console.log(participantId.win);
         
         client.say(channel, `${participantId.summonerName}: ${championId} 
         | KDA: ${kda} | CS/minute: ${csPerMinute} | Gold/minute: ${goldPerMinute} 
