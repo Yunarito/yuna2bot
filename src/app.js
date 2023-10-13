@@ -72,6 +72,12 @@ client.on('message', (channel, userstate, message, self) => {
     getLastGameData(channel, userstate, message)
     return
   }
+
+  if(message.toLowerCase().includes('!topmastery')) {
+    masteryscore(channel, userstate, message)
+    return
+  }
+
   onMessageHandler(channel, userstate, message, self)
 })
 
@@ -185,7 +191,6 @@ async function getSummonerRank(channel, userstate, message) {
   }
 }
 
-
 async function getLastGameData(channel, userstate, message) {
 
   let summonerName = message.replace('!lastgame', '') === '' ? channel.replace('#', '') : message.replace('!lastgame ', '');
@@ -261,8 +266,6 @@ async function getLastGameData(channel, userstate, message) {
         const win = participantId.win == 1 ? 'Victory' : 'Defeat';
         const hours = Math.floor(matchData.info.gameDuration / 60);
         const minutes = matchData.info.gameDuration % 60;
-
-        console.log(participantId.win);
         
         client.say(channel, `${participantId.summonerName}: ${championId} 
         | KDA: ${kda} | CS/minute: ${csPerMinute} | Gold/minute: ${goldPerMinute} 
@@ -276,6 +279,74 @@ async function getLastGameData(channel, userstate, message) {
     }
   } catch (error) {
     console.error('Error:', error);
+  }
+}
+
+async function masteryscore(channel, userstate, message) {
+
+  
+  let summonerName = message.replace('!topmastery', '') === '' ? channel.replace('#', '') : message.replace('!topmastery ', '');
+
+  summonerName = summonerName === 'chris5560' ? 'Hashira Kyojuro' : summonerName;
+  summonerName = summonerName === 'amaar270' ? 'WHY Ekoko' : summonerName;
+  summonerName = summonerName === 'yuuukix3' ? 'xYukix' : summonerName;
+
+  try {
+    const apiKey = RIOT_API_TOKEN;
+    const apiUrl = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`
+    
+    fetch(apiUrl, {
+      headers: {
+        'X-Riot-Token': apiKey,
+      },
+    })
+    .then(response => response.json())
+    .then(data => {
+      const summonerId = data.id;
+      
+      // With the summoner ID, you can now request the champion mastery data.
+      fetch(`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/${summonerId}`, {
+        headers: {
+          'X-Riot-Token': apiKey,
+        },
+      })
+      .then(response => response.json())
+      .then(masteryData => {
+        // Sort the masteryData to get the champion with the highest mastery points.
+        masteryData.sort((a, b) => b.championPoints - a.championPoints);
+        
+        // The champion with the highest mastery points is now at masteryData[0].
+        const championId = masteryData[0].championId;
+        const championPoints = masteryData[0].championPoints;
+        
+        // Construct the URL for fetching the latest game version.
+        const versionURL = 'https://ddragon.leagueoflegends.com/api/versions.json';
+
+        // Fetch the latest version.
+        fetch(versionURL)
+          .then(response => response.json())
+          .then(data => {
+            // The first item in the array is the latest version.
+            const latestVersion = data[0];// You can then make another request to get champion information based on championId.
+            fetch(`https://ddragon.leagueoflegends.com/cdn/${latestVersion}/data/en_US/champion.json`, {
+              headers: {
+                'X-Riot-Token': apiKey,
+              },
+            })
+            .then(response => response.json())
+            .then(championData => {
+              let champion = Object.values(championData.data).find(champ => champ.key == championId).name
+              client.say(channel, `${summonerName}: ${champion} (${championPoints}) .`)
+            })
+          })
+          .catch(error => console.log('Error fetching latest version:', error));
+      })
+        .catch(error => console.log('Error fetching champion data:', error));
+      })
+      .catch(error => console.log('Error fetching mastery data:', error));
+    
+  } catch (error) {
+    console.log('Error:', error);
   }
 }
 
