@@ -138,8 +138,8 @@ async function getSummonerRank(channel, userstate, message) {
     });
 
     if (!summonerResponse.ok) {
-      throw new Error('Summoner not found');
       client.say(channel, `Summoner not found`);
+      throw new Error('Summoner not found');
       return;
     }
 
