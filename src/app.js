@@ -66,8 +66,8 @@ client.on('message', (channel, userstate, message, self) => {
   if(message.toLowerCase().includes('!rank')) 
   {
     if(channel.includes('catzzi')){
-      let names = ['catzzi', 'I Love U much']
-      names.forEach(name => setTimeout(() => getSummonerRank(channel, userstate, '!rank ' + name), 2000))
+      let names = message.replace('!rank', '') === '' ? 'catzzi,I Love U much' : message.replace('!rank ', '');
+      getSummonerRank(channel, userstate, '!rank ' + names, true)
     } else {
       getSummonerRank(channel, userstate, message)
     }
@@ -110,51 +110,116 @@ function goodgirl (channel, userstate) {
   client.say(channel, ` GoodGirl `);
 }
 
-async function getSummonerRank(channel, userstate, message) {
-
-  console.log('Sum: '+message);
-
+async function getSummonerRank(channel, userstate, message, multiSummoner = false) {
   let summonerName = message.replace('!rank', '') === '' ? channel.replace('#', '') : message.replace('!rank ', '');
 
-  summonerName = summonerName === 'chris5560' ? 'Hashira Kyojuro' : summonerName;
-  summonerName = summonerName === 'amaar270' ? 'WHY Ekoko' : summonerName;
-  summonerName = summonerName === 'yuuukix3' ? 'xYukix' : summonerName;
-  summonerName = summonerName === 'callme_chilli' ? 'Chìllì' : summonerName;
-  
-  console.log(summonerName, channel)
-
-  if(summonerName.toLowerCase() === 'luci3fer'){
-    let rank = capitalizeFirstLetter('Challenger ') + ' I';
-    let wins = 69;
-    let losses = 31;
-    client.say(channel, `${summonerName}: ${rank} (1337 LP) || ${wins}W/${losses}L 
-    WR: ${Math.round(wins / (wins + losses) * 100)}%`);
-    return
+  let names;
+  if(multiSummoner || summonerName.includes(',')){
+    names = summonerName.split(',');
+  } else {
+    summonerName = summonerName === 'chris5560' ? 'Hashira Kyojuro' : summonerName;
+    summonerName = summonerName === 'amaar270' ? 'WHY Ekoko' : summonerName;
+    summonerName = summonerName === 'yuuukix3' ? 'xYukix' : summonerName;
+    summonerName = summonerName === 'callme_chilli' ? 'Chìllì' : summonerName;
   }
 
-  try {
-    const apiKey = RIOT_API_TOKEN; // Replace with your League of Legends API key
-    const region = 'euw1'
-    const apiUrl = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`
-    
-    // Make a request to get the summoner's ID
-    const summonerResponse = await fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-        'X-Riot-Token': apiKey,
-      },
-    });
+  let rankMessage = '';
 
-    if (!summonerResponse.ok) {
-      client.say(channel, `Summoner not found`);
-      throw new Error('Summoner not found');
-      return;
+  try {
+    if(multiSummoner || summonerName.includes(',')){
+      let summonerResponses = [];
+      for (let i = 0; i < names.length; i++) {
+        if(names[i] == null) continue;
+        let name = names[i];
+        let response = await getSummonerData(channel, name);
+        summonerResponses.push(response)
+      }
+
+      let summonerIds = [];
+      summonerResponses.forEach(response => {
+        summonerIds.push(response.id);
+      })
+
+      let rankDatas = [];
+      for (let i = 0; i < summonerIds.length; i++) {
+        if(summonerIds[i] == null) continue;
+        let response = await getRankDataForSummonerId(channel, summonerIds[i]);
+        rankDatas.push(response)
+      }
+
+      let rankMessages = [];
+      for (let i = 0; i < rankDatas.length; i++) {
+        if(rankDatas[i] == null) continue;
+        let name = names[i];
+        rankMessages.push(await getRankString(channel, rankDatas[i], name));
+      }
+
+      rankMessage += '───────────────────────────────────'
+
+      for (let i = 0; i < rankMessages.length; i++) {
+        if(rankMessages[i] == null) continue;
+        if(i == 0){
+          rankMessage += rankMessages[i];
+        } else {
+          rankMessage += (' ───────────────────────────────────' + rankMessages[i]) 
+        }
+      }
+
+      rankMessage += ' ───────────────────────────────────'
+      
+    } else {
+      const summonerData =  await getSummonerData(channel, summonerName)
+
+      const summonerId = summonerData.id;
+
+      const rankData = await getRankDataForSummonerId(channel, summonerId)
+
+      rankMessage = await getRankString(channel, rankData, summonerName)
     }
 
-    const summonerData = await summonerResponse.json();
+    if(rankMessage != ''){
+      client.say(channel, rankMessage)
+    } else {
+      if(channel.includes('catzzi')) {
+        client.say(channel, 'Well something went wrong here ropeFast')
+      } else {
+        client.say(channel, 'Well something went wrong here')
+      }
+    }
+    return
+  } catch (error) {
+    console.error('Error:', error);
+    return 'Error fetching data';
+  }
+}
 
-    const summonerId = summonerData.id;
 
+async function getSummonerData(channel, summonerName) {
+  const apiKey = RIOT_API_TOKEN; // Replace with your League of Legends API key
+  const apiUrl = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`
+  
+  // Make a request to get the summoner's ID
+  const summonerResponse = await fetch(apiUrl, {
+    method: 'GET',
+    headers: {
+      'X-Riot-Token': apiKey,
+    },
+  });
+
+  if (!summonerResponse.ok) {
+    client.say(channel, `Summoner not found`);
+    throw new Error('Summoner not found');
+    return;
+  }
+
+  const summonerData = await summonerResponse.json();
+
+  return summonerData;
+}
+
+async function getRankDataForSummonerId(channel, summonerId) {
+
+  const apiKey = RIOT_API_TOKEN; // Replace with your League of Legends API key
     // Make a request to get the summoner's rank
     const rankUrl = `https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/${summonerId}`;
     const rankResponse = await fetch(rankUrl, {
@@ -165,13 +230,17 @@ async function getSummonerRank(channel, userstate, message) {
     });
 
     if (!rankResponse.ok) {
-      throw new Error('Unable to fetch summoner rank data');
       client.say(channel, `Unable to fetch summoner rank data`);
+      throw new Error('Unable to fetch summoner rank data');
       return;
     }
 
     const rankData = await rankResponse.json();
 
+    return rankData;
+}
+
+async function getRankString(channel, rankData, summonerName) {
     // Assuming the summoner has a ranked record, you can return their rank
     if (rankData.length > 0) {
       const rankedSoloQ = rankData.find((entry) => entry.queueType === 'RANKED_SOLO_5x5');
@@ -188,18 +257,19 @@ async function getSummonerRank(channel, userstate, message) {
         rankMessage += `[FlexQ ${rank} (${rankedFlexQ.leaguePoints} LP) | ${rankedFlexQ.wins}W/${rankedFlexQ.losses}L 
         WR: ${Math.round(rankedFlexQ.wins / (rankedFlexQ.wins + rankedFlexQ.losses) * 100)}%]`;
       }
-      client.say(channel, rankMessage)
-      return
-    }
 
-    // If the summoner has no ranked record, return unranked
+      return rankMessage
+    } else {
+      // If the summoner has no ranked record, return unranked
       client.say(channel, `Summoner unranked`);
-    return;
-  } catch (error) {
-    console.error('Error:', error);
-    return 'Error fetching data';
-  }
+      return null;
+    }
 }
+
+
+
+
+
 
 async function getLastGameData(channel, userstate, message) {
 
