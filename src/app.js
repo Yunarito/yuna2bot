@@ -161,7 +161,7 @@ async function getSummonerRank(channel, userstate, message, multiSummoner = fals
         if(i == 0){
           rankMessage += rankMessages[i];
         } else {
-          rankMessage += (' ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ' + rankMessages[i]) 
+          rankMessage += (' ────────────────────────⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  ' + rankMessages[i]) 
         }
       }
 
