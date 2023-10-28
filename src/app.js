@@ -154,18 +154,18 @@ async function getSummonerRank(channel, userstate, message, multiSummoner = fals
         rankMessages.push(await getRankString(channel, rankDatas[i], name));
       }
 
-      rankMessage += '──────────────────────────────────⠀ '
+      rankMessage += '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ────────────────────────⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ '
 
       for (let i = 0; i < rankMessages.length; i++) {
         if(rankMessages[i] == null) continue;
         if(i == 0){
           rankMessage += rankMessages[i];
         } else {
-          rankMessage += (' ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ' + rankMessages[i]) 
+          rankMessage += (' ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ' + rankMessages[i]) 
         }
       }
 
-      rankMessage += ' ──────────────────────────────────'
+      rankMessage += '⠀⠀⠀⠀⠀ ────────────────────────'
       
     } else {
       const summonerData =  await getSummonerData(channel, summonerName)
@@ -254,11 +254,11 @@ async function getRankString(channel, rankData, summonerName) {
       if (rankedFlexQ) {
         rankMessage = rankedSoloQ ? rankMessage + ' || ' : rankMessage;
         let rank = capitalizeFirstLetter(rankedFlexQ.tier) + ' ' + rankedFlexQ.rank;
-        rankMessage += `[FlexQ ${rank} (${rankedFlexQ.leaguePoints} LP) | ${rankedFlexQ.wins}W/${rankedFlexQ.losses}L 
-        WR: ${Math.round(rankedFlexQ.wins / (rankedFlexQ.wins + rankedFlexQ.losses) * 100)}%]`;
+        rankMessage += `[FlexQ ${rank} (${rankedFlexQ.leaguePoints} LP)⠀| ${rankedFlexQ.wins}W/${rankedFlexQ.losses}L WR:⠀${Math.round(rankedFlexQ.wins / (rankedFlexQ.wins + rankedFlexQ.losses) * 100)}%]`;
       }
-
-      return rankMessage
+      const brailleSpace = '\u2800';
+      // return rankMessage.replace(/ /g, () => brailleSpace);
+      return rankMessage.replace(' ', '⠀')
     } else {
       // If the summoner has no ranked record, return unranked
       client.say(channel, `Summoner unranked`);
