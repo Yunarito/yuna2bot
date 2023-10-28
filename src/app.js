@@ -67,7 +67,7 @@ client.on('message', (channel, userstate, message, self) => {
   {
     if(channel.includes('catzzi')){
       let names = ['catzzi', 'I Love U much']
-      names.forEach(name => setTimeout(() => getSummonerRank(channel, userstate, '!rank ' + name), 1000))
+      names.forEach(name => setTimeout(() => getSummonerRank(channel, userstate, '!rank ' + name), 2000))
     } else {
       getSummonerRank(channel, userstate, message)
     }
