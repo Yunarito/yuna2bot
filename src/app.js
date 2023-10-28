@@ -63,8 +63,14 @@ client.on('message', (channel, userstate, message, self) => {
     }
   }
 
-  if(message.toLowerCase().includes('!rank')) {
-    getSummonerRank(channel, userstate, message)
+  if(message.toLowerCase().includes('!rank')) 
+  {
+    if(channel.includes('yunarito')){
+      let names = ['catzzi', 'I Love U much']
+      names.forEach(name => setTimeout(() => getSummonerRank(channel, userstate, '!rank ' + name), 500))
+    } else {
+      getSummonerRank(channel, userstate, message)
+    }
     return
   }
 
@@ -105,6 +111,8 @@ function goodgirl (channel, userstate) {
 }
 
 async function getSummonerRank(channel, userstate, message) {
+
+  console.log('Sum: '+message);
 
   let summonerName = message.replace('!rank', '') === '' ? channel.replace('#', '') : message.replace('!rank ', '');
 
