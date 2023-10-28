@@ -154,18 +154,18 @@ async function getSummonerRank(channel, userstate, message, multiSummoner = fals
         rankMessages.push(await getRankString(channel, rankDatas[i], name));
       }
 
-      rankMessage += '───────────────────────────────────'
+      rankMessage += '─────────────────────────────────'
 
       for (let i = 0; i < rankMessages.length; i++) {
         if(rankMessages[i] == null) continue;
         if(i == 0){
           rankMessage += rankMessages[i];
         } else {
-          rankMessage += (' ───────────────────────────────────' + rankMessages[i]) 
+          rankMessage += (' ─────────────────────────────────' + rankMessages[i]) 
         }
       }
 
-      rankMessage += ' ───────────────────────────────────'
+      rankMessage += ' ─────────────────────────────────'
       
     } else {
       const summonerData =  await getSummonerData(channel, summonerName)
