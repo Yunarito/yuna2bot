@@ -35,34 +35,6 @@ client.on('message', (channel, userstate, message, self) => {
     return
   }
 
-  if(!channel.toLowerCase().includes('catzzi') && !channel.toLowerCase().includes('amaar')) {
-    if(message.toLowerCase() === 'hello' 
-    || message.toLowerCase() === 'hallo' 
-    || message.toLowerCase() === 'hey' 
-      || message.toLowerCase() === 'hi' 
-      ||message.toLowerCase() === 'moin'
-      ||message.toLowerCase() === 'mmeowdy'
-      ||message.toLowerCase() === 'haudi') {
-      hello(channel, userstate)
-      return
-    }
-
-    if(message.toLowerCase() === 'uwu') {
-      uwu(channel, userstate)
-      return
-    }
-
-    if(message.toLowerCase().includes('moo')) {
-      moo(channel, userstate)
-      return
-    }
-
-    if(message.toLowerCase() === 'ara ara') {
-      goodgirl(channel, userstate)
-      return
-    }
-  }
-
   if(message.toLowerCase().includes('!rank')) 
   {
     if(channel.includes('catzzi') || message.includes(',')){
