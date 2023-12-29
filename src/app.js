@@ -37,13 +37,9 @@ client.on('message', (channel, userstate, message, self) => {
 
   if(message.toLowerCase().includes('!rank')) 
   {
-    if(channel.includes('catzzi')){
+    if(channel.includes('catzzi') || message.includes(',')){
       let names = message.replace('!rank', '') === '' ? 'catzzi,I Love U much,Katziopeia,smolcatzzi' : message.replace('!rank ', '');
-      if(message.includes(',')){
-        getSummonerRank(channel, userstate, '!rank ' + names, true)
-      } else {
-        getSummonerRank(channel, userstate, message)
-      }
+      getSummonerRank(channel, userstate, '!rank ' + names, true)
     } else {
       getSummonerRank(channel, userstate, message)
     }
