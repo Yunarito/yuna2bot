@@ -356,10 +356,10 @@ async function masteryscore(channel, userstate, message) {
     })
     .then(response => response.json())
     .then(data => {
-      const summonerId = data.id;
+      const summonerId = data.puuid;
       
       // With the summoner ID, you can now request the champion mastery data.
-      fetch(`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/${summonerId}`, {
+      fetch(`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${summonerId}`, {
         headers: {
           'X-Riot-Token': apiKey,
         },
