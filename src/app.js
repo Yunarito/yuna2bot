@@ -37,8 +37,8 @@ client.on('message', (channel, userstate, message, self) => {
 
   if(message.toLowerCase().includes('!rank')) 
   {
-    if(channel.includes('catzzi') || message.includes(',')){
-      let names = message.replace('!rank', '') === '' ? 'catzzi,I Love U much' : message.replace('!rank ', '');
+    if(channel.includes('catzzi') && message.includes(',')){
+      let names = message.replace('!rank', '') === '' ? 'catzzi,I Love U much,Katziopeia,smolcatzzi' : message.replace('!rank ', '');
       getSummonerRank(channel, userstate, '!rank ' + names, true)
     } else {
       getSummonerRank(channel, userstate, message)
@@ -95,6 +95,7 @@ async function getSummonerRank(channel, userstate, message, multiSummoner = fals
     summonerName = summonerName === 'callme_chilli' ? 'Chìllì' : summonerName;
   }
 
+  console.log(names);
   let rankMessage = '';
 
   try {
@@ -103,7 +104,7 @@ async function getSummonerRank(channel, userstate, message, multiSummoner = fals
       for (let i = 0; i < names.length; i++) {
         if(names[i] == null) continue;
         let name = names[i];
-        let response = await getSummonerData(channel, name);
+        let response = name.includes('#') ? await getSummonerDataTagline(channel, name) : await getSummonerData(channel, name);
         summonerResponses.push(response)
       }
 
@@ -189,6 +190,48 @@ async function getSummonerData(channel, summonerName) {
   return summonerData;
 }
 
+async function getSummonerDataTagline(channel, name){
+  const apiKey = RIOT_API_TOKEN;
+
+  let accTag = name.split('#');
+
+  const apiUrl = `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${accTag[0]}/${accTag[1]}`
+  
+  const response = await fetch(apiUrl, {
+    method: 'GET',
+    headers: {
+      'X-Riot-Token': apiKey,
+    },
+  });
+
+  if (!response.ok) {
+    client.say(channel, `Account not found`);
+    throw new Error('Account not found');
+    return;
+  }
+  const puuid = await response.json();
+
+  const summonerApi = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid.puuid}`
+
+  
+  const summonerResponse = await fetch(summonerApi, {
+    method: 'GET',
+    headers: {
+      'X-Riot-Token': apiKey,
+    },
+  });
+
+  if (!summonerResponse.ok) {
+    client.say(channel, `Account has no league summoner`);
+    throw new Error('Account has no league summoner');
+    return;
+  }
+
+  const data = await summonerResponse.json();
+
+  return data;
+}
+
 async function getRankDataForSummonerId(channel, summonerId) {
 
   const apiKey = RIOT_API_TOKEN; // Replace with your League of Legends API key
@@ -202,6 +245,7 @@ async function getRankDataForSummonerId(channel, summonerId) {
     });
 
     if (!rankResponse.ok) {
+      console.log(rankResponse);
       client.say(channel, `Unable to fetch summoner rank data`);
       throw new Error('Unable to fetch summoner rank data');
       return;
@@ -237,11 +281,6 @@ async function getRankString(channel, rankData, summonerName) {
       return null;
     }
 }
-
-
-
-
-
 
 async function getLastGameData(channel, userstate, message) {
 
@@ -427,4 +466,15 @@ function checkTwitchChat(userstate, message, channel) {
     // delete message
     client.deletemessage(channel, userstate.id)
   }
+}
+
+function removeFirstChar(inputString, charToRemove) {
+  const index = inputString.indexOf(charToRemove);
+
+  if (index !== -1) {
+    return inputString.slice(0, index) + inputString.slice(index + 1);
+  }
+
+  // Character not found, return the original string
+  return inputString;
 }
