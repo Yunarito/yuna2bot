@@ -38,7 +38,7 @@ client.on('message', (channel, userstate, message, self) => {
   if(startsWith(message, '!rank')) 
   {
     if(channel.includes('catzzi') || message.includes(',')){
-      let names = message.replace('!rank', '') === '' ? 'catzzi#EUW,smollestcatzzi#6969,Katziopeia#EUW,smolcatzzi#EUW' : message.replace('!rank ', '');
+      let names = message.replace('!rank', '') === '' ? 'catzzi#EUW,smolestcatzzi#6969,Katziopeia#EUW,smolcatzzi#EUW' : message.replace('!rank ', '');
       getSummonerRank(channel, userstate, '!rank ' + names, true)
     } else {
       getSummonerRank(channel, userstate, message)
