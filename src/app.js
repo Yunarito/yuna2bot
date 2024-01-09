@@ -35,11 +35,16 @@ client.on('message', (channel, userstate, message, self) => {
     return
   }
 
-  if(startsWith(message, '!rank')) 
+  if(startsWith(message, '!rank') || startsWith(message, '!elo')) 
   {
     if(channel.includes('catzzi') || message.includes(',')){
-      let names = message.replace('!rank', '') === '' ? 'catzzi#EUW,smolestcatzzi#6969,Katziopeia#EUW,smolcatzzi#EUW' : message.replace('!rank ', '');
-      getSummonerRank(channel, userstate, '!rank ' + names, true)
+      if(startsWith(message, '!rank')){
+        let names = message.replace('!rank', '') === '' ? 'catzzi#EUW,smolestcatzzi#6969,Katziopeia#EUW,smolcatzzi#EUW' : message.replace('!rank ', '');
+        getSummonerRank(channel, userstate, '!rank ' + names, true)
+      } else {
+        let names = message.replace('!elo', '') === '' ? 'catzzi#EUW,smolestcatzzi#6969,Katziopeia#EUW,smolcatzzi#EUW' : message.replace('!elo ', '');
+        getSummonerRank(channel, userstate, '!elo ' + names, true)
+      }
     } else {
       getSummonerRank(channel, userstate, message)
     }
@@ -66,24 +71,15 @@ function onMessageHandler (channel, userstate, message, self) {
 
 // commands
 
-function hello (channel, userstate) {
-  client.say(channel, `@${userstate.username}, alooo !`)
-}
-
-function uwu (channel, userstate) {
-  client.say(channel, `/me ⎝⎠ ╲╱╲╱ ⎝⎠`)
-}
-
-function moo (channel, userstate) {
-  client.say(channel, `moo`)
-}
-
-function goodgirl (channel, userstate) {
-  client.say(channel, ` GoodGirl `);
-}
-
 async function getSummonerRank(channel, userstate, message, multiSummoner = false) {
-  let summonerName = message.replace('!rank', '') === '' ? channel.replace('#', '') : message.replace('!rank ', '');
+  let summonerName;
+  if(startsWith(message, '!rank')){
+    summonerName = message.replace('!rank', '') === '' ? channel.replace('#', '') : message.replace('!rank ', '');
+  } else {
+    summonerName = message.replace('!elo', '') === '' ? channel.replace('#', '') : message.replace('!elo ', '');
+  }
+
+  console.log(summonerName);
 
   let names;
   if(multiSummoner || summonerName.includes(',')){
@@ -421,6 +417,8 @@ async function masteryscore(channel, userstate, message) {
     console.log('Error:', error);
   }
 }
+
+// helpers
 
 function capitalizeFirstLetter(inputString) {
   // Check if the input string is not empty
