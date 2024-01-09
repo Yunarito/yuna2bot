@@ -35,10 +35,10 @@ client.on('message', (channel, userstate, message, self) => {
     return
   }
 
-  if(message.toLowerCase().includes('!rank')) 
+  if(startsWith(message, '!rank')) 
   {
     if(channel.includes('catzzi') || message.includes(',')){
-      let names = message.replace('!rank', '') === '' ? 'catzzi,I Love U much,Katziopeia,smolcatzzi' : message.replace('!rank ', '');
+      let names = message.replace('!rank', '') === '' ? 'catzzi#EUW,smollestcatzzi#6969,Katziopeia#EUW,smolcatzzi#EUW' : message.replace('!rank ', '');
       getSummonerRank(channel, userstate, '!rank ' + names, true)
     } else {
       getSummonerRank(channel, userstate, message)
@@ -46,12 +46,12 @@ client.on('message', (channel, userstate, message, self) => {
     return
   }
 
-  if(message.toLowerCase().includes('!lastgame')) {
+  if(startsWith(message,'!lastgame')) {
     getLastGameData(channel, userstate, message)
     return
   }
 
-  if(message.toLowerCase().includes('!topmastery')) {
+  if(startsWith(message,'!topmastery')) {
     masteryscore(channel, userstate, message)
     return
   }
@@ -165,7 +165,6 @@ async function getSummonerRank(channel, userstate, message, multiSummoner = fals
     return 'Error fetching data';
   }
 }
-
 
 async function getSummonerData(channel, summonerName) {
   const apiKey = RIOT_API_TOKEN; // Replace with your League of Legends API key
@@ -296,20 +295,7 @@ async function getLastGameData(channel, userstate, message) {
     const apiUrl = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`
     
     // Make a request to get the summoner's ID
-    const summonerResponse = await fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-        'X-Riot-Token': apiKey,
-      },
-    });
-
-    if (!summonerResponse.ok) {
-      client.say(channel, 'Summoner not found');
-      throw new Error('Summoner not found');
-      return;
-    }
-
-    const summonerData = await summonerResponse.json();
+    const summonerData = summonerName.includes('#') ? await getSummonerDataTagline(channel, summonerName) : await getSummonerData(channel, summonerName);
 
     if (summonerData) {
       const summonerId = summonerData.puuid;
@@ -359,7 +345,7 @@ async function getLastGameData(channel, userstate, message) {
         const hours = Math.floor(matchData.info.gameDuration / 60);
         const minutes = matchData.info.gameDuration % 60;
         
-        client.say(channel, `${participantId.summonerName}: ${championId} 
+        client.say(channel, `${summonerName}: ${championId} 
         | KDA: ${kda} | CS/minute: ${csPerMinute} | Gold/minute: ${goldPerMinute} 
         | Total Damage Dealt to Champions: ${totalDamageDealtToChampions} 
         | ${win} | Game Duration: ${hours}:${minutes}`)
@@ -386,58 +372,50 @@ async function masteryscore(channel, userstate, message) {
 
   try {
     const apiKey = RIOT_API_TOKEN;
-    const apiUrl = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`
+
+    const summonerData = summonerName.includes('#') ? await getSummonerDataTagline(channel, summonerName) : await getSummonerData(channel, summonerName);
     
-    fetch(apiUrl, {
+    const summonerId = summonerData.puuid;
+    
+    // With the summoner ID, you can now request the champion mastery data.
+    fetch(`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${summonerId}`, {
       headers: {
         'X-Riot-Token': apiKey,
       },
     })
     .then(response => response.json())
-    .then(data => {
-      const summonerId = data.puuid;
+    .then(masteryData => {
+      // Sort the masteryData to get the champion with the highest mastery points.
+      masteryData.sort((a, b) => b.championPoints - a.championPoints);
       
-      // With the summoner ID, you can now request the champion mastery data.
-      fetch(`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${summonerId}`, {
-        headers: {
-          'X-Riot-Token': apiKey,
-        },
-      })
-      .then(response => response.json())
-      .then(masteryData => {
-        // Sort the masteryData to get the champion with the highest mastery points.
-        masteryData.sort((a, b) => b.championPoints - a.championPoints);
-        
-        // The champion with the highest mastery points is now at masteryData[0].
-        const championId = masteryData[0].championId;
-        const championPoints = masteryData[0].championPoints;
-        const championLevel = masteryData[0].championLevel;
-        
-        // Construct the URL for fetching the latest game version.
-        const versionURL = 'https://ddragon.leagueoflegends.com/api/versions.json';
+      // The champion with the highest mastery points is now at masteryData[0].
+      const championId = masteryData[0].championId;
+      const championPoints = masteryData[0].championPoints;
+      const championLevel = masteryData[0].championLevel;
+      
+      // Construct the URL for fetching the latest game version.
+      const versionURL = 'https://ddragon.leagueoflegends.com/api/versions.json';
 
-        // Fetch the latest version.
-        fetch(versionURL)
-          .then(response => response.json())
-          .then(data => {
-            // The first item in the array is the latest version.
-            const latestVersion = data[0];// You can then make another request to get champion information based on championId.
-            fetch(`https://ddragon.leagueoflegends.com/cdn/${latestVersion}/data/en_US/champion.json`, {
-              headers: {
-                'X-Riot-Token': apiKey,
-              },
-            })
-            .then(response => response.json())
-            .then(championData => {
-              let champion = Object.values(championData.data).find(champ => champ.key == championId).name
-              client.say(channel, `${summonerName}: ${champion} Lvl ${championLevel} (${championPoints.toLocaleString()}) Punkte`)
-            })
+      // Fetch the latest version.
+      fetch(versionURL)
+        .then(response => response.json())
+        .then(data => {
+          // The first item in the array is the latest version.
+          const latestVersion = data[0];// You can then make another request to get champion information based on championId.
+          fetch(`https://ddragon.leagueoflegends.com/cdn/${latestVersion}/data/en_US/champion.json`, {
+            headers: {
+              'X-Riot-Token': apiKey,
+            },
           })
-          .catch(error => console.log('Error fetching latest version:', error));
-      })
-        .catch(error => console.log('Error fetching champion data:', error));
-      })
-      .catch(error => console.log('Error fetching mastery data:', error));
+          .then(response => response.json())
+          .then(championData => {
+            let champion = Object.values(championData.data).find(champ => champ.key == championId).name
+            client.say(channel, `${summonerName}: ${champion} Lvl ${championLevel} (${championPoints.toLocaleString()}) Punkte`)
+          })
+        })
+        .catch(error => console.log('Error fetching latest version:', error));
+    }).catch(error => console.log('Error fetching champion data:', error));
+      
     
   } catch (error) {
     console.log('Error:', error);
@@ -477,4 +455,9 @@ function removeFirstChar(inputString, charToRemove) {
 
   // Character not found, return the original string
   return inputString;
+}
+
+function startsWith(message, searchString){
+      const words = message.split(' ');
+      return words[0] === searchString;
 }
