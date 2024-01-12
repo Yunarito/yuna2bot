@@ -272,8 +272,7 @@ async function getRankString(channel, rankData, summonerName) {
       return rankMessage.replace(' ', '⠀')
     } else {
       // If the summoner has no ranked record, return unranked
-      client.say(channel, `Summoner unranked`);
-      return null;
+      return `${summonerName}: unranked`;
     }
 }
 
