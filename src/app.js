@@ -39,10 +39,10 @@ client.on('message', (channel, userstate, message, self) => {
   {
     if(channel.includes('catzzi') || message.includes(',')){
       if(startsWith(message, '!rank')){
-        let names = message.replace('!rank', '') === '' ? 'catzzi#EUW,smolestcatzzi#6969,Katziopeia#EUW,smolcatzzi#EUW' : message.replace('!rank ', '');
+        let names = message.replace('!rank', '') === '' ? 'catzzi#EUW,smolcatzzi#EUW,smolercatzzi#6969,smolestcatzzi#6969' : message.replace('!rank ', '');
         getSummonerRank(channel, userstate, '!rank ' + names, true)
       } else {
-        let names = message.replace('!elo', '') === '' ? 'catzzi#EUW,smolestcatzzi#6969,Katziopeia#EUW,smolcatzzi#EUW' : message.replace('!elo ', '');
+        let names = message.replace('!elo', '') === '' ? 'catzzi#EUW,smolcatzzi#EUW,smolercatzzi#6969,smolestcatzzi#6969' : message.replace('!elo ', '');
         getSummonerRank(channel, userstate, '!elo ' + names, true)
       }
     } else {
