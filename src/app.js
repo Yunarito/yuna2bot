@@ -345,7 +345,7 @@ let summonerName;
 }
 
 function commands(channel) {
-  channel.say(channel, '!rank/!elo <name,name2>, !avgrank/!avgelo <name>, !lastgame <name>, !topmastery <name>')
+  client.say(channel, '!rank/!elo <name,name2>, !avgrank/!avgelo <name>, !lastgame <name>, !topmastery <name>')
 }
 // helpers
 
