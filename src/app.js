@@ -606,9 +606,11 @@ async function calculateAverageRank(rankDataArray) {
   // Calculate the sum of numerical values for each rank
   let totalRankValue = validRankDataArray.reduce(function(sum, rankData) {
     let rankValue = rankValues[rankData.tier];
-    let divisionValue = romanToInteger(rankData.rank); // Extract numeric part from division
+    let divisionValue = parseInt(rankData.rank.replace(/\D/g, '')) || 1; // Adjusted to use values from 1 to 4
     return sum + rankValue + divisionValue / 10; // Add division as a decimal part
   }, 0);
+
+  console.log(rankDataArray);
 
   // Display the totalRankValue
   console.log('Total Rank Value:', totalRankValue);
@@ -628,7 +630,7 @@ async function calculateAverageRank(rankDataArray) {
   console.log('Average Tier:', averageTier);
 
   // Calculate the average division value
-  let averageDivisionValue = Math.round((averageRankValue % 1) * 10);
+  let averageDivisionValue = Math.round((averageRankValue % 1) * validRankDataArray.length);
 
   // Display the averageDivisionValue
   console.log('Average Division Value:', averageDivisionValue);
