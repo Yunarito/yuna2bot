@@ -51,6 +51,11 @@ client.on('message', (channel, userstate, message, self) => {
     return
   }
 
+  if(startsWith(message, '!avgrank') || startsWith(message, '!avgelo')) {
+    getAvgRankInMatch(channel, userstate, message)
+    return
+  }
+
   if(startsWith(message,'!lastgame')) {
     getLastGameData(channel, userstate, message)
     return
@@ -85,13 +90,13 @@ async function getSummonerRank(channel, userstate, message, multiSummoner = fals
   if(multiSummoner || summonerName.includes(',')){
     names = summonerName.split(',');
   } else {
-    summonerName = summonerName === 'chris5560' ? 'Hashira Kyojuro' : summonerName;
-    summonerName = summonerName === 'amaar270' ? 'WHY Ekoko' : summonerName;
-    summonerName = summonerName === 'yuuukix3' ? 'xYukix' : summonerName;
+    summonerName = summonerName === 'chris5560' ? 'Nathaniel Flint#Scrin' : summonerName;
+    summonerName = summonerName === 'pluffuff' ? 'Pluffuff#EUW' : summonerName;
+    summonerName = summonerName === 'amaar270' ? 'WHY Ekoko#EUW' : summonerName;
+    summonerName = summonerName === 'yuuukix3' ? 'xYukix#EUW' : summonerName;
     summonerName = summonerName === 'callme_chilli' ? 'Chìllì' : summonerName;
   }
 
-  console.log(names);
   let rankMessage = '';
 
   try {
@@ -137,7 +142,7 @@ async function getSummonerRank(channel, userstate, message, multiSummoner = fals
       rankMessage += '⠀⠀⠀⠀⠀ ────────────────────────'
       
     } else {
-      const summonerData =  await getSummonerData(channel, summonerName)
+      const summonerData =  summonerName.includes('#') ? await getSummonerDataTagline(channel, summonerName) : await getSummonerData(channel, summonerName);
 
       const summonerId = summonerData.id;
 
@@ -160,120 +165,6 @@ async function getSummonerRank(channel, userstate, message, multiSummoner = fals
     console.error('Error:', error);
     return 'Error fetching data';
   }
-}
-
-async function getSummonerData(channel, summonerName) {
-  const apiKey = RIOT_API_TOKEN; // Replace with your League of Legends API key
-  const apiUrl = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`
-  
-  // Make a request to get the summoner's ID
-  const summonerResponse = await fetch(apiUrl, {
-    method: 'GET',
-    headers: {
-      'X-Riot-Token': apiKey,
-    },
-  });
-
-  if (!summonerResponse.ok) {
-    client.say(channel, `Summoner not found`);
-    throw new Error('Summoner not found');
-    return;
-  }
-
-  const summonerData = await summonerResponse.json();
-
-  return summonerData;
-}
-
-async function getSummonerDataTagline(channel, name){
-  const apiKey = RIOT_API_TOKEN;
-
-  let accTag = name.split('#');
-
-  const apiUrl = `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${accTag[0]}/${accTag[1]}`
-  
-  const response = await fetch(apiUrl, {
-    method: 'GET',
-    headers: {
-      'X-Riot-Token': apiKey,
-    },
-  });
-
-  if (!response.ok) {
-    client.say(channel, `Account not found`);
-    throw new Error('Account not found');
-    return;
-  }
-  const puuid = await response.json();
-
-  const summonerApi = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid.puuid}`
-
-  
-  const summonerResponse = await fetch(summonerApi, {
-    method: 'GET',
-    headers: {
-      'X-Riot-Token': apiKey,
-    },
-  });
-
-  if (!summonerResponse.ok) {
-    client.say(channel, `Account has no league summoner`);
-    throw new Error('Account has no league summoner');
-    return;
-  }
-
-  const data = await summonerResponse.json();
-
-  return data;
-}
-
-async function getRankDataForSummonerId(channel, summonerId) {
-
-  const apiKey = RIOT_API_TOKEN; // Replace with your League of Legends API key
-    // Make a request to get the summoner's rank
-    const rankUrl = `https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/${summonerId}`;
-    const rankResponse = await fetch(rankUrl, {
-      method: 'GET',
-      headers: {
-        'X-Riot-Token': apiKey,
-      },
-    });
-
-    if (!rankResponse.ok) {
-      console.log(rankResponse);
-      client.say(channel, `Unable to fetch summoner rank data`);
-      throw new Error('Unable to fetch summoner rank data');
-      return;
-    }
-
-    const rankData = await rankResponse.json();
-
-    return rankData;
-}
-
-async function getRankString(channel, rankData, summonerName) {
-    // Assuming the summoner has a ranked record, you can return their rank
-    if (rankData.length > 0) {
-      const rankedSoloQ = rankData.find((entry) => entry.queueType === 'RANKED_SOLO_5x5');
-      const rankedFlexQ = rankData.find((entry) => entry.queueType === 'RANKED_FLEX_SR');
-      let rankMessage = `${summonerName}: `
-      if (rankedSoloQ) {
-        let rank = capitalizeFirstLetter(rankedSoloQ.tier) + ' ' + rankedSoloQ.rank;
-        rankMessage += `[SOLOQ ${rank} (${rankedSoloQ.leaguePoints} LP) | ${rankedSoloQ.wins}W/${rankedSoloQ.losses}L 
-        WR: ${Math.round(rankedSoloQ.wins / (rankedSoloQ.wins + rankedSoloQ.losses) * 100)}%]`;
-      }
-      if (rankedFlexQ) {
-        rankMessage = rankedSoloQ ? rankMessage + ' || ' : rankMessage;
-        let rank = capitalizeFirstLetter(rankedFlexQ.tier) + ' ' + rankedFlexQ.rank;
-        rankMessage += `[FlexQ ${rank} (${rankedFlexQ.leaguePoints} LP)⠀| ${rankedFlexQ.wins}W/${rankedFlexQ.losses}L WR:⠀${Math.round(rankedFlexQ.wins / (rankedFlexQ.wins + rankedFlexQ.losses) * 100)}%]`;
-      }
-      const brailleSpace = '\u2800';
-      // return rankMessage.replace(/ /g, () => brailleSpace);
-      return rankMessage.replace(' ', '⠀')
-    } else {
-      // If the summoner has no ranked record, return unranked
-      return `${summonerName}: unranked`;
-    }
 }
 
 async function getLastGameData(channel, userstate, message) {
@@ -417,6 +308,36 @@ async function masteryscore(channel, userstate, message) {
   }
 }
 
+async function getAvgRankInMatch(channel, userstate, message) {
+let summonerName;
+  if(startsWith(message, '!avgrank')){
+    summonerName = message.replace('!avgrank', '') === '' ? channel.replace('#', '') : message.replace('!avgrank ', '');
+  } else {
+    summonerName = message.replace('!avgelo', '') === '' ? channel.replace('#', '') : message.replace('!avgelo ', '');
+  }
+
+  summonerName = summonerName === 'chris5560' ? 'Nathaniel Flint#Scrin' : summonerName;
+  summonerName = summonerName === 'pluffuff' ? 'Pluffuff#EUW' : summonerName;
+  summonerName = summonerName === 'amaar270' ? 'WHY Ekoko#EUW' : summonerName;
+  summonerName = summonerName === 'yuuukix3' ? 'xYukix#EUW' : summonerName;
+  summonerName = summonerName === 'callme_chilli' ? 'Chìllì' : summonerName;
+  
+
+  try {
+      const summonerData =  summonerName.includes('#') ? await getSummonerDataTagline(channel, summonerName) : await getSummonerData(channel, summonerName);
+
+      console.log(summonerData, message);
+    
+      const avgrank = await getLiveMatchDataForSummonerId(channel, summonerData.id)
+
+      client.say(channel, 'Average rank: ' + avgrank)
+
+    return
+  } catch (error) {
+    console.error('Error:', error);
+    return 'Error fetching data';
+  }
+}
 // helpers
 
 function capitalizeFirstLetter(inputString) {
@@ -457,4 +378,284 @@ function removeFirstChar(inputString, charToRemove) {
 function startsWith(message, searchString){
       const words = message.split(' ');
       return words[0] === searchString;
+}
+
+async function getRankString(channel, rankData, summonerName) {
+  // Assuming the summoner has a ranked record, you can return their rank
+  if (rankData.length > 0) {
+    const rankedSoloQ = rankData.find((entry) => entry.queueType === 'RANKED_SOLO_5x5');
+    const rankedFlexQ = rankData.find((entry) => entry.queueType === 'RANKED_FLEX_SR');
+    let rankMessage = `${summonerName}: `
+    if (rankedSoloQ) {
+      let rank = capitalizeFirstLetter(rankedSoloQ.tier) + ' ' + rankedSoloQ.rank;
+      rankMessage += `[SOLOQ ${rank} (${rankedSoloQ.leaguePoints} LP) | ${rankedSoloQ.wins}W/${rankedSoloQ.losses}L 
+      WR: ${Math.round(rankedSoloQ.wins / (rankedSoloQ.wins + rankedSoloQ.losses) * 100)}%]`;
+    }
+    if (rankedFlexQ) {
+      rankMessage = rankedSoloQ ? rankMessage + ' || ' : rankMessage;
+      let rank = capitalizeFirstLetter(rankedFlexQ.tier) + ' ' + rankedFlexQ.rank;
+      rankMessage += `[FlexQ ${rank} (${rankedFlexQ.leaguePoints} LP)⠀| ${rankedFlexQ.wins}W/${rankedFlexQ.losses}L WR:⠀${Math.round(rankedFlexQ.wins / (rankedFlexQ.wins + rankedFlexQ.losses) * 100)}%]`;
+    }
+    const brailleSpace = '\u2800';
+    // return rankMessage.replace(/ /g, () => brailleSpace);
+    return rankMessage.replace(' ', '⠀')
+  } else {
+    // If the summoner has no ranked record, return unranked
+    return `${summonerName}: unranked`;
+  }
+}
+
+async function getSummonerData(channel, summonerName) {
+  const apiKey = RIOT_API_TOKEN; // Replace with your League of Legends API key
+  const apiUrl = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`
+  
+  // Make a request to get the summoner's ID
+  const summonerResponse = await fetch(apiUrl, {
+    method: 'GET',
+    headers: {
+      'X-Riot-Token': apiKey,
+    },
+  });
+
+  if (!summonerResponse.ok) {
+    client.say(channel, `Summoner not found`);
+    throw new Error('Summoner not found');
+    return;
+  }
+
+  const summonerData = await summonerResponse.json();
+
+  return summonerData;
+}
+
+async function getSummonerDataTagline(channel, name){
+  const apiKey = RIOT_API_TOKEN;
+
+  let accTag = name.split('#');
+
+  const apiUrl = `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${accTag[0]}/${accTag[1]}`
+  
+  const response = await fetch(apiUrl, {
+    method: 'GET',
+    headers: {
+      'X-Riot-Token': apiKey,
+    },
+  });
+
+  if (!response.ok) {
+    client.say(channel, `Account not found`);
+    throw new Error('Account not found');
+    return;
+  }
+  const puuid = await response.json();
+
+  const summonerApi = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid.puuid}`
+
+  
+  const summonerResponse = await fetch(summonerApi, {
+    method: 'GET',
+    headers: {
+      'X-Riot-Token': apiKey,
+    },
+  });
+
+  if (!summonerResponse.ok) {
+    client.say(channel, `Account has no league summoner`);
+    throw new Error('Account has no league summoner');
+    return;
+  }
+
+  const data = await summonerResponse.json();
+
+  return data;
+}
+
+async function getAccountDataForPuuid(channel, puuid){
+  const apiKey = RIOT_API_TOKEN;
+
+  const apiUrl = `https://europe.api.riotgames.com/riot/account/v1/accounts/by-puuid/${puuid}`
+  
+  const response = await fetch(apiUrl, {
+    method: 'GET',
+    headers: {
+      'X-Riot-Token': apiKey,
+    },
+  });
+
+  if (!response.ok) {
+    client.say(channel, `Account not found`);
+    // throw new Error('Account not found');
+    return;
+  }
+  const account = await response.json();
+
+  return account;
+}
+
+async function getRankDataForSummonerId(channel, summonerId) {
+  const apiKey = RIOT_API_TOKEN;
+    const rankUrl = `https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/${summonerId}`;
+    const rankResponse = await fetch(rankUrl, {
+      method: 'GET',
+      headers: {
+        'X-Riot-Token': apiKey,
+      },
+    });
+
+    if (!rankResponse.ok) {
+      console.log(rankResponse);
+      client.say(channel, `Unable to fetch summoner rank data`);
+      // throw new Error('Unable to fetch summoner rank data');
+      return;
+    }
+
+    const rankData = await rankResponse.json();
+
+    return rankData;
+}
+
+async function getRankForSummonerId(channel, summonerId) {
+  const apiKey = RIOT_API_TOKEN;
+    const rankUrl = `https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/${summonerId}`;
+    const rankResponse = await fetch(rankUrl, {
+      method: 'GET',
+      headers: {
+        'X-Riot-Token': apiKey,
+      },
+    });
+
+    if (!rankResponse.ok) {
+      console.log("no bueno");
+      // client.say(channel, `Unable to fetch summoner rank data`);
+      // throw new Error('Unable to fetch summoner rank data');
+      return;
+    }
+
+    const rankData = await rankResponse.json();
+
+    const rankedSoloQ = rankData.find((entry) => entry.queueType === 'RANKED_SOLO_5x5');
+
+    if(rankedSoloQ == null) return null;
+
+    // Extract relevant information
+    let relevantInformation = {
+      tier: rankedSoloQ.tier,
+      rank: rankedSoloQ.rank,
+    };
+
+    return relevantInformation;
+}
+
+async function getLiveMatchDataForSummonerId(channel, summonerId) {
+  const apiKey = RIOT_API_TOKEN;
+  const liveGameUrl = `https://euw1.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/${summonerId}`;
+  const matchData = await fetch(liveGameUrl, {
+    method: 'GET',
+    headers: {
+      'X-Riot-Token': apiKey,
+    },
+  });
+
+  if (!matchData.ok) {
+    console.log(matchData, liveGameUrl);
+    client.say(channel, `Unable to fetch summoner live match data`);
+    // throw new Error('Unable to fetch summoner live match data');
+    return;
+  }
+
+  const data = await matchData.json();
+
+  let summonerIds = data.participants.map(function(obj) {
+    return obj.summonerId;
+  });
+
+  let rankDatas = await Promise.all(summonerIds.map(id => getRankForSummonerId(channel, id)));
+
+  let avgrank = await calculateAverageRank(rankDatas);
+
+  return avgrank;
+}
+
+async function calculateAverageRank(rankDataArray) {
+  // Define the ranks and their corresponding numerical values
+  let rankValues = {
+    'IRON': 1,
+    'BRONZE': 2,
+    'SILVER': 3,
+    'GOLD': 4,
+    'PLATINUM': 5,
+    'EMERALD': 6,
+    'DIAMOND': 7,
+    'MASTER': 8,
+    'GRANDMASTER': 9,
+    'CHALLENGER': 10
+  };
+
+  // Filter out empty arrays from rankDataArray
+  let validRankDataArray = rankDataArray.filter(function(rankData) {
+    if (rankData == null) return false;
+    return rankData && rankData.tier && rankData.rank;
+  });
+
+  if (validRankDataArray.length === 0) {
+    // Handle the case where there are no valid rank data entries
+    console.log('No valid rank data entries.');
+    return null; // or return a default value, depending on your needs
+  }
+
+  // Calculate the sum of numerical values for each rank
+  let totalRankValue = validRankDataArray.reduce(function(sum, rankData) {
+    let rankValue = rankValues[rankData.tier];
+    let divisionValue = romanToInteger(rankData.rank); // Extract numeric part from division
+
+    // Adjust division value based on its proximity to neighboring ranks
+    if (divisionValue > 0.5) {
+      divisionValue = 1 - divisionValue;
+    }
+
+    return sum + rankValue + divisionValue / 10; // Add division as a decimal part
+  }, 0);
+
+  // Calculate the average rank value
+  let averageRankValue = totalRankValue / validRankDataArray.length;
+
+  // Find the tier and rank corresponding to the average rank value
+  let averageTier = Object.keys(rankValues).find(function(rank) {
+    return rankValues[rank] === Math.floor(averageRankValue);
+  });
+
+  // Calculate the average division value
+  let averageDivisionValue = Math.round((averageRankValue % 1) * 10);
+
+  // Return the average tier + rank
+  let averageRank = `${averageTier} ${averageDivisionValue}`;
+  return averageRank;
+}
+
+function romanToInteger(roman) {
+  const romanNumerals = {
+    I: 1,
+    V: 5,
+    X: 10,
+    L: 50,
+    C: 100,
+    D: 500,
+    M: 1000,
+  };
+
+  let result = 0;
+
+  for (let i = 0; i < roman.length; i++) {
+    const currentSymbolValue = romanNumerals[roman[i]];
+    const nextSymbolValue = romanNumerals[roman[i + 1]];
+
+    if (nextSymbolValue > currentSymbolValue) {
+      result += nextSymbolValue - currentSymbolValue;
+      i++; // Skip the next symbol, as it has been accounted for
+    } else {
+      result += currentSymbolValue;
+    }
+  }
+
+  return result;
 }
