@@ -330,7 +330,7 @@ let summonerName;
     
       const avgrank = await getLiveMatchDataForSummonerId(channel, summonerData.id)
 
-      client.say(channel, 'Average rank: ' + avgrank)
+      client.say(channel, 'Average SoloQ Rank: ' + avgrank)
 
     return
   } catch (error) {
@@ -607,28 +607,36 @@ async function calculateAverageRank(rankDataArray) {
   let totalRankValue = validRankDataArray.reduce(function(sum, rankData) {
     let rankValue = rankValues[rankData.tier];
     let divisionValue = romanToInteger(rankData.rank); // Extract numeric part from division
-
-    // Adjust division value based on its proximity to neighboring ranks
-    if (divisionValue > 0.5) {
-      divisionValue = 1 - divisionValue;
-    }
-
     return sum + rankValue + divisionValue / 10; // Add division as a decimal part
   }, 0);
 
+  // Display the totalRankValue
+  console.log('Total Rank Value:', totalRankValue);
+
   // Calculate the average rank value
   let averageRankValue = totalRankValue / validRankDataArray.length;
+
+  // Display the averageRankValue
+  console.log('Average Rank Value:', averageRankValue);
 
   // Find the tier and rank corresponding to the average rank value
   let averageTier = Object.keys(rankValues).find(function(rank) {
     return rankValues[rank] === Math.floor(averageRankValue);
   });
 
+  // Display the averageTier
+  console.log('Average Tier:', averageTier);
+
   // Calculate the average division value
   let averageDivisionValue = Math.round((averageRankValue % 1) * 10);
 
+  // Display the averageDivisionValue
+  console.log('Average Division Value:', averageDivisionValue);
+
   // Return the average tier + rank
   let averageRank = `${averageTier} ${averageDivisionValue}`;
+  console.log('Average Rank:', averageRank);
+
   return averageRank;
 }
 
