@@ -25,6 +25,8 @@ client.connect()
 
 // event handlers
 
+let queue = [];
+
 client.on('message', (channel, userstate, message, self) => {
   if(self) {
     return
@@ -69,6 +71,56 @@ client.on('message', (channel, userstate, message, self) => {
   if(startsWith(message,'!commands')) {
     commands(channel)
     return
+  }
+
+  if(channel.includes('catzzi')){
+    if (startsWith(message, '!join')) {
+      if (!queue.includes(userstate.username)) {
+        queue.push(userstate.username);
+        client.say(channel, `${userstate.username} has joined the queue.`);
+      } else {
+        client.say(channel, `@${userstate.username}, you are already in the queue.`);
+      }
+    }
+
+    // Check for command to leave queue
+    if (startsWith(message, '!leave')) {
+      if (queue.includes(userstate.username)) {
+        queue = queue.filter(user => user !== userstate.username);
+        client.say(channel, `${userstate.username} has left the queue.`);
+      } else {
+        client.say(channel, `@${userstate.username}, you are not in the queue.`);
+      }
+    }
+
+    if (message.toLowerCase() === '!list') {
+      if (queue.length > 0) {
+        const userList = queue.join(', ');
+        client.say(channel, `Current queue: ${userList}`);
+      } else {
+        client.say(channel, 'Queue is empty.');
+      }
+    }
+
+    if (startsWith(message, '!pick') && (userstate['user-type'] === 'mod' || userstate.username === channel.replace('#', ''))) {
+      const args = message.toLowerCase().split(' ');
+      let numPicks = 1; // Default to picking 1 user
+
+      // Check if argument for number of picks is provided
+      if (args.length > 1 && !isNaN(args[1])) {
+        numPicks = parseInt(args[1]);
+      }
+
+      const pickedUsers = queue.slice(0, numPicks);
+      queue = queue.slice(numPicks);
+
+      if (pickedUsers.length > 0) {
+        const pickedList = pickedUsers.join(', ');
+        client.say(channel, `Picked ${numPicks} users: ${pickedList}`);
+      } else {
+        client.say(channel, 'Queue is empty.');
+      }
+    }
   }
 
   onMessageHandler(channel, userstate, message, self)
@@ -386,7 +438,7 @@ function removeFirstChar(inputString, charToRemove) {
 
 function startsWith(message, searchString){
       const words = message.split(' ');
-      return words[0] === searchString;
+      return words[0].toLowerCase() === searchString;
 }
 
 async function getRankString(channel, rankData, summonerName) {
