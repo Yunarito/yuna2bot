@@ -119,7 +119,7 @@ function onMessageHandler(channel, userstate, message) {
 // commands
 
 function commands(channel) {
-  client.say(channel, '!rank/!elo <name,name2>, !avgrank/!avgelo <name>, !lastgame <name>, !topmastery <name>');
+  client.say(channel, '!rank/!elo <name,name2>, !avgrank/!avgelo <name>, !lastgame <name>, !topmastery <name>, !join, !leave, !list');
 }
 
 export default client;
