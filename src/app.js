@@ -37,17 +37,17 @@ client.on('message', (channel, userstate, message, self) => {
 
   if(startsWith(message, '!rank') || startsWith(message, '!elo')) 
   {
-    if(channel.includes('catzzi') || message.includes(',')){
-      if(startsWith(message, '!rank')){
-        let names = message.replace('!rank', '') === '' ? 'catzzi#EUW,smolcatzzi#EUW,smolercatzzi#6969,smolestcatzzi#6969' : message.replace('!rank ', '');
-        getSummonerRank(channel, userstate, '!rank ' + names, true)
-      } else {
-        let names = message.replace('!elo', '') === '' ? 'catzzi#EUW,smolcatzzi#EUW,smolercatzzi#6969,smolestcatzzi#6969' : message.replace('!elo ', '');
-        getSummonerRank(channel, userstate, '!elo ' + names, true)
-      }
-    } else {
+    // if(channel.includes('catzzi') || message.includes(',')){
+    //   if(startsWith(message, '!rank')){
+    //     let names = message.replace('!rank', '') === '' ? 'catzzi#EUW,smolcatzzi#EUW,smolercatzzi#6969,smolestcatzzi#6969' : message.replace('!rank ', '');
+    //     getSummonerRank(channel, userstate, '!rank ' + names, true)
+    //   } else {
+    //     let names = message.replace('!elo', '') === '' ? 'catzzi#EUW,smolcatzzi#EUW,smolercatzzi#6969,smolestcatzzi#6969' : message.replace('!elo ', '');
+    //     getSummonerRank(channel, userstate, '!elo ' + names, true)
+    //   }
+    // } else {
       getSummonerRank(channel, userstate, message)
-    }
+    // }
     return
   }
 
@@ -89,8 +89,6 @@ async function getSummonerRank(channel, userstate, message, multiSummoner = fals
     summonerName = message.replace('!elo', '') === '' ? channel.replace('#', '') : message.replace('!elo ', '');
   }
 
-  console.log(summonerName);
-
   let names;
   if(multiSummoner || summonerName.includes(',')){
     names = summonerName.split(',');
@@ -99,7 +97,7 @@ async function getSummonerRank(channel, userstate, message, multiSummoner = fals
     summonerName = summonerName === 'pluffuff' ? 'Pluffuff#EUW' : summonerName;
     summonerName = summonerName === 'amaar270' ? 'WHY Ekoko#EUW' : summonerName;
     summonerName = summonerName === 'yuuukix3' ? 'xYukix#EUW' : summonerName;
-    summonerName = summonerName === 'callme_chilli' ? 'Chìllì' : summonerName;
+    summonerName = summonerName === 'callme_chilli' ? 'Chilli#2680' : summonerName;
   }
 
   let rankMessage = '';
@@ -111,7 +109,7 @@ async function getSummonerRank(channel, userstate, message, multiSummoner = fals
         if(names[i] == null) continue;
         let name = names[i];
         let response = name.includes('#') ? await getSummonerDataTagline(channel, name) : await getSummonerData(channel, name);
-        summonerResponses.push(response)
+        if(response != null) summonerResponses.push(response)
       }
 
       let summonerIds = [];
@@ -148,6 +146,8 @@ async function getSummonerRank(channel, userstate, message, multiSummoner = fals
       
     } else {
       const summonerData =  summonerName.includes('#') ? await getSummonerDataTagline(channel, summonerName) : await getSummonerData(channel, summonerName);
+
+      if(summonerData == null) return;
 
       const summonerId = summonerData.id;
 
@@ -415,6 +415,8 @@ async function getRankString(channel, rankData, summonerName) {
 }
 
 async function getSummonerData(channel, summonerName) {
+  client.say(channel, 'Please only use Summoner with Tagline like "Yunarito#69420".');
+  return null;
   const apiKey = RIOT_API_TOKEN; // Replace with your League of Legends API key
   const apiUrl = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`
   
@@ -438,6 +440,7 @@ async function getSummonerData(channel, summonerName) {
 }
 
 async function getSummonerDataTagline(channel, name){
+  if(name.includes('catzzi')) return;
   const apiKey = RIOT_API_TOKEN;
 
   let accTag = name.split('#');
