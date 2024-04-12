@@ -25,7 +25,7 @@ import { RIOT_API_TOKEN } from './constants';
     } else {
       summonerName = summonerName === 'chris5560' ? 'Nathaniel Flint#Scrin' : summonerName;
       summonerName = summonerName === 'pluffuff' ? 'Pluffuff#EUW' : summonerName;
-      summonerName = summonerName === 'amaar270' ? 'WHY Ekoko#EUW' : summonerName;
+      summonerName = summonerName === 'amaar270' ? 'Ekoko#Haku' : summonerName;
       summonerName = summonerName === 'yuuukix3' ? 'xYukix#EUW' : summonerName;
       summonerName = summonerName === 'callme_chilli' ? 'Chilli#2680' : summonerName;
     }
