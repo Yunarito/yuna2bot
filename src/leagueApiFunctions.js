@@ -28,6 +28,7 @@ import { RIOT_API_TOKEN } from './constants';
       summonerName = summonerName === 'amaar270' ? 'Ekoko#Haku' : summonerName;
       summonerName = summonerName === 'yuuukix3' ? 'xYukix#EUW' : summonerName;
       summonerName = summonerName === 'callme_chilli' ? 'Chilli#2680' : summonerName;
+      summonerName = summonerName === 'catzzi' ? 'catzzi#euw' : summonerName;
     }
   
     let rankMessage = '';
