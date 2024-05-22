@@ -94,7 +94,7 @@ import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
   
   
   export async function getSummonerDataTagline(channel, name){
-    if(name.includes('catzzi')) return;
+    if(name.includes('smolcatzzi') || name.includes('smolercatzzi') || name.includes('smolestcatzzi')) return;
     const apiKey = RIOT_API_TOKEN;
   
     let accTag = name.split('#');
