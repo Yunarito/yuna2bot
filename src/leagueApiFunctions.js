@@ -25,10 +25,11 @@ import { RIOT_API_TOKEN } from './constants';
     } else {
       summonerName = summonerName === 'chris5560' ? 'Nathaniel Flint#Scrin' : summonerName;
       summonerName = summonerName === 'pluffuff' ? 'Pluffuff#EUW' : summonerName;
-      summonerName = summonerName === 'amaar270' ? 'Ekoko#Haku' : summonerName;
+      summonerName = summonerName === 'amaar270' ? 'PvB Ekoko#Haku' : summonerName;
       summonerName = summonerName === 'yuuukix3' ? 'xYukix#EUW' : summonerName;
       summonerName = summonerName === 'callme_chilli' ? 'Chilli#2680' : summonerName;
       summonerName = summonerName === 'catzzi' ? 'catzzi#euw' : summonerName;
+      summonerName = summonerName === 'yunarito' ? 'Yunarito#69420' : summonerName;
     }
   
     let rankMessage = '';
