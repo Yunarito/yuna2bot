@@ -233,8 +233,6 @@ import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
     let summonerIds = data.participants.map(function(obj) {
       return obj.summonerId;
     });
-
-    console.log(summonerIds);
   
     let rankDatas = await Promise.all(summonerIds.map(id => getRankForSummonerId(channel, id)));
   
@@ -246,17 +244,19 @@ import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
   export async function calculateAverageRank(rankDataArray) {
     // Define the ranks and their corresponding numerical values
     let rankValues = {
-      'IRON': 1,
-      'BRONZE': 2,
-      'SILVER': 3,
-      'GOLD': 4,
-      'PLATINUM': 5,
-      'EMERALD': 6,
-      'DIAMOND': 7,
-      'MASTER': 8,
-      'GRANDMASTER': 9,
-      'CHALLENGER': 10
+      'IRON': 28,
+      'BRONZE': 24,
+      'SILVER': 20,
+      'GOLD': 16,
+      'PLATINUM': 12,
+      'EMERALD': 8,
+      'DIAMOND': 4,
+      'MASTER': 3,
+      'GRANDMASTER': 2,
+      'CHALLENGER': 1
     };
+
+    console.log(rankValues);
   
     // Filter out empty arrays from rankDataArray
     let validRankDataArray = rankDataArray.filter(function(rankData) {
@@ -269,40 +269,34 @@ import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
       console.log('No valid rank data entries.');
       return null; // or return a default value, depending on your needs
     }
-  
+
+    console.log(validRankDataArray);
+    
     // Calculate the sum of numerical values for each rank
     let totalRankValue = validRankDataArray.reduce(function(sum, rankData) {
       let rankValue = rankValues[rankData.tier];
-      let divisionValue = parseInt(rankData.rank.replace(/\D/g, '')) || 1; // Adjusted to use values from 1 to 4
-      return sum + rankValue + divisionValue / 10; // Add division as a decimal part
+      let divisionValue = romanToInteger(rankData.rank); // Adjusted to use values from 1 to 4
+      return sum + rankValue + divisionValue; // Add division as a decimal part
     }, 0);
+
+    console.log(totalRankValue);
+
+    totalRankValue = Math.round(totalRankValue / validRankDataArray.length);
+
+    let averageTier;
+    let averageDivisionValue
+
+    for (let rank in rankValues) {
+      if(rankValues[rank] <= totalRankValue){
+        averageTier = rank;
+        break;
+      }
+    }
+
+    averageDivisionValue = totalRankValue - rankValues[averageTier];
+
+    averageDivisionValue = integerToRoman(averageDivisionValue);
   
-    console.log(rankDataArray);
-  
-    // Display the totalRankValue
-    console.log('Total Rank Value:', totalRankValue);
-  
-    // Calculate the average rank value
-    let averageRankValue = totalRankValue / validRankDataArray.length;
-  
-    // Display the averageRankValue
-    console.log('Average Rank Value:', averageRankValue);
-  
-    // Find the tier and rank corresponding to the average rank value
-    let averageTier = Object.keys(rankValues).find(function(rank) {
-      return rankValues[rank] === Math.floor(averageRankValue);
-    });
-  
-    // Display the averageTier
-    console.log('Average Tier:', averageTier);
-  
-    // Calculate the average division value
-    let averageDivisionValue = Math.round((averageRankValue % 1) * validRankDataArray.length);
-  
-    // Display the averageDivisionValue
-    console.log('Average Division Value:', averageDivisionValue);
-  
-    // Return the average tier + rank
     let averageRank = `${averageTier} ${averageDivisionValue}`;
     console.log('Average Rank:', averageRank);
   
@@ -310,31 +304,23 @@ import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
   }
   
   export function romanToInteger(roman) {
-    const romanNumerals = {
-      I: 1,
-      V: 5,
-      X: 10,
-      L: 50,
-      C: 100,
-      D: 500,
-      M: 1000,
+    const romanNumeralMap = {
+      'IV': 3,
+      'III': 2,
+      'II': 1,
+      'I': 0,
     };
-  
-    let result = 0;
-  
-    for (let i = 0; i < roman.length; i++) {
-      const currentSymbolValue = romanNumerals[roman[i]];
-      const nextSymbolValue = romanNumerals[roman[i + 1]];
-  
-      if (nextSymbolValue > currentSymbolValue) {
-        result += nextSymbolValue - currentSymbolValue;
-        i++; // Skip the next symbol, as it has been accounted for
-      } else {
-        result += currentSymbolValue;
-      }
-    }
-  
-    return result;
+    return romanNumeralMap[roman];
+  }
+
+  export function integerToRoman(roman) {
+    const romanNumeralMap = {
+      3: 'IV',
+      2: 'III',
+      1: 'II',
+      0: 'I',
+    };
+    return romanNumeralMap[roman];
   }
 
   export function getNameMapping(username) {
