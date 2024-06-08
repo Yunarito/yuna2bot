@@ -214,7 +214,7 @@ import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
   
   export async function getLiveMatchDataForSummonerId(channel, summonerId) {
     const apiKey = RIOT_API_TOKEN;
-    const liveGameUrl = `https://euw1.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/${summonerId}`;
+    const liveGameUrl = `https://euw1.api.riotgames.com/lol/spectator/v5/active-games/by-summoner/${summonerId}`;
     const matchData = await fetch(liveGameUrl, {
       method: 'GET',
       headers: {
@@ -223,17 +223,18 @@ import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
     });
   
     if (!matchData.ok) {
-      console.log(matchData, liveGameUrl);
       client.say(channel, `Unable to fetch summoner live match data`);
       // throw new Error('Unable to fetch summoner live match data');
       return;
     }
   
     const data = await matchData.json();
-  
+
     let summonerIds = data.participants.map(function(obj) {
       return obj.summonerId;
     });
+
+    console.log(summonerIds);
   
     let rankDatas = await Promise.all(summonerIds.map(id => getRankForSummonerId(channel, id)));
   
@@ -243,6 +244,7 @@ import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
   }
   
   export async function calculateAverageRank(rankDataArray) {
+
     // Define the ranks and their corresponding numerical values
     let rankValues = {
       'IRON': 1,
@@ -334,4 +336,18 @@ import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
     }
   
     return result;
+  }
+
+  export function getNameMapping(username) {
+    const nameMappings = {
+      'chris5560': 'Nathaniel Flint#Scrin',
+      'pluffuff': 'Pluffuff#EUW',
+      'amaar270': 'PvB Ekoko#Haku',
+      'yuuukix3': 'xYukix#EUW',
+      'callme_chilli': 'Chilli#2680',
+      'catzzi': 'catzzi#euw',
+      'yunarito': 'Yunarito#69420',
+    };
+  
+    return nameMappings[username] || username;
   }

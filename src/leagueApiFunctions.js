@@ -5,6 +5,7 @@ const {
     getSummonerDataTagline,
     getRankDataForSummonerId,
     getLiveMatchDataForSummonerId,
+    getNameMapping,
 } = require('./helper.js');
 
 import fetch from 'node-fetch';
@@ -23,13 +24,7 @@ import { RIOT_API_TOKEN } from './constants';
     if(multiSummoner || summonerName.includes(',')){
       names = summonerName.split(',');
     } else {
-      summonerName = summonerName === 'chris5560' ? 'Nathaniel Flint#Scrin' : summonerName;
-      summonerName = summonerName === 'pluffuff' ? 'Pluffuff#EUW' : summonerName;
-      summonerName = summonerName === 'amaar270' ? 'PvB Ekoko#Haku' : summonerName;
-      summonerName = summonerName === 'yuuukix3' ? 'xYukix#EUW' : summonerName;
-      summonerName = summonerName === 'callme_chilli' ? 'Chilli#2680' : summonerName;
-      summonerName = summonerName === 'catzzi' ? 'catzzi#euw' : summonerName;
-      summonerName = summonerName === 'yunarito' ? 'Yunarito#69420' : summonerName;
+      summonerName = getNameMapping(summonerName);
     }
   
     let rankMessage = '';
@@ -108,10 +103,7 @@ import { RIOT_API_TOKEN } from './constants';
   
     let summonerName = message.replace('!lastgame', '') === '' ? channel.replace('#', '') : message.replace('!lastgame ', '');
   
-    summonerName = summonerName === 'chris5560' ? 'Hashira Kyojuro' : summonerName;
-    summonerName = summonerName === 'amaar270' ? 'WHY Ekoko' : summonerName;
-    summonerName = summonerName === 'yuuukix3' ? 'xYukix' : summonerName;
-    summonerName = summonerName === 'callme_chilli' ? 'Chìllì' : summonerName;
+    summonerName = getNameMapping(summonerName);
   
     try {
       const apiKey = RIOT_API_TOKEN;
@@ -188,10 +180,7 @@ import { RIOT_API_TOKEN } from './constants';
     
     let summonerName = message.replace('!topmastery', '') === '' ? channel.replace('#', '') : message.replace('!topmastery ', '');
   
-    summonerName = summonerName === 'chris5560' ? 'Hashira Kyojuro' : summonerName;
-    summonerName = summonerName === 'amaar270' ? 'WHY Ekoko' : summonerName;
-    summonerName = summonerName === 'yuuukix3' ? 'xYukix' : summonerName;
-    summonerName = summonerName === 'callme_chilli' ? 'Chìllì' : summonerName;
+    summonerName = getNameMapping(summonerName);
   
     try {
       const apiKey = RIOT_API_TOKEN;
@@ -253,19 +242,13 @@ import { RIOT_API_TOKEN } from './constants';
       summonerName = message.replace('!avgelo', '') === '' ? channel.replace('#', '') : message.replace('!avgelo ', '');
     }
   
-    summonerName = summonerName === 'chris5560' ? 'Nathaniel Flint#Scrin' : summonerName;
-    summonerName = summonerName === 'pluffuff' ? 'Pluffuff#EUW' : summonerName;
-    summonerName = summonerName === 'amaar270' ? 'WHY Ekoko#EUW' : summonerName;
-    summonerName = summonerName === 'yuuukix3' ? 'xYukix#EUW' : summonerName;
-    summonerName = summonerName === 'callme_chilli' ? 'Chìllì' : summonerName;
+    summonerName = getNameMapping(summonerName);
     
   
     try {
         const summonerData =  summonerName.includes('#') ? await getSummonerDataTagline(channel, summonerName) : await getSummonerData(channel, summonerName);
-  
-        console.log(summonerData, message);
-      
-        const avgrank = await getLiveMatchDataForSummonerId(channel, summonerData.id)
+
+        const avgrank = await getLiveMatchDataForSummonerId(channel, summonerData.puuid)
   
         client.say(channel, 'Average SoloQ Rank: ' + avgrank)
   
