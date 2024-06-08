@@ -244,7 +244,6 @@ import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
   }
   
   export async function calculateAverageRank(rankDataArray) {
-
     // Define the ranks and their corresponding numerical values
     let rankValues = {
       'IRON': 1,
