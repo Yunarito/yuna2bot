@@ -250,7 +250,11 @@ import { RIOT_API_TOKEN } from './constants';
 
         const avgrank = await getLiveMatchDataForSummonerId(channel, summonerData.puuid)
   
-        client.say(channel, 'Average SoloQ Rank: ' + avgrank)
+        if(!avgrank) {
+          return;
+        }
+
+        client.say(channel, 'Average in Game SoloQ Rank: ' + avgrank)
   
       return
     } catch (error) {

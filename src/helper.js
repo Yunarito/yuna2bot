@@ -223,7 +223,7 @@ import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
     });
   
     if (!matchData.ok) {
-      client.say(channel, `Unable to fetch summoner live match data`);
+      client.say(channel, `Summoner not ingame`);
       // throw new Error('Unable to fetch summoner live match data');
       return;
     }
@@ -297,7 +297,7 @@ import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
 
     averageDivisionValue = integerToRoman(averageDivisionValue);
   
-    let averageRank = `${averageTier} ${averageDivisionValue}`;
+    let averageRank = `${capitalizeFirstLetter(averageTier)} ${averageDivisionValue}`;
     console.log('Average Rank:', averageRank);
   
     return averageRank;
