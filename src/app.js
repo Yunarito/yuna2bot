@@ -22,6 +22,12 @@ const {
   disableQueue
 } = require('./queue.js');
 
+const {
+  resetTimeoutCount,
+  addTimeoutTime,
+  getTimeoutTime
+} = require('./timeoutCounter.js')
+
 import initialize from './initialize';
 
 const options = {
@@ -89,6 +95,10 @@ client.on('message', (channel, userstate, message, self) => {
   if (startsWith(message, '!list') && initialize.channelsInfo[channel].enabled) {
     listQueue(channel);
   }
+  
+  if (startsWith(message, '!scamout')) {
+    getTimeoutTime(channel)
+  }
 
   if (startsWith(message, '!commands')) {
     commands(channel);
@@ -97,16 +107,26 @@ client.on('message', (channel, userstate, message, self) => {
 
   // Mod or Streamer commands:
 
-  if (startsWith(message, '!pick') && (userstate['user-type'] === 'mod' || userstate.username === channel.replace('#', ''))) {
-    pickFromQueue(channel, userstate, message);
-  }
+  if(hasRights(userstate, channel)){
+    if (startsWith(message, '!pick')) {
+      pickFromQueue(channel, userstate, message);
+    }
 
-  if (startsWith(message, '!enablequeue') && (userstate['user-type'] === 'mod' || userstate.username === channel.replace('#', ''))) {
-    enableQueue(channel);
-  }
+    if (startsWith(message, '!enablequeue')) {
+      enableQueue(channel);
+    }
 
-  if (startsWith(message, '!disablequeue') && (userstate['user-type'] === 'mod' || userstate.username === channel.replace('#', ''))) {
-    disableQueue(channel);
+    if (startsWith(message, '!disablequeue')) {
+      disableQueue(channel);
+    }
+
+    if (startsWith(message, '!resetTimeout')) {
+      resetTimeoutCount(channel)
+    }
+
+    if (startsWith(message, '!scammed')) {
+      addTimeoutTime(channel)
+    }
   }
 
   onMessageHandler(channel, userstate, message);
@@ -120,6 +140,10 @@ function onMessageHandler(channel, userstate, message) {
 
 function commands(channel) {
   client.say(channel, '!rank/!elo <name,name2>, !avgrank/!avgelo <name>, !lastgame <name>, !topmastery <name>, !join, !leave, !list');
+}
+
+function hasRights(userstate, channel) {
+  return userstate['user-type'] === 'mod' || userstate.username === channel.replace('#', '');
 }
 
 export default client;

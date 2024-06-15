@@ -5,7 +5,8 @@ const initialize = {
         if (!this.channelsInfo[channel]) {
             this.channelsInfo[channel] = {
                 queue: [],
-                enabled: false
+                enabled: false,
+                timeoutTime: 300
             };
         }
     }
