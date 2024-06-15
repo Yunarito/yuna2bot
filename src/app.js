@@ -23,7 +23,8 @@ const {
 } = require('./queue.js');
 
 const {
-  resetTimeoutCount,
+  resetTime,
+  setTime,
   addTimeoutTime,
   getTimeoutTime
 } = require('./timeoutCounter.js')
@@ -120,12 +121,16 @@ client.on('message', (channel, userstate, message, self) => {
       disableQueue(channel);
     }
 
-    if (startsWith(message, '!resetTimeout')) {
-      resetTimeoutCount(channel)
+    if (startsWith(message, '!scamreset')) {
+      resetTime(channel)
     }
 
     if (startsWith(message, '!scammed')) {
       addTimeoutTime(channel)
+    }
+
+    if (startsWith(message, '!scamset')) {
+      setTime(channel, message)
     }
   }
 

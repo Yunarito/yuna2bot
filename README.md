@@ -40,4 +40,6 @@ Timeout Timer commands:
 
     - !scammed                                              --> Adds 300 seconds (5 minutes) to the timecounter.
 
-    - !resetTimeout                                         --> Resets the timeoutcounter back to 300 seconds (5 minutes).
+    - !scamreset                                            --> Resets the timeoutcounter back to 300 seconds (5 minutes).
+
+    - !scamset <time>                                       --> Sets the timeoutcounter to the given seconds.
