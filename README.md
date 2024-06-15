@@ -1,40 +1,43 @@
-# techno-boto-twitch
+✨ Yuna2bot ✨
 
-This is a simple moderation bot that can be added to your own Twitch channel.
+League of Legends related commands:
 
-For instructions, please see [https://youtu.be/7uSjKbAUHXg](https://youtu.be/7uSjKbAUHXg)
+If there are names here, they are always optional. No name entered in the command, it will automatically search with the main of the channel.
 
-Don't forget to ⭐ this repo and fork it too! 👆
+    - !rank/!elo <name#id>/<name1#id,name2#id,name3....>    --> Gets the current rank, lp and wr of the players given.
 
-## Getting started
+    - !avgrank/!avgelo <name#id>                            --> Gets the average soloq rank of all the players in that given players game.
 
-If you need help setting up your machine for JavaScript development, see https://www.youtube.com/watch?v=kL8iGErULiw
+    - !lastgame <name#id>                                   --> Gets the last game and stats for the player.
 
-[Sign Up for a Twitch Developer Account](https://dev.twitch.tv/)
+    - !topmastery <name#id>                                 --> Gets the highest mastery and champion along the points.
 
-[OAuth Scopes](https://dev.twitch.tv/docs/authentication#scopes)
 
-After signing up, you can get your token by visiting:
 
-https://id.twitch.tv/oauth2/authorize?client_id=CLIENT_ID&redirect_uri=YOUR_HOST&response_type=token&scope=chat:read+chat:edit+channel:moderate
+Queue commands:
 
-After authorizing, you will be rdirected to `YOUR_HOST` and the access token will be in the URL `access_token` param.
+    - !join                                                 --> Joins the queue.
 
-Replace `CLIENT_ID` and `YOUR_HOST` with the values for your newly created Twitch application from the dev portal.
+    - !leave                                                --> Leaves the queue.
 
-## Credits
-Created by Techno Tim with 💛
+    - !list                                                 --> Prints the current queue list.
 
-🔔 Social Media 🔔
+    Mod commands:
+    
+    - !pick <number>                                        --> Gets the given number of people of the list and deletes them from it. Is there no number given, it will only pick one.
 
-► Twitch https://www.twitch.tv/TechnoTim
+    - !enablequeue                                          --> Enables the queue.
 
-► Twitter  https://twitter.com/TechnoTimLive
+    - !disablequeue                                         --> Disabled the queue.
 
-► Discord https://l.technotim.live/discord
 
-► Instagram https://www.instagram.com/techno.tim/
 
-► Facebook https://www.facebook.com/TechnoTimLive/
+Timeout Timer commands:
 
-► GitHub https://github.com/timothystewart6
+    - !scamout                                              --> Prints out the time for the next timeout.
+
+    Mod commands:
+
+    - !scammed                                              --> Adds 300 seconds (5 minutes) to the timecounter.
+
+    - !resetTimeout                                         --> Resets the timeoutcounter back to 300 seconds (5 minutes).
