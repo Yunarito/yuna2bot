@@ -15,7 +15,7 @@ export function setTime(channel, message) {
         return
     }
 
-    initialize.channelsInfo[channel].timeoutTime = parts[1];
+    initialize.channelsInfo[channel].timeoutTime = parseInt(parts[1]);
     const timeoutMinutes = initialize.channelsInfo[channel].timeoutTime / 60;
     client.say(channel, `Timeout set to: ${timeoutMinutes} m [${initialize.channelsInfo[channel].timeoutTime} s]`);
 }
