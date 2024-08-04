@@ -27,7 +27,11 @@ const {
   setTime,
   addTimeoutTime,
   getTimeoutTime
-} = require('./timeoutCounter.js')
+} = require('./timeoutCounter.js');
+
+const {
+  stinkFight
+} = require('./stinkfight.js');
 
 import initialize from './initialize';
 
@@ -99,6 +103,11 @@ client.on('message', (channel, userstate, message, self) => {
   
   if (startsWith(message, '!scamout')) {
     getTimeoutTime(channel)
+  }
+
+  if (startsWith(message, '!stinkfight')) {
+    stinkFight(channel, userstate, message);
+    return;
   }
 
   if (startsWith(message, '!commands')) {
