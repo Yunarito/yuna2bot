@@ -34,6 +34,7 @@ const {
   accept,
   decline,
   retract,
+  duelInfo,
 } = require('./stinkfight.js');
 
 import initialize from './initialize';
@@ -123,6 +124,10 @@ client.on('message', (channel, userstate, message, self) => {
 
   if (startsWith(message, '!retract')) {
     retract(channel, userstate, message);
+  }
+
+  if (startsWith(message, '!duelinfo')) {
+    duelInfo(channel, userstate, message);
   }
 
   if (startsWith(message, '!commands')) {

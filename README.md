@@ -41,6 +41,8 @@ Duel commands:
     
     - !retract                                              --> Retracts the duel.
 
+    - !duelinfo                                             --> Gives info of the duel commands.
+
 
 Timeout Timer commands:
 

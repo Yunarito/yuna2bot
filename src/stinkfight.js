@@ -97,3 +97,8 @@ export function retract(channel, userstate, message) {
         delete initialize.channelsInfo[channel].pendingDuels[opponent];
         client.say(channel, `@${opponent}, your duel request has been retracted.`);
 }
+
+export function duelInfo(channel, userstate, message) {
+    let username = userstate.username;
+    client.say(channel, `@${username}, the available duel commands are: !duel <username>, !accept, !decline, !retract`);
+}
