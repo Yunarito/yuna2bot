@@ -49,11 +49,11 @@ export function accept(channel, userstate, message) {
     let stink2 = Math.floor(Math.random() * 100) + 1;
     if (stink1 < stink2) {
         client.say(channel, `@${challenger} (${stink1}%) wins the stink duel against ${username} (${stink2}%)!`);
-        timeout(channel, challenger, 300); // Timeout the user for 5 minutes
+        timeout(channel, username, 300); // Timeout the user for 5 minutes
         client.say(channel, `@${username} has been timed out for 5 minutes.`);
     } else if (stink1 > stink2) {
         client.say(channel, `${username} (${stink2}%) wins the stink duel against @${challenger} (${stink1}%)!`);
-        timeout(channel, username, 300); // Timeout the user for 5 minutes
+        timeout(channel, challenger, 300); // Timeout the user for 5 minutes
         client.say(channel, `@${challenger} has been timed out for 5 minutes.`);
     } else {
         client.say(channel, `It's a tie! Both @${challenger} (${stink1}%) and ${username} (${stink2}%) stink equally!`);
