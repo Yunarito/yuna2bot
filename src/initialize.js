@@ -4,6 +4,7 @@ const initialize = {
     initializeChannel(channel) {
         if (!this.channelsInfo[channel]) {
             this.channelsInfo[channel] = {
+                pendingDuels: {},
                 queue: [],
                 enabled: false,
                 timeoutTime: 300

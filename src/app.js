@@ -30,7 +30,10 @@ const {
 } = require('./timeoutCounter.js');
 
 const {
-  stinkFight
+  duel,
+  accept,
+  decline,
+  retract,
 } = require('./stinkfight.js');
 
 import initialize from './initialize';
@@ -63,11 +66,12 @@ client.on('message', (channel, userstate, message, self) => {
   }
 
   initialize.initializeChannel(channel);
+  
 
-  if (userstate.username === BOT_USERNAME) {
-    console.log(`Not checking bot's messages.`);
-    return;
-  }
+  // if (userstate.username === BOT_USERNAME) {
+  //   console.log(`Not checking bot's messages.`);
+  //   return;
+  // }
 
   if (startsWith(message, '!rank') || startsWith(message, '!elo')) {
     getSummonerRank(channel, userstate, message);
@@ -105,9 +109,20 @@ client.on('message', (channel, userstate, message, self) => {
     getTimeoutTime(channel)
   }
 
-  if (startsWith(message, '!stinkfight')) {
-    stinkFight(channel, userstate, message);
-    return;
+  if (startsWith(message, '!duel')) {
+    duel(channel, userstate, message);
+  }
+
+  if (startsWith(message, '!accept')) {
+    accept(channel, userstate, message);
+  }
+
+  if (startsWith(message, '!decline')) {
+    decline(channel, userstate, message);
+  }
+
+  if (startsWith(message, '!retract')) {
+    retract(channel, userstate, message);
   }
 
   if (startsWith(message, '!commands')) {
