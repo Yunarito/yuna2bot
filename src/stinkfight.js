@@ -23,17 +23,15 @@ export function stinkFight(channel, userstate, message) {
         if (stink1 < stink2) {
             client.say(channel, `@${userstate.username} (${stink1}%) wins the stink fight against ${args[1]} (${stink2}%)!`);
             timeout(channel, userstate.username, 300); // Timeout the user for 5 minutes
-            // client.timeout(channel, args[1], 300); // Timeout the user for 5 minutes
             client.say(channel, `@${args[1]} has been timed out for 5 minutes.`);
         } else if (stink1 > stink2) {
             client.say(channel, `${args[1]} (${stink2}%) wins the stink fight against @${userstate.username} (${stink1}%)!`);
             timeout(channel, args[1], 300); // Timeout the user for 5 minutes
-            // client.timeout(channel, userstate.username, 300); // Timeout the user for 5 minutes
             client.say(channel, `@${userstate.username} has been timed out for 5 minutes.`);
         } else {
             client.say(channel, `It's a tie! Both @${userstate.username} (${stink1}%) and ${args[1]} (${stink2}%) stink equally!`);
-            client.say(channel, `/timeout ${args[1]} 300`); // Timeout the user for 5 minutes
-            client.say(channel, `/timeout ${userstate.username} 300`); // Timeout the user for 5 minutes
+            timeout(channel, args[1], 300); // Timeout the user for 5 minutes
+            timeout(channel, userstate.username, 300); // Timeout the user for 5 minutes
             client.say(channel, `Both @${userstate.username} and ${args[1]} have been timed out for 5 minutes.`);
         }
     }
