@@ -31,6 +31,16 @@ Queue commands:
     - !disablequeue                                         --> Disabled the queue.
 
 
+Duel commands:
+
+    - !duel <name>                                          --> Starts a duel request.
+
+    - !accept                                               --> Accepts the duel.
+
+    - !decline                                              --> Declines the duel.
+    
+    - !retract                                              --> Retracts the duel.
+
 
 Timeout Timer commands:
 
