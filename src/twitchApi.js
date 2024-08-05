@@ -9,7 +9,7 @@ export async function timeout(channel, user, duration) {
 
     console.log(`User ID: ${userId} for ${user}`);
     console.log(`Broadcaster ID: ${broadcasterId}`);
-    console.log(`Moderator ID: ${moderatorId}`);
+    console.log(`Moderator ID: ${moderatorId} for ${BOT_USERNAME}`);
     
 
     const url = `https://api.twitch.tv/helix/moderation/bans?broadcaster_id=${broadcasterId}&moderator_id=${moderatorId}`;

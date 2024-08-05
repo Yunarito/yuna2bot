@@ -108,6 +108,7 @@ export function retract(channel, userstate, message) {
         return;
         }
     
+        clearTimeout(channelData.pendingDuels[opponent].timeout);
         delete initialize.channelsInfo[channel].pendingDuels[opponent];
         client.say(channel, `@${opponent}, your duel request has been retracted.`);
 }
