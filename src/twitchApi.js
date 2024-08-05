@@ -28,8 +28,6 @@ export async function timeout(channel, user, duration) {
     
         if (response.ok) {
         const responseData = await response.json();
-        console.log(`Successfully timed out user with ID ${userId} for ${duration} seconds.`);
-        console.log(responseData);
         } else {
         const errorData = await response.json();
         console.error(`Failed to timeout user: ${response.status} - ${response.statusText}`);
@@ -56,7 +54,6 @@ async function getUserId(username) {
       const data = await response.json();
       if (data.data.length > 0) {
         const userId = data.data[0].id;
-        console.log(`User ID for ${username}: ${userId}`);
         return userId;
       } else {
         console.log(`User ${username} not found.`);
