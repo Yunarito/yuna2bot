@@ -21,7 +21,7 @@ export function duel(channel, userstate, message) {
       return;
     }
   
-    channelData.pendingDuels[username] = opponent;
+    channelData.pendingDuels[username] = opponent.replace('@', '');
     client.say(channel, `@${opponent}, you have been challenged to a duel by @${username}! Type !accept to accept the challenge.`);
   }
 
@@ -48,7 +48,7 @@ export function accept(channel, userstate, message) {
     let stink1 = Math.floor(Math.random() * 100) + 1;
     let stink2 = Math.floor(Math.random() * 100) + 1;
     if (stink1 < stink2) {
-        client.say(channel, `@${challenger} (${stink1}%) wins the stink duel against ${username} (${stink2}%)!`);
+        client.say(channel, `@${challenger} (${stink1}%) wins the stink duel against @${username} (${stink2}%)!`);
         timeout(channel, username, 300); // Timeout the user for 5 minutes
         client.say(channel, `@${username} has been timed out for 5 minutes.`);
     } else if (stink1 > stink2) {
@@ -59,7 +59,7 @@ export function accept(channel, userstate, message) {
         client.say(channel, `It's a tie! Both @${challenger} (${stink1}%) and ${username} (${stink2}%) stink equally!`);
         timeout(channel, username, 300); // Timeout the user for 5 minutes
         timeout(channel, challenger, 300); // Timeout the user for 5 minutes
-        client.say(channel, `Both @${challenger} and ${username} have been timed out for 5 minutes.`);
+        client.say(channel, `Both @${challenger} and @${username} have been timed out for 5 minutes.`);
     }
 }
 
