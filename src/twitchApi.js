@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 import { BOT_USERNAME, CLIENT_ID, OAUTH_TOKEN, CHANNEL_NAME } from './constants';
 
-export async function timeout(channel, user, duration) {
+export async function timeout(user, channel, duration) {
     let userId = await getUserId(user.replace('#', ''));
     let broadcasterId = await getUserId(channel.replace('#', ''));
     let moderatorId = await getUserId(BOT_USERNAME);
