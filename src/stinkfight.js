@@ -64,19 +64,19 @@ export function accept(channel, userstate, message) {
     if (stink1 < stink2) {
       client.say(channel, `@${challenger} (${stink1}%) wins the stink duel against @${username} (${stink2}%)! o7`);
       timeout(username, channel, channelData.timeoutTime); // Timeout the user
-      updateUserStats(challenger, true);  // Update stats for winner
-      updateUserStats(username, false);   // Update stats for loser
+      updateUserStats(channel, challenger, true);  // Update stats for winner
+      updateUserStats(channel, username, false);   // Update stats for loser
     } else if (stink1 > stink2) {
       client.say(channel, `@${username} (${stink2}%) wins the stink duel against @${challenger} (${stink1}%)! o7`);
       timeout(challenger, channel, channelData.timeoutTime); // Timeout the user
-      updateUserStats(username, true);  // Update stats for winner
-      updateUserStats(challenger, false);   // Update stats for loser
+      updateUserStats(channel, username, true);  // Update stats for winner
+      updateUserStats(channel, challenger, false);   // Update stats for loser
     } else {
       client.say(channel, `It's a tie! Both @${challenger} (${stink1}%) and @${username} (${stink2}%) stink equally!`);
       timeout(username, channel, channelData.timeoutTime); // Timeout both users
       timeout(challenger, channel, channelData.timeoutTime);
-      updateUserStats(username, false);  // Update stats for tie
-      updateUserStats(challenger, false);
+      updateUserStats(channel, username, false);  // Update stats for tie
+      updateUserStats(channel, challenger, false);
       client.say(channel, `Both @${challenger} and @${username} are now in Timeout o7.`);
     }
 

@@ -45,50 +45,57 @@ function writeUserStats(stats) {
 }
 
 // Update win/loss record for a user
-function updateUserStats(username, isWinner) {
-  const stats = readUserStats();
-
-  // Ensure the user exists in the stats
-  if (!stats[username]) {
-    stats[username] = { wins: 0, losses: 0 };
+function updateUserStats(channel, username, isWinner) {
+    const stats = readUserStats();
+  
+    if (!stats[channel]) {
+      stats[channel] = {};
+    }
+  
+    if (!stats[channel][username]) {
+      stats[channel][username] = { wins: 0, losses: 0 };
+    }
+  
+    if (isWinner) {
+      stats[channel][username].wins += 1;
+    } else {
+      stats[channel][username].losses += 1;
+    }
+  
+    writeUserStats(stats);
   }
-
-  // Update the stats based on duel outcome
-  if (isWinner) {
-    stats[username].wins += 1;
-  } else {
-    stats[username].losses += 1;
-  }
-
-  // Write updated stats back to the file
-  writeUserStats(stats);
-}
 
 // Function to handle the stats command
-function stats(channel, userstate) {    
-  const username = userstate.username;
-  const stats = readUserStats();
-  const userStats = stats[username] || { wins: 0, losses: 0 };
+function stats(channel, userstate) {
+    const username = userstate.username;
+    const stats = readUserStats();
+    const userStats = (stats[channel] && stats[channel][username]) || { wins: 0, losses: 0 };
+  
+    client.say(channel, `@${username}, your duel stats: Wins: ${userStats.wins}, Losses: ${userStats.losses}`);
+}
 
-  client.say(channel, `@${username}, your duel stats: Wins: ${userStats.wins}, Losses: ${userStats.losses}`);
+function getLeaderboard(channel) {
+    const stats = readUserStats();
+    const channelStats = stats[channel] || {};
+  
+    const leaderboard = Object.entries(channelStats)
+      .map(([username, { wins, losses }]) => ({ username, wins, losses }))
+      .sort((a, b) => b.wins - a.wins || a.losses - b.losses)
+      .slice(0, 5); // Top 5
+  
+    return leaderboard;
 }
 
 function leaderboard(channel) {
-    const stats = readUserStats();
-  
-    // Convert stats object to an array and sort by wins
-    const sortedUsers = Object.entries(stats)
-      .sort(([, a], [, b]) => b.wins - a.wins)
-      .slice(0, 5); // Get top 5 users
-  
-    // Format the leaderboard message
-    let leaderboardMessage = 'Top 5 Duelers:';
-    sortedUsers.forEach(([username, userStats], index) => {
-      leaderboardMessage += `\n${index + 1}. ${username} - Wins: ${userStats.wins}, Losses: ${userStats.losses}`;
-    });
-  
-    client.say(channel, leaderboardMessage);
-  }
+    const topUsers = getLeaderboard(channel);
+    if (topUsers.length === 0) {
+      client.say(channel, `No leaderboard data available.`);
+    } else {
+      let leaderboardMessage = `Top 5 duelists: `;
+      leaderboardMessage += topUsers.map((user, index) => `${index + 1}. @${user.username} - Wins: ${user.wins}, Losses: ${user.losses}`).join(' | ');
+      client.say(channel, leaderboardMessage);
+    }
+}
 
 // Export functions using CommonJS
 module.exports = {
