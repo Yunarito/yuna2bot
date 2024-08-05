@@ -2,10 +2,15 @@ const fetch = require('node-fetch');
 import { BOT_USERNAME, CLIENT_ID, OAUTH_TOKEN, CHANNEL_NAME } from './constants';
 
 export async function timeout(channel, user, duration) {
-    let userId = await getUserId(user);
+    let userId = await getUserId(user.replace('#', ''));
     let broadcasterId = await getUserId(channel.replace('#', ''));
     let moderatorId = await getUserId(BOT_USERNAME);
 
+
+    console.log(`User ID: ${userId} for ${user}`);
+    console.log(`Broadcaster ID: ${broadcasterId}`);
+    console.log(`Moderator ID: ${moderatorId}`);
+    
 
     const url = `https://api.twitch.tv/helix/moderation/bans?broadcaster_id=${broadcasterId}&moderator_id=${moderatorId}`;
     const body = {
@@ -39,7 +44,7 @@ export async function timeout(channel, user, duration) {
 }
 
 async function getUserId(username) {
-  const url = `https://api.twitch.tv/helix/users?login=${username}`;
+  const url = `https://api.twitch.tv/helix/users?login=${username}`; 
 
   try {
     const response = await fetch(url, {
