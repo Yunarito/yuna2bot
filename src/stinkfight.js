@@ -5,10 +5,7 @@ import { timeout } from './twitchApi.js';
 export function duel(channel, userstate, message) {
     let command = message.trim().split(' ');
     let username = userstate.username;
-    if (command.length > 2) {
-      client.say(channel, `@${username}, please provide only one user to challenge.`);
-      return;
-    } else if (command.length < 2) {
+    if (command.length < 2) {
       client.say(channel, `@${username}, please provide a user to challenge.`);
       return;
     }
