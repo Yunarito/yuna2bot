@@ -43,19 +43,14 @@ export function accept(channel, userstate, message) {
       (key) => channelData.pendingDuels[key].opponent === username.toLowerCase()
     );
 
-    console.log(challenger);
-
     if (!challenger) {
       client.say(channel, `@${username}, you don't have any pending duel requests.`);
       return;
     }
-  
-    console.log(initialize.channelsInfo[channel].pendingDuels);
-    
+
     clearTimeout(channelData.pendingDuels[challenger].timeout);
     delete initialize.channelsInfo[channel].pendingDuels[challenger];
     
-    console.log(initialize.channelsInfo[channel].pendingDuels);
     client.say(channel, `@${challenger} and @${username}, the duel has begun!`);
   
     let stink1 = Math.floor(Math.random() * 100) + 1;
