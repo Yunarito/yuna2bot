@@ -1,5 +1,6 @@
 import tmi from 'tmi.js';
 import { BOT_USERNAME, OAUTH_TOKEN, CHANNEL_NAME, BLOCKED_WORDS, RIOT_API_TOKEN } from './constants';
+import initialize from './initialize';
 
 const {
   checkTwitchChat,
@@ -37,7 +38,10 @@ const {
   duelInfo,
 } = require('./stinkfight.js');
 
-import initialize from './initialize';
+const {
+  stats,
+  leaderboard
+} = require('./userStats.js');
 
 const options = {
   options: { debug: true },
@@ -128,6 +132,14 @@ client.on('message', (channel, userstate, message, self) => {
 
   if (startsWith(message, '!duelinfo')) {
     duelInfo(channel, userstate, message);
+  }
+
+  if(startsWith(message, '!duelstats')) {    
+    stats(channel, userstate);
+  }
+
+  if(startsWith(message, '!duelleaderboard')) {    
+    leaderboard(channel);
   }
 
   if (startsWith(message, '!commands')) {
