@@ -9,7 +9,7 @@ export function duel(channel, userstate, message) {
       client.say(channel, `@${username}, please provide only one user to challenge.`);
       return;
     }
-    const opponent = command[1].toLowerCase();
+    const opponent = command[1].replace('@', '').toLowerCase();
     if (opponent === username.toLowerCase()) {
       client.say(channel, `@${username}, you cannot duel yourself!`);
       return;
@@ -21,7 +21,7 @@ export function duel(channel, userstate, message) {
       return;
     }
   
-    channelData.pendingDuels[username] = opponent.replace('@', '');
+    channelData.pendingDuels[username] = opponent;
     client.say(channel, `@${opponent}, you have been challenged to a duel by @${username}! Type !accept to accept the challenge.`);
   }
 
