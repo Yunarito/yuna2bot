@@ -94,6 +94,7 @@ export function decline(channel, userstate, message) {
       return;
     }
 
+    clearTimeout(initialize.channelsInfo[channel].pendingDuels[challenger]);
     delete initialize.channelsInfo[channel].pendingDuels[challenger];
     client.say(channel, `@${challenger}, your duel request to @${username} has been declined.`);
 }
@@ -107,8 +108,8 @@ export function retract(channel, userstate, message) {
         client.say(channel, `@${username}, you don't have any pending duel requests.`);
         return;
         }
-    
-        clearTimeout(channelData.pendingDuels[opponent].timeout);
+  
+        clearTimeout(initialize.channelsInfo[channel].pendingDuels[opponent]);
         delete initialize.channelsInfo[channel].pendingDuels[opponent];
         client.say(channel, `@${opponent}, your duel request has been retracted.`);
 }
