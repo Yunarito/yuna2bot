@@ -8,6 +8,9 @@ export function duel(channel, userstate, message) {
     if (command.length > 2) {
       client.say(channel, `@${username}, please provide only one user to challenge.`);
       return;
+    } else if (command.length < 2) {
+      client.say(channel, `@${username}, please provide a user to challenge.`);
+      return;
     }
     const opponent = command[1].replace('@', '').toLowerCase();
     if (opponent === username.toLowerCase()) {
