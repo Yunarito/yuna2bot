@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
+import { log } from 'console';
 import client from './app.js';
 
 // Path to the JSON file that stores user statistics
@@ -68,10 +69,12 @@ function updateUserStats(channel, username, isWinner) {
 // Function to handle the stats command
 function stats(channel, userstate, message) {
     let command = message.trim().split(' ');
-    if(command.length < 2) {
-      const username = command[1].replace('@', '').toLowerCase();
+    console.log(command);
+    let username;
+    if(command.length > 1) {
+      username = command[1].replace('@', '').toLowerCase();
     } else {
-      const username = userstate.username;
+      username = userstate.username;
     }
     const stats = readUserStats();
     const userStats = (stats[channel] && stats[channel][username]) || { wins: 0, losses: 0 };
