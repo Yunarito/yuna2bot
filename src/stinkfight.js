@@ -116,5 +116,5 @@ export function retract(channel, userstate, message) {
 
 export function duelInfo(channel, userstate, message) {
     let username = userstate.username;
-    client.say(channel, `@${username}, the available duel commands are: !duel <username>, !accept, !decline, !retract`);
+    client.say(channel, `@${username}, the available duel commands are: !duel <username>, !accept, !decline, !retract, !duelinfo, !duelstats, !duelleaderboard`);
 }
