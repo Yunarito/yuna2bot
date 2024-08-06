@@ -25,7 +25,8 @@ export function duel(channel, userstate, message) {
     }
     
     channelData.pendingDuels[username] = { opponent, timeout: null };
-    client.say(channel, `@${opponent}, you have been challenged to a duel by @${username}! Type !accept to accept the challenge.`);
+    client.say(channel, `@${opponent}, you have been challenged to a duel by @${username}! 
+      Type !accept to accept the challenge. Loser will be 5 mintes in Timeout .`);
   
     channelData.pendingDuels[username].timeout = setTimeout(() => {
       client.say(channel, `@${username}, your duel request to @${opponent} has expired.`);
