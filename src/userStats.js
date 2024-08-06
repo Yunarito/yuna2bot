@@ -68,7 +68,8 @@ function updateUserStats(channel, username, isWinner) {
 // Function to handle the stats command
 function stats(channel, userstate, message) {
     let command = message.trim().split(' ');
-    const username = command.length < 2 ? userstate.username : command[1].tolowerCase().replace('@', '');
+    let yes = command[1].replace('@', '').toLowerCase();
+    const username = command.length < 2 ? userstate.username : yes;
     const stats = readUserStats();
     const userStats = (stats[channel] && stats[channel][username]) || { wins: 0, losses: 0 };
   
