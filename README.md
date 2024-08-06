@@ -43,6 +43,10 @@ Duel commands:
 
     - !duelinfo                                             --> Gives info of the duel commands.
 
+    - !duelstats                                            --> Gives your duelstats.
+
+    - !duelleaderboard                                      --> Gives the current top 5 duelists.
+
 
 Timeout Timer commands:
 
