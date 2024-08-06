@@ -71,7 +71,7 @@ function stats(channel, userstate) {
     const stats = readUserStats();
     const userStats = (stats[channel] && stats[channel][username]) || { wins: 0, losses: 0 };
   
-    client.say(channel, `@${username}, your duel stats: Wins: ${userStats.wins}, Losses: ${userStats.losses}`);
+    client.say(channel, `@${username}, your duel stats: Wins: ${userStats.wins}, Losses: ${userStats.losses} (${(userStats.wins / (userStats.wins + userStats.losses) * 100).toFixed(2)}%)`);
 }
 
 function getLeaderboard(channel) {
