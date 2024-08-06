@@ -92,7 +92,7 @@ function leaderboard(channel) {
       client.say(channel, `No leaderboard data available.`);
     } else {
       let leaderboardMessage = `Top 5 duelists: `;
-      leaderboardMessage += topUsers.map((user, index) => `${index + 1}. @${user.username} - Wins: ${user.wins}, Losses: ${user.losses}`).join(' | ');
+      leaderboardMessage += topUsers.map((user, index) => `${index + 1}. @${user.username} - [${user.wins}:${user.losses}]`).join(' | ');
       client.say(channel, leaderboardMessage);
     }
 }
