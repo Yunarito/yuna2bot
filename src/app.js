@@ -135,7 +135,7 @@ client.on('message', (channel, userstate, message, self) => {
   }
 
   if(startsWith(message, '!duelstats')) {    
-    stats(channel, userstate);
+    stats(channel, userstate, message);
   }
 
   if(startsWith(message, '!duelleaderboard')) {    
