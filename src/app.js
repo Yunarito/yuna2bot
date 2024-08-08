@@ -36,6 +36,8 @@ const {
   decline,
   retract,
   duelInfo,
+  groupDuel,
+  acceptGroupDuel
 } = require('./stinkfight.js');
 
 const {
@@ -73,10 +75,12 @@ client.on('message', (channel, userstate, message, self) => {
   initialize.initializeChannel(channel);
   
 
-  // if (userstate.username === BOT_USERNAME) {
-  //   console.log(`Not checking bot's messages.`);
-  //   return;
-  // }
+  if (userstate.username === BOT_USERNAME) {
+    console.log(`Not checking bot's messages.`);
+    return;
+  }
+
+  // League commands:
 
   if (startsWith(message, '!rank') || startsWith(message, '!elo')) {
     getSummonerRank(channel, userstate, message);
@@ -98,6 +102,8 @@ client.on('message', (channel, userstate, message, self) => {
     return;
   }
 
+  // Queue commands:
+
   if (startsWith(message, '!join') && initialize.channelsInfo[channel].enabled) {
     joinQueue(channel, userstate);
   }
@@ -114,12 +120,22 @@ client.on('message', (channel, userstate, message, self) => {
     getTimeoutTime(channel)
   }
 
+  // Duel commands:
+
   if (startsWith(message, '!duel')) {
     duel(channel, userstate, message);
   }
 
+  if (startsWith(message, '!moshpit')) {
+    groupDuel(channel, userstate, message);
+  }
+
   if (startsWith(message, '!accept')) {
     accept(channel, userstate, message);
+  }
+
+  if (startsWith(message, '!acceptmoshpit')) {
+    acceptGroupDuel(channel, userstate, message);
   }
 
   if (startsWith(message, '!decline')) {
