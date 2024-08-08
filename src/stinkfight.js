@@ -122,7 +122,7 @@ export function duelInfo(channel, userstate, message) {
     client.say(channel, `@${username}, the available duel commands are: !duel <username>, !accept, !decline, !retract, !duelinfo, !duelstats, !duelleaderboard`);
 }
 
-export function groupduel(channel, userstate, message) {
+export function groupDuel(channel, userstate, message) {
   const command = message.trim().split(' ');
   const username = userstate.username;
 
