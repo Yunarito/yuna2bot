@@ -79,7 +79,7 @@ function stats(channel, userstate, message) {
     const stats = readUserStats();
     const userStats = (stats[channel] && stats[channel][username]) || { wins: 0, losses: 0 };
   
-    client.say(channel, `@${username}, your duel stats: Wins: ${userStats.wins}, Losses: ${userStats.losses} (${(userStats.wins / (userStats.wins + userStats.losses) * 100).toFixed(2)}%)`);
+    client.say(channel, `@${username}, deine Duellstats: Wins: ${userStats.wins}, Losses: ${userStats.losses} (${(userStats.wins / (userStats.wins + userStats.losses) * 100).toFixed(2)}%)`);
 }
 
 function getLeaderboard(channel) {
@@ -97,9 +97,9 @@ function getLeaderboard(channel) {
 function leaderboard(channel) {
     const topUsers = getLeaderboard(channel);
     if (topUsers.length === 0) {
-      client.say(channel, `No leaderboard data available.`);
+      client.say(channel, `Kein Bestenliste vorhanden.`);
     } else {
-      let leaderboardMessage = `Top 5 duelists: `;
+      let leaderboardMessage = `Top 5 Duelisten: `;
       leaderboardMessage += topUsers.map((user, index) => `${index + 1}. @${user.username} - [${user.wins}:${user.losses}]`).join(' | ');
       client.say(channel, leaderboardMessage);
     }

@@ -3,7 +3,7 @@ import client from './app.js';
 import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
 
   export async function getSummonerData(channel, summonerName) {
-    client.say(channel, 'Please only use Summoner with Tagline like "Yunarito#69420".');
+    client.say(channel, 'Bitte schreibe nutze RiotID wie "Yunarito#69420".');
     return null;
     const apiKey = RIOT_API_TOKEN; // Replace with your League of Legends API key
     const apiUrl = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`
@@ -45,7 +45,7 @@ import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
     shouldSendMessage = BLOCKED_WORDS.some(blockedWord => message.includes(blockedWord.toLowerCase()))
     if (shouldSendMessage) {
       // tell user
-      client.say(channel, `@${userstate.username}, sorry!  You message was deleted.`)
+      client.say(channel, `@${userstate.username}, sorry!  Deine Nachricht wurde gelöscht.`)
       // delete message
       client.deletemessage(channel, userstate.id)
     }
@@ -92,7 +92,6 @@ import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
     }
   }
   
-  
   export async function getSummonerDataTagline(channel, name){
     if(name.includes('smolcatzzi') || name.includes('smolercatzzi') || name.includes('smolestcatzzi')) return;
     const apiKey = RIOT_API_TOKEN;
@@ -109,7 +108,7 @@ import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
     });
   
     if (!response.ok) {
-      client.say(channel, `Account not found`);
+      client.say(channel, `Account nicht gefunden`);
       throw new Error('Account not found');
       return;
     }
@@ -126,7 +125,7 @@ import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
     });
   
     if (!summonerResponse.ok) {
-      client.say(channel, `Account has no league summoner`);
+      client.say(channel, `Der Account ist kein League-Summoner`);
       throw new Error('Account has no league summoner');
       return;
     }
@@ -149,7 +148,7 @@ import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
     });
   
     if (!response.ok) {
-      client.say(channel, `Account not found`);
+      client.say(channel, `Account nicht gefunden`);
       // throw new Error('Account not found');
       return;
     }
@@ -170,7 +169,7 @@ import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
   
       if (!rankResponse.ok) {
         console.log(rankResponse);
-        client.say(channel, `Unable to fetch summoner rank data`);
+        client.say(channel, `Datenziehung des Accounts nicht möglich`);
         // throw new Error('Unable to fetch summoner rank data');
         return;
       }
@@ -223,7 +222,7 @@ import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
     });
   
     if (!matchData.ok) {
-      client.say(channel, `Summoner not ingame`);
+      client.say(channel, `Spieler ist nicht in einem Spiel`);
       // throw new Error('Unable to fetch summoner live match data');
       return;
     }

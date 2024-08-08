@@ -33,7 +33,7 @@ Queue commands:
 
 Duel commands:
 
-    - !duel <name>                                          --> Starts a duel request.
+    - !duell <name>                                          --> Starts a duel request.
 
     - !accept                                               --> Accepts the duel.
 
@@ -42,6 +42,16 @@ Duel commands:
     - !retract                                              --> Retracts the duel.
 
     - !duelinfo                                             --> Gives info of the duel commands.
+
+    - !moshpit <name> <name>                                --> Starts a group duel request.
+
+    - !acceptmoshpit                                        --> Accepts the group duel.
+
+    - !declinemoshpit                                       --> Declines the group duel.
+
+    - !openfight                                            --> Opens a fight for anyone to join.
+
+    - !joinfight                                            --> Joins the fight
 
     - !duelstats                                            --> Gives your duelstats.
 

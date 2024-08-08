@@ -37,7 +37,10 @@ const {
   retract,
   duelInfo,
   groupDuel,
-  acceptGroupDuel
+  acceptGroupDuel,
+  declineGroupDuel,
+  openContest,
+  joinContest
 } = require('./stinkfight.js');
 
 const {
@@ -122,40 +125,52 @@ client.on('message', (channel, userstate, message, self) => {
 
   // Duel commands:
 
-  if (startsWith(message, '!duel')) {
+  if (startsWith(message, '!duell')) {
     duel(channel, userstate, message);
-  }
-
-  if (startsWith(message, '!moshpit')) {
-    groupDuel(channel, userstate, message);
   }
 
   if (startsWith(message, '!accept')) {
     accept(channel, userstate, message);
   }
 
+  if (startsWith(message, '!decline')) {
+    decline(channel, userstate, message);
+  }
+
+  if (startsWith(message, '!moshpit')) {
+    groupDuel(channel, userstate, message);
+  }
+
   if (startsWith(message, '!acceptmoshpit')) {
     acceptGroupDuel(channel, userstate, message);
   }
 
-  if (startsWith(message, '!decline')) {
-    decline(channel, userstate, message);
+  if (startsWith(message, '!declinemoshpit')) {
+    declineGroupDuel(channel, userstate, message);
   }
 
   if (startsWith(message, '!retract')) {
     retract(channel, userstate, message);
   }
 
-  if (startsWith(message, '!duelinfo')) {
+  if (startsWith(message, '!duellinfo')) {
     duelInfo(channel, userstate, message);
   }
 
-  if(startsWith(message, '!duelstats')) {    
+  if(startsWith(message, '!duellstats')) {    
     stats(channel, userstate, message);
   }
 
-  if(startsWith(message, '!duelleaderboard')) {    
+  if(startsWith(message, '!duellboard')) {    
     leaderboard(channel);
+  }
+
+  if (startsWith(message, '!openfight')) {
+    openContest(channel, userstate, message);
+  }
+
+  if (startsWith(message, '!joinfight')) {
+    joinContest(channel, userstate, message);
   }
 
   if (startsWith(message, '!commands')) {
