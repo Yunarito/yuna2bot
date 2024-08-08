@@ -150,17 +150,18 @@ export function groupDuel(channel, userstate, message) {
   }
 
   channelData.pendingDuels[username] = {
-      opponents: [username, ...opponents],
+      opponents: [...opponents],
       accepted: new Set(),
       timeout: null
   };
 
-  client.say(channel, `@${opponents.join(', @')}, you have been invited to a group duel by @${username}! Type !accept to join. All except the lowest score will be timed out for 5 minutes.`);
+  client.say(channel, `@${opponents.join(', @')}, you have been invited to a group duel by @${username}! 
+  Type !acceptmoshpit to join. All except the lowest score will be timed out for 5 minutes.`);
 
   channelData.pendingDuels[username].timeout = setTimeout(() => {
       client.say(channel, `@${username}, your group duel request to ${opponents.join(', ')} has expired.`);
       delete channelData.pendingDuels[username];
-  }, 60000); // 60 seconds
+  }, 120000); // 120 seconds
 }
 
 
@@ -190,6 +191,7 @@ export function acceptGroupDuel(channel, userstate, message) {
 }
 
 function startGroupDuel(channel, participants) {
+  const channelData = initialize.channelsInfo[channel];
   const scores = participants.map(participant => ({
       name: participant,
       score: Math.floor(Math.random() * 100) + 1
