@@ -26,7 +26,7 @@ export function duel(channel, userstate, message) {
     
     channelData.pendingDuels[username] = { opponent, timeout: null };
     client.say(channel, `@${opponent}, du wurdest von @${username} zu einem Duell herausgefordert! 
-      Schreibe !accept um anzunehmen! Verlierer ist 5 minute im Timeout .`);
+      Schreibe !accept um anzunehmen! Verlierer ist 5 minuten im Timeout`);
   
     channelData.pendingDuels[username].timeout = setTimeout(() => {
       client.say(channel, `@${username}, deine Duellanfrage an @${opponent} is abgelaufen. SadCat`);
