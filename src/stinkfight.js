@@ -122,17 +122,17 @@ export function duelInfo(channel, userstate, message) {
     client.say(channel, `@${username}, the available duel commands are: !duel <username>, !accept, !decline, !retract, !duelinfo, !duelstats, !duelleaderboard`);
 }
 
-export function groupDuel(channel, userstate, message) {
+export function groupduel(channel, userstate, message) {
   const command = message.trim().split(' ');
   const username = userstate.username;
 
-  if (command.length < 2) { // Must include the command, challenger, and at least one opponent
+  if (command.length < 3) {
       client.say(channel, `@${username}, please provide at least one user to challenge for a group duel.`);
       return;
   }
 
   const opponents = command.slice(1).map(opponent => opponent.replace('@', '').toLowerCase());
-  
+
   if (opponents.includes(username.toLowerCase())) {
       client.say(channel, `@${username}, you cannot include yourself in the opponent list!`);
       return;
@@ -149,11 +149,13 @@ export function groupDuel(channel, userstate, message) {
       return;
   }
 
-  channelData.pendingDuels[username] = { opponents, timeout: null };
-  const allParticipants = [username, ...opponents];
+  channelData.pendingDuels[username] = {
+      opponents: [username, ...opponents],
+      accepted: new Set(),
+      timeout: null
+  };
 
-  client.say(channel, `@${allParticipants.join(', @')}, you have been invited to a group duel by @${username}! 
-    Type !acceptmoshpit to accept the challenge. All participants except the winner will be timed out for 5 minutes.`);
+  client.say(channel, `@${opponents.join(', @')}, you have been invited to a group duel by @${username}! Type !accept to join. All except the lowest score will be timed out for 5 minutes.`);
 
   channelData.pendingDuels[username].timeout = setTimeout(() => {
       client.say(channel, `@${username}, your group duel request to ${opponents.join(', ')} has expired.`);
@@ -161,13 +163,13 @@ export function groupDuel(channel, userstate, message) {
   }, 60000); // 60 seconds
 }
 
+
 export function acceptGroupDuel(channel, userstate, message) {
   const username = userstate.username;
   const channelData = initialize.channelsInfo[channel];
 
-  // Find the duel where the user is an opponent
   const challenger = Object.keys(channelData.pendingDuels).find(
-      (key) => channelData.pendingDuels[key].opponents.includes(username.toLowerCase())
+      key => channelData.pendingDuels[key].opponents.includes(username.toLowerCase())
   );
 
   if (!challenger) {
@@ -175,30 +177,40 @@ export function acceptGroupDuel(channel, userstate, message) {
       return;
   }
 
-  // Accepting and starting the duel
-  clearTimeout(channelData.pendingDuels[challenger].timeout);
-  const allParticipants = [challenger, ...channelData.pendingDuels[challenger].opponents];
-  delete channelData.pendingDuels[challenger];
+  const duel = channelData.pendingDuels[challenger];
+  duel.accepted.add(username.toLowerCase());
 
-  client.say(channel, `@${allParticipants.join(', @')}, the group duel has begun!`);
-
-  // Determine the winner
-  const scores = allParticipants.map(participant => ({
-      name: participant,
-      score: Math.floor(Math.random() * 100) + 1
-  }));
-
-  scores.sort((a, b) => b.score - a.score); // Sort in descending order by score
-  const winner = scores[0];
-
-  // Announce results and apply timeouts
-  client.say(channel, `@${winner.name} wins the group duel with a score of ${winner.score}%!`);
-
-  scores.slice(1).forEach(loser => {
-      client.say(channel, `@${loser.name} (${loser.score}%) loses the duel and will be timed out.`);
-      timeout(loser.name, channel, channelData.timeoutTime); // Timeout losers
-      updateUserStats(channel, loser.name, false);  // Update stats for losers
-  });
-
-  updateUserStats(channel, winner.name, true);  // Update stats for the winner
+  if (duel.accepted.size === duel.opponents.length) {
+      clearTimeout(duel.timeout);
+      delete channelData.pendingDuels[challenger];
+      startGroupDuel(channel, duel.opponents);
+  } else {
+      client.say(channel, `@${username} has accepted the duel. Waiting for others to accept.`);
+  }
 }
+
+export function acceptGroupDuel(channel, userstate, message) {
+  const username = userstate.username;
+  const channelData = initialize.channelsInfo[channel];
+
+  const challenger = Object.keys(channelData.pendingDuels).find(
+      key => channelData.pendingDuels[key].opponents.includes(username.toLowerCase())
+  );
+
+  if (!challenger) {
+      client.say(channel, `@${username}, you don't have any pending group duel requests.`);
+      return;
+  }
+
+  const duel = channelData.pendingDuels[challenger];
+  duel.accepted.add(username.toLowerCase());
+
+  if (duel.accepted.size === duel.opponents.length) {
+      clearTimeout(duel.timeout);
+      delete channelData.pendingDuels[challenger];
+      startGroupDuel(channel, duel.opponents);
+  } else {
+      client.say(channel, `@${username} has accepted the duel. Waiting for others to accept.`);
+  }
+}
+
