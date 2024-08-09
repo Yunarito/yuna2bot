@@ -325,9 +325,7 @@ import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
   export function getNameMapping(username) {
     const nameMappings = {
       'chris5560': 'Nathaniel Flint#Scrin',
-      'pluffuff': 'Pluffuff#EUW',
       'amaar270': 'PvB Ekoko#Haku',
-      'yuuukix3': 'xYukix#EUW',
       'callme_chilli': 'Chilli#2680',
       'catzzi': 'catzzi#euw',
       'yunarito': 'Yunarito#69420',
