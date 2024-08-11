@@ -68,7 +68,7 @@ export function accept(channel, userstate, message) {
       updateUserStats(channel, username, true);  // Update stats for winner
       updateUserStats(channel, challenger, false);   // Update stats for loser
     } else {
-      client.say(channel, `Unentschieden! @${challenger} (${stink1}%) und @${username} (${stink2}%) stink gleich stark! Smelly`);
+      client.say(channel, `Unentschieden! @${challenger} (${stink1}%) und @${username} (${stink2}%) stinken gleich stark! Smelly`);
       timeout(username, channel, channelData.timeoutTime); // Timeout both users
       timeout(challenger, channel, channelData.timeoutTime);
       updateUserStats(channel, username, false);  // Update stats for tie
