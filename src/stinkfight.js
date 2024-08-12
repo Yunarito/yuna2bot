@@ -27,7 +27,7 @@ export function duel(channel, userstate, message) {
     channelData.pendingDuels[username] = { opponent, timeout: null };
     client.say(channel, `@${opponent}, du wurdest von @${username} zu einem Duell herausgefordert! 
       Schreibe !accept um anzunehmen! Verlierer ist 5 minuten im Timeout`);
-  
+
     channelData.pendingDuels[username].timeout = setTimeout(() => {
       client.say(channel, `@${username}, deine Duellanfrage an @${opponent} is abgelaufen. SadCat`);
       delete channelData.pendingDuels[username];
@@ -82,7 +82,7 @@ export function decline(channel, userstate, message) {
     
     let username = userstate.username;
 
-    const challenger = Object.keys(initialize.channelsInfo[channel].pendingDuels).find(key => initialize.channelsInfo[channel].pendingDuels[key] === username.toLowerCase());
+    const challenger = Object.keys(initialize.channelsInfo[channel].pendingDuels).find(key => initialize.channelsInfo[channel].pendingDuels[key].opponent === username.toLowerCase());
 
     if (!challenger) {
       client.say(channel, `@${username}, du hast keine ausstehenden Duellanfragen.`);
@@ -90,7 +90,8 @@ export function decline(channel, userstate, message) {
     }
 
     const challengerIndex = initialize.channelsInfo[channel].pendingDuels[challenger];
-    if (challengerIndex !== username.toLowerCase()) {
+
+    if (challengerIndex.opponent !== username.toLowerCase()) {
       client.say(channel, `@${username}, du kannst keine Duellanfrage ablehnen, die du nie erhalten hast KEKW`);
       return;
     }
