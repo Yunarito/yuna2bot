@@ -3,7 +3,7 @@ import client from './app.js';
 import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
 
   export async function getSummonerData(channel, summonerName) {
-    client.say(channel, 'Bitte schreibe nutze RiotID wie "Yunarito#69420".');
+    client.say(channel, 'Bitte nutze RiotID wie "Yunarito#69420".');
     return null;
     const apiKey = RIOT_API_TOKEN; // Replace with your League of Legends API key
     const apiUrl = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`
