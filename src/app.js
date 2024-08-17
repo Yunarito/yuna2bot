@@ -5,6 +5,7 @@ import initialize from './initialize';
 const {
   checkTwitchChat,
   startsWith,
+  twentyFour
 } = require('./helper.js');
 
 const {
@@ -171,7 +172,11 @@ client.on('message', (channel, userstate, message, self) => {
 
     if (startsWith(message, '!joinfight')) {
       joinContest(channel, userstate, message);
-    } 
+    }
+    
+    if (startsWith(message, '!24')) {
+      twentyFour(channel);
+    }
   }
 
   if (startsWith(message, '!commands')) {

@@ -2,6 +2,10 @@ import fetch from 'node-fetch';
 import client from './app.js';
 import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
 
+  export function twentyFour(channel) {
+    client.say(channel, `Heute gibts einen 24 Stunden Stream mit: League, Winchallenge, MURMELN!!!!, hausgemachten Keksen und eventuell mehr. Dreht das Scamrad!!!`);
+  }
+
   export async function getSummonerData(channel, summonerName) {
     client.say(channel, 'Bitte nutze RiotID wie "Yunarito#69420".');
     return null;
