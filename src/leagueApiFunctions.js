@@ -151,6 +151,22 @@ export async function getLastGameData(channel, userstate, message) {
       
         const participantId = participants.find(participant => participant.puuid === summonerId)
 
+        let idToMode = {
+          400 : 'Normal 5v5 Draft Pick',
+          420 : 'Ranked Solo/Duo',
+          430 : 'Normal 5v5 Blind Pick',
+          440 : 'Ranked Flex',
+          450 : 'ARAM',
+          700 : 'Clash',
+          830 : 'Co-op vs. AI Intermediate Bot',
+          840 : 'Co-op vs. AI Intro Bot',
+          850 : 'Co-op vs. AI Beginner Bot',
+          900 : 'URF',
+          920 : 'ARURF',
+          1020 : 'One for All',
+          1300 : 'Nexus Blitz',
+        };
+
         const kda = `${participantId.kills}/${participantId.deaths}/${participantId.assists}`;
         const csPerMinute = ((participantId.totalMinionsKilled + participantId.totalEnemyJungleMinionsKilled + participantId.totalAllyJungleMinionsKilled) / (matchData.info.gameDuration / 60)).toFixed(2);
         const goldPerMinute = (participantId.goldEarned / (matchData.info.gameDuration / 60)).toFixed(2);
@@ -160,11 +176,14 @@ export async function getLastGameData(channel, userstate, message) {
         const hours = Math.floor(matchData.info.gameDuration / 60);
         const minutes = matchData.info.gameDuration % 60;
         const date = new Date(matchData.info.gameCreation);
+        const matchType = idToMode[matchData.info.queueId];
+        console.log(matchData.info);
+        
         
         client.say(channel, `${summonerName}: ${championId} 
         | KDA: ${kda} | CS/Min: ${csPerMinute} | Gold/Min: ${goldPerMinute} 
         | Schaden an Champs: ${totalDamageDealtToChampions} 
-        | ${win} | Dauer: ${hours}:${minutes} | Datum: ${date.toLocaleDateString('de-DE', {year: 'numeric', month: '2-digit', day:'2-digit'})}`);
+        | ${win} | Dauer: ${hours}:${minutes} | Datum: ${date.toLocaleDateString('de-DE', {year: 'numeric', month: '2-digit', day:'2-digit'})} | ${matchType}`) ;
       } else {
         client.say(channel, `${summonerName} has no recent games.`);
       }
