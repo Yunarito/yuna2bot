@@ -152,9 +152,9 @@ export async function getLastGameData(channel, userstate, message) {
         const participantId = participants.find(participant => participant.puuid === summonerId)
 
         let idToMode = {
-          400 : 'Normal 5v5 Draft Pick',
+          400 : 'Normal Draft Pick',
           420 : 'Ranked Solo/Duo',
-          430 : 'Normal 5v5 Blind Pick',
+          430 : 'Normal Blind Pick',
           440 : 'Ranked Flex',
           450 : 'ARAM',
           700 : 'Clash',
@@ -177,13 +177,11 @@ export async function getLastGameData(channel, userstate, message) {
         const minutes = matchData.info.gameDuration % 60;
         const date = new Date(matchData.info.gameCreation);
         const matchType = idToMode[matchData.info.queueId];
-        console.log(matchData.info);
+
+        let lgString = `${summonerName}: ${date.toLocaleDateString('de-DE', {year: 'numeric', month: '2-digit', day:'2-digit'})} | ${matchType} |  ${win} | ${hours}:${("000" + minutes).slice(-2)} |
+         ${championId} | KDA: ${kda} | CS/Min: ${csPerMinute} | Gold/Min: ${goldPerMinute} | Schaden: ${totalDamageDealtToChampions}`
         
-        
-        client.say(channel, `${summonerName}: ${championId} 
-        | KDA: ${kda} | CS/Min: ${csPerMinute} | Gold/Min: ${goldPerMinute} 
-        | Schaden an Champs: ${totalDamageDealtToChampions} 
-        | ${win} | Dauer: ${hours}:${minutes} | Datum: ${date.toLocaleDateString('de-DE', {year: 'numeric', month: '2-digit', day:'2-digit'})} | ${matchType}`) ;
+        client.say(channel, `${lgString}`) ;
       } else {
         client.say(channel, `${summonerName} has no recent games.`);
       }
