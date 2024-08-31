@@ -87,7 +87,11 @@ client.on('message', (channel, userstate, message, self) => {
   // League commands:
 
   if (startsWith(message, '!rank') || startsWith(message, '!elo')) {
-    getSummonerRank(channel, userstate, message);
+    if(channel === '#catzzi' && message.includes('mods')) {
+      getSummonerRank(channel, userstate, "!rank Yunarito#69420,Leaveless#GGA,scremmys#6969");
+    } else { 
+      getSummonerRank(channel, userstate, message);
+    }
     return;
   }
 
