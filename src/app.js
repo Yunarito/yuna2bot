@@ -84,6 +84,16 @@ client.on('message', (channel, userstate, message, self) => {
     return;
   }
 
+  if (userstate.username === "streamlabs") {
+    const regex = /€(\d+(?:\.\d{1,2})?)/;
+    const match = message.match(regex);
+
+    if (match) {
+      let amount = match[1];
+    }
+    return;
+  }  
+
   // League commands:
 
   if (startsWith(message, '!rank') || startsWith(message, '!elo')) {
@@ -222,6 +232,19 @@ client.on('message', (channel, userstate, message, self) => {
 function onMessageHandler(channel, userstate, message) {
   checkTwitchChat(userstate, message, channel);
 }
+
+client.on('subgift', (channel, username, streakMonths, recipient, methods, userstate) => {
+  console.log(channel, username, streakMonths, recipient, methods, userstate)
+})
+client.on('resub', (channel, username, months, message, userstate, methods) => {
+  console.log(channel, username, months, message, userstate, methods)
+})
+client.on('cheer', (channel, userstate, message) => {
+  console.log(channel, userstate, message)
+})
+client.on('subscription', (channel, username, method, message, userstate) => {
+  console.log(channel, username, method, message, userstate)
+})
 
 // commands
 
