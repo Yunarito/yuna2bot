@@ -148,6 +148,8 @@ function readSubathonData() {
   ensureSubathonFileExists();
   try {
     const data = fs.readFileSync(subathonFilePath, 'utf8');
+    console.log(data);
+    
     return JSON.parse(data);
   } catch (err) {
     console.error('Error reading subathon file:', err);

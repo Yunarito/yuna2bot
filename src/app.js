@@ -194,20 +194,20 @@ client.on('message', (channel, userstate, message, self) => {
     }
     
     if (startsWith(message, '!24')) {
-      twentyFour(channel);
+      // twentyFour(channel);
     }
 
     //subathon commands
 
     if (startsWith(message, '!subathon')) {
-      twentyFour(channel);
+      // twentyFour(channel);
     }
 
     if (startsWith(message, '!myPoints')) {
       getChannelPoints(channel, userstate.username);
     }
 
-    if (startsWith(message, '!totalPoints')) {
+    if (startsWith(message, '!totalpoints')) {
       getChannelTotalPoints(channel);
     }
 
