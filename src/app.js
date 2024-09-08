@@ -55,7 +55,9 @@ const {
   subGiftHandler,
   subHandler,
   resubHandler,
-  donationHandler
+  donationHandler,
+  getChannelPoints,
+  getChannelTotalPoints
 } = require('./subathonCounter.js');
 
 const options = {
@@ -194,6 +196,21 @@ client.on('message', (channel, userstate, message, self) => {
     if (startsWith(message, '!24')) {
       twentyFour(channel);
     }
+
+    //subathon commands
+
+    if (startsWith(message, '!subathon')) {
+      twentyFour(channel);
+    }
+
+    if (startsWith(message, '!myPoints')) {
+      getChannelPoints(channel, userstate.username);
+    }
+
+    if (startsWith(message, '!totalPoints')) {
+      getChannelTotalPoints(channel);
+    }
+
   }
 
   if (startsWith(message, '!commands')) {

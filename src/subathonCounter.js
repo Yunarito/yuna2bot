@@ -85,3 +85,15 @@ export function resubHandler(channel, user, method) {
 
     addSubathonPoints(channel, user, points);
 }
+
+export function getChannelPoints(channel, username) {
+    const subathonData = readSubathonData();
+    let points = subathonData[channel][username].points;
+    client.say(channel, `@${username}, du hast ${points} Punkte zum Subatahon beigetragen.`);
+}
+
+export function getChannelTotalPoints(channel) {
+    const subathonData = readSubathonData();
+    let points = subathonData[channel].points;
+    client.say(channel, `Der aktuelle Subathon hat ${points} Punkte.`);
+}
