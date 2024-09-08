@@ -127,10 +127,7 @@ function addSubathonPoints(channel, username, points) {
   const subathonData = readSubathonData();
   if (!subathonData[channel]) {
     subathonData[channel] = {
-      points: 0,
-      [username]: {
-        points: 0,
-      }
+      points: 0
     };
   } else if (!subathonData[channel][username]) {
     subathonData[channel][username] = {
