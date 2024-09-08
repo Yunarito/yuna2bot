@@ -203,7 +203,7 @@ client.on('message', (channel, userstate, message, self) => {
       // twentyFour(channel);
     }
 
-    if (startsWith(message, '!myPoints')) {
+    if (startsWith(message, '!mypoints')) {
       getChannelPoints(channel, userstate.username);
     }
 

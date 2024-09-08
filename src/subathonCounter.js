@@ -4,7 +4,8 @@ const {
     addSubathonPoints, 
     addUserPoints, 
     readSubathonData, 
-    getPointTable 
+    getPointTable,
+    writeSubathonData
 } = require('./userStats.js');
 
 export function donationHandler(channel, message) {
@@ -88,12 +89,36 @@ export function resubHandler(channel, user, method) {
 
 export function getChannelPoints(channel, username) {
     const subathonData = readSubathonData();
+    
+    if (!subathonData[channel]) {
+        subathonData[channel] = {
+        points: 0,
+        };
+    }
+
+    if (!subathonData[channel][username]) {
+        subathonData[channel][username] = {
+            points: 0,
+            };
+    }
+
+    writeSubathonData(subathonData);
+
     let points = subathonData[channel][username].points;
     client.say(channel, `@${username}, du hast ${points} Punkte zum Subatahon beigetragen.`);
 }
 
 export function getChannelTotalPoints(channel) {
     const subathonData = readSubathonData();
+    
+    if (!subathonData[channel]) {
+        subathonData[channel] = {
+        points: 0,
+        };
+    }
+    
+    writeSubathonData(subathonData);
+
     let points = subathonData[channel].points;
     client.say(channel, `Der aktuelle Subathon hat ${points} Punkte.`);
 }
