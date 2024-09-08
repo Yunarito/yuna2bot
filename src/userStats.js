@@ -1,12 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 
-import { log } from 'console';
 import client from './app.js';
 
 // Path to the JSON file that stores user statistics
 const statsDir = path.join(__dirname, 'json', 'userStats');
 const statsFilePath = path.join(statsDir, 'userStats.json');
+const subathonFilePath = path.join(statsDir, 'subathon.json');
+const pointTablePath = path.join(statsDir, 'pointTable.json');
 
 function ensureStatsFileExists() {
     // Ensure the directory exists
@@ -20,6 +21,19 @@ function ensureStatsFileExists() {
       console.log('User stats file created.');
     }
 } 
+
+function ensureSubathonFileExists() {
+    // Ensure the directory exists
+    if (!fs.existsSync(statsDir)) {
+      fs.mkdirSync(statsDir, { recursive: true });
+    }
+  
+    // Check if the file exists and create it if it doesn't
+    if (!fs.existsSync(subathonFilePath)) {
+      fs.writeFileSync(subathonFilePath, JSON.stringify({}));
+      console.log('Subathon file created.');
+    }
+}
 
 // Read user stats from the JSON file
 function readUserStats() {
@@ -105,6 +119,74 @@ function leaderboard(channel) {
     }
 }
 
+// Subathon logic
+
+function addSubathonPoints(channel, username, points) {
+  ensureSubathonFileExists();
+
+  const subathonData = readSubathonData();
+  if (!subathonData[channel]) {
+    subathonData[channel] = {
+      points: 0,
+      [username]: {
+        points: 0,
+      }
+    };
+  } else if (!subathonData[channel][username]) {
+    subathonData[channel][username] = {
+      points: 0,
+    };
+  }
+
+  subathonData[channel].points += points;
+  subathonData[channel][username].points += points;
+
+  writeSubathonData(subathonData);
+}
+
+function readSubathonData() {
+  ensureSubathonFileExists();
+  try {
+    const data = fs.readFileSync(subathonFilePath, 'utf8');
+    return JSON.parse(data);
+  } catch (err) {
+    console.error('Error reading subathon file:', err);
+    return {};
+  }
+}
+
+function writeSubathonData(subathonData) {
+  try {
+    fs.writeFileSync(subathonFilePath, JSON.stringify(subathonData, null, 2));
+  } catch (err) {
+    console.error('Error writing subathon file:', err);
+  }
+}
+
+function getPointTable() {
+  try {
+    const data = fs.readFileSync(pointTablePath, 'utf8');
+    return JSON.parse(data);
+  } catch (err) {
+    console.error('Error reading subathon file:', err);
+    return {};
+  }
+}
+
+function addUserPoints(channel, user, points) {
+  const pointTable = getPointTable();
+  if (!pointTable[channel]) {
+    pointTable[channel] = {};
+  }
+
+  if (!pointTable[channel][user]) {
+    pointTable[channel][user] = 0;
+  }
+
+  pointTable[channel][user] += points;
+  writeSubathonData(pointTable);
+}
+
 // Export functions using CommonJS
 module.exports = {
   readUserStats,
@@ -112,4 +194,9 @@ module.exports = {
   updateUserStats,
   stats,
   leaderboard,
+  addSubathonPoints,
+  readSubathonData,
+  writeSubathonData,
+  getPointTable,
+  addUserPoints
 };

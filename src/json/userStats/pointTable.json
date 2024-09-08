@@ -1,0 +1,32 @@
+{
+    "subscriptions": {
+        "1": {
+            "name": "Tier 1",
+            "points": 5
+        },
+        "2": {
+            "name": "Tier 2",
+            "points": 10
+        },
+        "3": {
+            "name": "Tier 3",
+            "points": 25
+        },
+        "prime": {
+            "name": "Prime",
+            "points": 5
+        }
+    },
+    "cheers" : {
+        "hundred": {
+            "name": "100 Bits",
+            "points": 1.5
+        }
+    },
+    "donations": {
+        "euro": {
+            "name": "1€",
+            "points": 2
+        }
+    }
+}

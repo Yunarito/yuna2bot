@@ -46,8 +46,17 @@ const {
 
 const {
   stats,
-  leaderboard
+  leaderboard,
+  getPointTable,
 } = require('./userStats.js');
+
+const {
+  cheerHandler,
+  subGiftHandler,
+  subHandler,
+  resubHandler,
+  donationHandler
+} = require('./subathonCounter.js');
 
 const options = {
   options: { debug: true },
@@ -85,13 +94,7 @@ client.on('message', (channel, userstate, message, self) => {
   }
 
   if (userstate.username === "streamlabs") {
-    const regex = /€(\d+(?:\.\d{1,2})?)/;
-    const match = message.match(regex);
-
-    if (match) {
-      let amount = match[1];
-    }
-    return;
+    donationHandler(channel, message);	
   }  
 
   // League commands:
@@ -234,16 +237,16 @@ function onMessageHandler(channel, userstate, message) {
 }
 
 client.on('subgift', (channel, username, streakMonths, recipient, methods, userstate) => {
-  console.log(channel, username, streakMonths, recipient, methods, userstate)
+  subGiftHandler(channel, username, methods)
 })
 client.on('resub', (channel, username, months, message, userstate, methods) => {
-  console.log(channel, username, months, message, userstate, methods)
+  resubHandler(channel, username, methods)
 })
 client.on('cheer', (channel, userstate, message) => {
-  console.log(channel, userstate, message)
+  cheerHandler(channel, userstate, message)
 })
 client.on('subscription', (channel, username, method, message, userstate) => {
-  console.log(channel, username, method, message, userstate)
+  subHandler(channel, username, method)
 })
 
 // commands
