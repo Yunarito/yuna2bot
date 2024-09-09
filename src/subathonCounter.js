@@ -39,6 +39,9 @@ export function cheerHandler(channel, userstate, message) {
 
     let points = pointTable.cheers.hundred.points * (total/100);  
 
+    console.log(channel, user, points , 'cheerHandler');
+    
+
     addSubathonPoints(channel, user, points);
 }
 
