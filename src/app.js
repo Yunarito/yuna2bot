@@ -96,8 +96,9 @@ client.on('message', (channel, userstate, message, self) => {
   }
 
   if (userstate.username === "streamlabs" && message.includes("hat €")) {
-    console.log(message);
+    console.log(message, message.includes("hat €"));
     donationHandler(channel, message);
+    return;
   }  
 
   // League commands:
