@@ -135,6 +135,9 @@ function addSubathonPoints(channel, username, points) {
     };
   }
 
+  console.log(channel, username, points, subathonData[channel]);
+  
+
   subathonData[channel].points += points;
   subathonData[channel][username].points += points;
 
