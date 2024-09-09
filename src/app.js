@@ -96,7 +96,13 @@ client.on('message', (channel, userstate, message, self) => {
   }
 
   if (userstate.username === "streamlabs") {
-    donationHandler(channel, message);	
+    const regex = /^(.+) hat €(\d+(?:\.\d{1,2})?) gespendet!$/;
+
+    const match = message.match(regex);
+
+    if (match) {
+      donationHandler(channel, message);	
+    }
   }  
 
   // League commands:
