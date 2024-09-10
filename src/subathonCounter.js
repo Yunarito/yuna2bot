@@ -11,13 +11,13 @@ const {
 export function happyswitch(channel) {
     initialize.channelsInfo[channel].happyHour = true;
 
-    client.say(channel, `Die Happyhour ist nun eingeschaltet'.`);
+    client.say(channel, `Die Happyhour ist nun eingeschaltet.`);
 }
 
 export function sadswitch(channel) {
     initialize.channelsInfo[channel].happyHour = false;    
 
-    client.say(channel, `Die Happyhour ist nun ausgeschaltet'.`);
+    client.say(channel, `Die Happyhour ist nun ausgeschaltet.`);
 }
 
 export function donationHandler(channel, message) {
