@@ -1,13 +1,16 @@
 const fs = require('fs');
 const path = require('path');
 
+import { DefaultDeserializer } from 'v8';
 import client from './app.js';
+import initialize from './initialize';
 
 // Path to the JSON file that stores user statistics
 const statsDir = path.join(__dirname, 'json', 'userStats');
 const statsFilePath = path.join(statsDir, 'userStats.json');
 const subathonFilePath = path.join(statsDir, 'subathon.json');
 const pointTablePath = path.join(statsDir, 'pointTable.json');
+const happyTablePath = path.join(statsDir, 'happyTable.json');
 
 function ensureStatsFileExists() {
     // Ensure the directory exists
@@ -163,9 +166,20 @@ function writeSubathonData(subathonData) {
   }
 }
 
-function getPointTable() {
+function getPointTable(channel) {
   try {
-    const data = fs.readFileSync(pointTablePath, 'utf8');
+    let happy = initialize.channelsInfo[channel].happyHour;
+    console.log(happy ? happyTablePath : pointTablePath);
+    const data =  happy ? fs.readFileSync(happyTablePath, 'utf8') : fs.readFileSync(pointTablePath, 'utf8');
+    return JSON.parse(data);
+  } catch (err) {
+    console.error('Error reading subathon file:', err);
+    return {};
+  }
+}
+function getHappyTable() {
+  try {
+    const data = fs.readFileSync(happyTablePath, 'utf8');
     return JSON.parse(data);
   } catch (err) {
     console.error('Error reading subathon file:', err);
@@ -174,7 +188,7 @@ function getPointTable() {
 }
 
 function addUserPoints(channel, user, points) {
-  const pointTable = getPointTable();
+  const pointTable = getPointTable(channel);
   if (!pointTable[channel]) {
     pointTable[channel] = {};
   }

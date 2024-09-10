@@ -57,7 +57,10 @@ const {
   resubHandler,
   donationHandler,
   getChannelPoints,
-  getChannelTotalPoints
+  getChannelTotalPoints,
+  happyswitch,
+  sadswitch,
+  getPointChart
 } = require('./subathonCounter.js');
 
 const options = {
@@ -213,6 +216,9 @@ client.on('message', (channel, userstate, message, self) => {
       getChannelTotalPoints(channel);
     }
 
+    if (startsWith(message, '!pointchart')) {
+      getPointChart(channel);
+    }
   }
 
   if (startsWith(message, '!commands')) {
@@ -245,6 +251,14 @@ client.on('message', (channel, userstate, message, self) => {
 
     if (startsWith(message, '!scamset')) {
       setTime(channel, message)
+    }
+
+    if (startsWith(message, '!happyswitch')) {
+      happyswitch(channel)
+    }
+
+    if (startsWith(message, '!sadswitch')) {
+      sadswitch(channel)
     }
   }
 
