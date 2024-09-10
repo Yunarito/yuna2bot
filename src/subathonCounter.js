@@ -120,7 +120,7 @@ export function getChannelPoints(channel, username) {
 
 
     let points = subathonData[channel][username].points;
-    client.say(channel, `@${username}, du hast ${points} Punkte zum Subatahon beigetragen.`);
+    client.say(channel, `@${username}, du hast ${points} Punkte zum Subathon beigetragen.`);
 }
 
 export function getChannelTotalPoints(channel) {
