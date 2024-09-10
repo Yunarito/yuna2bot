@@ -3,7 +3,6 @@ import initialize from './initialize';
 
 const { 
     addSubathonPoints, 
-    addUserPoints, 
     readSubathonData, 
     getPointTable,
     writeSubathonData
@@ -12,16 +11,11 @@ const {
 export function happyswitch(channel) {
     initialize.channelsInfo[channel].happyHour = true;
 
-    console.log(initialize.channelsInfo[channel].enabled);
-
     client.say(channel, `Die Happyhour ist nun eingeschaltet'.`);
 }
 
 export function sadswitch(channel) {
-    initialize.channelsInfo[channel].happyHour = false;
-    
-    console.log(initialize.channelsInfo[channel].v);
-    
+    initialize.channelsInfo[channel].happyHour = false;    
 
     client.say(channel, `Die Happyhour ist nun ausgeschaltet'.`);
 }
@@ -55,10 +49,7 @@ export function cheerHandler(channel, userstate, message) {
         total += parseInt(match[1], 10);  // Convert the captured number to integer and add it to the total
     }
 
-    let points = pointTable.cheers.hundred.points * (total/100);  
-
-    console.log(channel, user, points , 'cheerHandler');
-    
+    let points = pointTable.cheers.hundred.points * (total/100);      
 
     addSubathonPoints(channel, user, points);
 }
@@ -115,17 +106,18 @@ export function getChannelPoints(channel, username) {
     
     if (!subathonData[channel]) {
         subathonData[channel] = {
-        points: 0,
+            points: 0,
         };
+        writeSubathonData(subathonData);
     }
 
     if (!subathonData[channel][username]) {
         subathonData[channel][username] = {
             points: 0,
-            };
+        };
+        writeSubathonData(subathonData);
     }
 
-    writeSubathonData(subathonData);
 
     let points = subathonData[channel][username].points;
     client.say(channel, `@${username}, du hast ${points} Punkte zum Subatahon beigetragen.`);
@@ -136,11 +128,10 @@ export function getChannelTotalPoints(channel) {
     
     if (!subathonData[channel]) {
         subathonData[channel] = {
-        points: 0,
+            points: 0,
         };
+        writeSubathonData(subathonData);
     }
-    
-    writeSubathonData(subathonData);
 
     let points = subathonData[channel].points;
     client.say(channel, `Der aktuelle Subathon hat ${points} Punkte.`);

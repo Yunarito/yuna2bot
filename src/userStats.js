@@ -177,29 +177,6 @@ function getPointTable(channel) {
     return {};
   }
 }
-function getHappyTable() {
-  try {
-    const data = fs.readFileSync(happyTablePath, 'utf8');
-    return JSON.parse(data);
-  } catch (err) {
-    console.error('Error reading subathon file:', err);
-    return {};
-  }
-}
-
-function addUserPoints(channel, user, points) {
-  const pointTable = getPointTable(channel);
-  if (!pointTable[channel]) {
-    pointTable[channel] = {};
-  }
-
-  if (!pointTable[channel][user]) {
-    pointTable[channel][user] = 0;
-  }
-
-  pointTable[channel][user] += points;
-  writeSubathonData(pointTable);
-}
 
 // Export functions using CommonJS
 module.exports = {
@@ -212,5 +189,4 @@ module.exports = {
   readSubathonData,
   writeSubathonData,
   getPointTable,
-  addUserPoints
 };
