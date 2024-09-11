@@ -119,7 +119,7 @@ export function getChannelPoints(channel, username) {
     }
 
 
-    let points = Math.round(subathonData[channel][username].points * 100)/100+"".replace('.', ',');
+    let points = Math.round(subathonData[channel][username].points * 100)/100+"".replace(',', '.');
     client.say(channel, `@${username}, du hast ${points} Punkte zum Subathon beigetragen.`);
 }
 
