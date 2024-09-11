@@ -91,7 +91,6 @@ client.on('message', (channel, userstate, message, self) => {
   }
 
   initialize.initializeChannel(channel);
-  
 
   if (userstate.username === BOT_USERNAME) {
     console.log(`Not checking bot's messages.`);
@@ -209,7 +208,7 @@ client.on('message', (channel, userstate, message, self) => {
     }
 
     if (startsWith(message, '!mypoints')) {
-      getChannelPoints(channel, userstate.username);
+      getChannelPoints(channel, userstate['display-name']);
     }
 
     if (startsWith(message, '!totalpoints')) {

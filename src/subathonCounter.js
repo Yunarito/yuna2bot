@@ -33,7 +33,7 @@ export function donationHandler(channel, message) {
 }
 
 export function cheerHandler(channel, userstate, message) {
-    let user = userstate.username;
+    let user = userstate['display-name'];
 
     const pointTable = getPointTable(channel);
 
