@@ -269,18 +269,20 @@ function onMessageHandler(channel, userstate, message) {
   checkTwitchChat(userstate, message, channel);
 }
 
-client.on('subgift', (channel, username, streakMonths, recipient, methods, userstate) => {
-  subGiftHandler(channel, username, methods)
-})
-client.on('resub', (channel, username, months, message, userstate, methods) => {
-  resubHandler(channel, username, methods)
-})
-client.on('cheer', (channel, userstate, message) => {
-  cheerHandler(channel, userstate, message)
-})
-client.on('subscription', (channel, username, method, message, userstate) => {
-  subHandler(channel, username, method)
-})
+if (channel === '#catzzi') {
+  client.on('subgift', (channel, username, streakMonths, recipient, methods, userstate) => {
+    subGiftHandler(channel, username, methods)
+  })
+  client.on('resub', (channel, username, months, message, userstate, methods) => {
+    resubHandler(channel, username, methods)
+  })
+  client.on('cheer', (channel, userstate, message) => {
+    cheerHandler(channel, userstate, message)
+  })
+  client.on('subscription', (channel, username, method, message, userstate) => {
+    subHandler(channel, username, method)
+  })
+}
 
 // commands
 
