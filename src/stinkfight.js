@@ -59,20 +59,20 @@ export function accept(channel, userstate, message) {
   
     if (stink1 < stink2) {
       client.say(channel, `@${challenger} (${stink1}%) gewinnt das Stinkerduell @${username} (${stink2}%)! Smelly`);
-      // timeout(username, channel, 300); // Timeout the user
-      // updateUserStats(channel, challenger, true);  // Update stats for winner
-      // updateUserStats(channel, username, false);   // Update stats for loser
+      timeout(username, channel, 300); // Timeout the user
+      updateUserStats(channel, challenger, true);  // Update stats for winner
+      updateUserStats(channel, username, false);   // Update stats for loser
     } else if (stink1 > stink2) {
       client.say(channel, `@${username} (${stink2}%) gewinnt das Stinkerduell @${challenger} (${stink1}%)! Smelly`);
-      // timeout(challenger, channel, 300); // Timeout the user
-      // updateUserStats(channel, username, true);  // Update stats for winner
-      // updateUserStats(channel, challenger, false);   // Update stats for loser
+      timeout(challenger, channel, 300); // Timeout the user
+      updateUserStats(channel, username, true);  // Update stats for winner
+      updateUserStats(channel, challenger, false);   // Update stats for loser
     } else {
       client.say(channel, `Unentschieden! @${challenger} (${stink1}%) und @${username} (${stink2}%) stinken gleich stark! Smelly`);
-      // timeout(username, channel, 300); // Timeout both users
-      // timeout(challenger, channel, 300);
-      // updateUserStats(channel, username, false);  // Update stats for tie
-      // updateUserStats(channel, challenger, false);
+      timeout(username, channel, 300); // Timeout both users
+      timeout(challenger, channel, 300);
+      updateUserStats(channel, username, false);  // Update stats for tie
+      updateUserStats(channel, challenger, false);
       client.say(channel, `@${challenger} und @${username} sind nun im Timeout pepePoint .`);
     }
 
