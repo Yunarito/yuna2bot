@@ -1,6 +1,7 @@
 import tmi from 'tmi.js';
 import { BOT_USERNAME, OAUTH_TOKEN, CHANNEL_NAME, BLOCKED_WORDS, RIOT_API_TOKEN } from './constants';
 import initialize from './initialize';
+import { dreamRank } from './leagueFunctions.js';
 
 const {
   checkTwitchChat,
@@ -148,7 +149,12 @@ client.on('message', (channel, userstate, message, self) => {
   }
 
   // Duel commands:
-  if (channel === '#catzzi') {
+  if (channel === '#catzzi' || channel === '#yunarito') {
+
+    if (startsWith(message, '!dream')) {
+      dreamRank(channel);
+    }
+
     if (startsWith(message, '!duell')) {
       duel(channel, userstate, message);
     }
