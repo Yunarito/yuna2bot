@@ -31,7 +31,7 @@ export async function dreamRank(channel) {
 
         let totalLpNeeded = lpToEmerald4(currentRank);
 
-        rankMessage += `${capitalizeFirstLetter(rankedSoloQ.tier)} ${rankedSoloQ.rank} ${rankedSoloQ.leaguePoints}LP - ${totalLpNeeded}LP bis Emerald 4 woah`;
+        rankMessage += `${capitalizeFirstLetter(rankedSoloQ.tier)} ${rankedSoloQ.rank} ${rankedSoloQ.leaguePoints}LP - ${totalLpNeeded}LP bis Emerald IV woah`;
 
         client.say(channel, rankMessage);
         return;
