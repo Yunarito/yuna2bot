@@ -151,6 +151,10 @@ client.on('message', (channel, userstate, message, self) => {
   // Duel commands:
   if (channel === '#catzzi' || channel === '#yunarito') {
 
+    if (message.includes('owoCheer')) {
+      client.say(channel, 'owoCheer');
+    }
+
     if (startsWith(message, '!dream')) {
       dreamRank(channel);
     }
