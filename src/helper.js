@@ -104,39 +104,43 @@ export async function getSummonerDataTagline(channel, name){
 
   const apiUrl = `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${accTag[0]}/${accTag[1]}`
   
-  const response = await fetch(apiUrl, {
-    method: 'GET',
-    headers: {
-      'X-Riot-Token': apiKey,
-    },
-  });
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'X-Riot-Token': apiKey,
+      },
+    });
 
-  if (!response.ok) {
-    client.say(channel, `Account nicht gefunden`);
-    throw new Error('Account not found');
-    return;
+    if (!response.ok) {
+      client.say(channel, `Account nicht gefunden`);
+      // throw new Error('Account not found');
+      return;
+    }
+    const puuid = await response.json();
+
+    const summonerApi = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid.puuid}`
+
+    const summonerResponse = await fetch(summonerApi, {
+      method: 'GET',
+      headers: {
+        'X-Riot-Token': apiKey,
+      },
+    });
+
+    if (!summonerResponse.ok) {
+      client.say(channel, `Der Account ist kein League-Summoner`);
+      // throw new Error('Account has no league summoner');
+      return;
+    }
+
+    const data = await summonerResponse.json();
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    client.say(channel, `Riot API Fehler fricc`);
   }
-  const puuid = await response.json();
-
-  const summonerApi = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid.puuid}`
-
-  
-  const summonerResponse = await fetch(summonerApi, {
-    method: 'GET',
-    headers: {
-      'X-Riot-Token': apiKey,
-    },
-  });
-
-  if (!summonerResponse.ok) {
-    client.say(channel, `Der Account ist kein League-Summoner`);
-    throw new Error('Account has no league summoner');
-    return;
-  }
-
-  const data = await summonerResponse.json();
-
-  return data;
 }
 
 export async function getAccountDataForPuuid(channel, puuid){
