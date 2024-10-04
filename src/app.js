@@ -213,21 +213,19 @@ client.on('message', (channel, userstate, message, self) => {
 
     //subathon commands
 
-    if (startsWith(message, '!subathon')) {
-      // twentyFour(channel);
-    }
+    /*
+      if (startsWith(message, '!mypoints')) {
+        getChannelPoints(channel, userstate['display-name']);
+      }
 
-    if (startsWith(message, '!mypoints')) {
-      getChannelPoints(channel, userstate['display-name']);
-    }
+      if (startsWith(message, '!totalpoints')) {
+        getChannelTotalPoints(channel);
+      }
 
-    if (startsWith(message, '!totalpoints')) {
-      getChannelTotalPoints(channel);
-    }
-
-    if (startsWith(message, '!pointchart')) {
-      getPointChart(channel);
-    }
+      if (startsWith(message, '!pointchart')) {
+        getPointChart(channel);
+      }
+    */
   }
 
   if (startsWith(message, '!commands')) {
@@ -278,26 +276,26 @@ function onMessageHandler(channel, userstate, message) {
   checkTwitchChat(userstate, message, channel);
 }
 
-client.on('subgift', (channel, username, streakMonths, recipient, methods, userstate) => {
-  if (channel === '#catzzi') {
-    subGiftHandler(channel, username, methods)
-  }
-})
-client.on('resub', (channel, username, months, message, userstate, methods) => {
-  if (channel === '#catzzi') {
-    resubHandler(channel, username, methods)
-  }
-})
-client.on('cheer', (channel, userstate, message) => {
-  if (channel === '#catzzi') {
-    cheerHandler(channel, userstate, message)
-  }
-})
-client.on('subscription', (channel, username, method, message, userstate) => {
-  if (channel === '#catzzi') {
-    subHandler(channel, username, method)
-  }
-})
+// client.on('subgift', (channel, username, streakMonths, recipient, methods, userstate) => {
+//   if (channel === '#catzzi') {
+//     subGiftHandler(channel, username, methods)
+//   }
+// })
+// client.on('resub', (channel, username, months, message, userstate, methods) => {
+//   if (channel === '#catzzi') {
+//     resubHandler(channel, username, methods)
+//   }
+// })
+// client.on('cheer', (channel, userstate, message) => {
+//   if (channel === '#catzzi') {
+//     cheerHandler(channel, userstate, message)
+//   }
+// })
+// client.on('subscription', (channel, username, method, message, userstate) => {
+//   if (channel === '#catzzi') {
+//     subHandler(channel, username, method)
+//   }
+// })
 
 // commands
 

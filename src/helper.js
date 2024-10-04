@@ -333,6 +333,7 @@ export function getNameMapping(username) {
     'callme_chilli': 'Chilli#2680',
     'catzzi': 'catzzi#euw',
     'yunarito': 'Yunarito#69420',
+    'rosnitzky': 'rosnitzky#EUW',
   };
 
   return nameMappings[username] || username;
