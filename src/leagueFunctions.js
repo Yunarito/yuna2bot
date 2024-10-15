@@ -17,8 +17,8 @@ export async function dreamRank(channel) {
 
     const response = await getSummonerDataTagline(channel, summonerName);
 
-    if (!response.ok) {
-        console.log(response);        
+    if (!response.ok && response.status === 404) {
+        console.log(response);
         client.say(channel, `Da ist n Fehler iwie oder so fricc riot.`);
         return;
     }
