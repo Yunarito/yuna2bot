@@ -206,10 +206,6 @@ client.on('message', (channel, userstate, message, self) => {
     if (startsWith(message, '!joinfight')) {
       joinContest(channel, userstate, message);
     }
-    
-    if (startsWith(message, '!24')) {
-      // twentyFour(channel);
-    }
 
     //subathon commands
 
@@ -229,7 +225,7 @@ client.on('message', (channel, userstate, message, self) => {
   }
 
   if (startsWith(message, '!commands')) {
-    commands(channel);
+    client.say(channel, 'Die Commands könnt ihr hier finden: https://yunarito.de/yuna2bot');
     return;
   }
 

@@ -338,6 +338,7 @@ export function getNameMapping(username) {
     'catzzi': 'catzzi#euw',
     'yunarito': 'Yunarito#69420',
     'rosnitzky': 'rosnitzky#EUW',
+    'vegazz__': 'Vegaz#uwu',
   };
 
   return nameMappings[username] || username;
