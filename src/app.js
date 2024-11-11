@@ -84,12 +84,16 @@ const client = new tmi.Client(options);
 
 client.connect();
 
+let messageCount = 0;
+
 // event handlers
 
 client.on('message', (channel, userstate, message, self) => {
   if (self) {
     return;
   }
+
+  messageCount += 1;
 
   initialize.initializeChannel(channel);
 
@@ -150,6 +154,10 @@ client.on('message', (channel, userstate, message, self) => {
 
   // Duel commands:
   if (channel === '#catzzi' || channel === '#yunarito') {
+    
+    if (messageCount % 30 === 0) {
+      client.say(channel, 'Momentan kann man für die Streamawards abstimmen! Stimmt für catzzi unter Beste/r Newcomer/in ab! Do your part ! owo7 https://streamawards.de');
+    }
 
     if (message.includes('owoCheer')) {
       client.say(channel, 'owoCheer');
