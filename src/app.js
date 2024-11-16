@@ -106,14 +106,14 @@ client.on('message', (channel, userstate, message, self) => {
     console.log(message, message.includes("hat €"));
     donationHandler(channel, message);
     return;
-  }  
+  }
 
   // League commands:
 
   if (startsWith(message, '!rank') || startsWith(message, '!elo')) {
     if(channel === '#catzzi' && message.includes('mods')) {
       getSummonerRank(channel, userstate, "!rank Yunarito#69420,Leaveless#GGA,scremmys#6969");
-    } else { 
+    } else {
       getSummonerRank(channel, userstate, message);
     }
     return;
@@ -147,16 +147,16 @@ client.on('message', (channel, userstate, message, self) => {
   if (startsWith(message, '!list') && initialize.channelsInfo[channel].enabled) {
     listQueue(channel);
   }
-  
+
   if (startsWith(message, '!scamout')) {
     getTimeoutTime(channel)
   }
 
   // Duel commands:
   if (channel === '#catzzi' || channel === '#yunarito') {
-    
+
     if (messageCount % 60 === 0) {
-      client.say(channel, 'Momentan kann man für die Streamawards abstimmen! Stimmt für catzzi unter Beste/r Newcomer/in ab! Do your part ! owo7 https://streamawards.de');
+      // client.say(channel, 'Momentan kann man für die Streamawards abstimmen! Stimmt für catzzi unter Beste/r Newcomer/in ab! Do your part ! owo7 https://streamawards.de');
     }
 
     if (message.includes('owoCheer')) {
@@ -199,11 +199,11 @@ client.on('message', (channel, userstate, message, self) => {
       duelInfo(channel, userstate, message);
     }
 
-    if(startsWith(message, '!duellstats')) {    
+    if(startsWith(message, '!duellstats')) {
       stats(channel, userstate, message);
     }
 
-    if(startsWith(message, '!duellboard')) {    
+    if(startsWith(message, '!duellboard')) {
       leaderboard(channel);
     }
 
