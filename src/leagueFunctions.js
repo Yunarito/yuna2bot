@@ -12,23 +12,23 @@ const lpPerDivision = 100; // You need 100 LP to promote from one division to th
 
 
 export async function dreamRank(channel) {
-    
+
     const summonerName = 'catzzi#euw';
 
     const response = await getSummonerDataTagline(channel, summonerName);
 
-    if (!response.ok && response.status === 404) {
+    if (response && !response.ok && response.status === 404) {
         console.log(response);
         client.say(channel, `Da ist n Fehler iwie oder so fricc riot.`);
         return;
     }
-    
+
     let rankData = await getRankDataForSummonerId(channel, response.id);
 
     if (rankData.length > 0) {
         const rankedSoloQ = rankData.find((entry) => entry.queueType === 'RANKED_SOLO_5x5');
         let rankMessage = `${summonerName}: `
-    
+
         let currentRank = {
             tier: capitalizeFirstLetter(rankedSoloQ.tier),
             division: romanToInteger(rankedSoloQ.rank)+1,
@@ -49,7 +49,7 @@ export async function dreamRank(channel) {
 
 function lpToEmerald4(currentRank) {
     let totalLpNeeded = 0;
-    
+
     // Find the current tier and division in the list
     let currentTierIndex = tiers.indexOf(currentRank.tier);
 
@@ -57,7 +57,7 @@ function lpToEmerald4(currentRank) {
     while (currentTierIndex < tiers.indexOf("Emerald") || (currentTierIndex === tiers.indexOf("Emerald") && currentRank.division > 4)) {
         // LP to promote to the next division
         totalLpNeeded += (lpPerDivision - currentRank.lp);
-        
+
         // Reset LP for the next division/tier
         currentRank.lp = 0;
 
@@ -68,7 +68,7 @@ function lpToEmerald4(currentRank) {
             // Move to the next tier if we're in division 1
             currentTierIndex++;
             currentRank.division = 4; // Reset division to 4 in the new tier
-        }        
-    }    
+        }
+    }
     return totalLpNeeded;
 }
