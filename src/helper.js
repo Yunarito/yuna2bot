@@ -11,7 +11,7 @@ export async function getSummonerData(channel, summonerName) {
   return null;
   const apiKey = RIOT_API_TOKEN; // Replace with your League of Legends API key
   const apiUrl = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`
-  
+
   // Make a request to get the summoner's ID
   const summonerResponse = await fetch(apiUrl, {
     method: 'GET',
@@ -79,7 +79,7 @@ export async function getRankString(channel, rankData, summonerName) {
     let rankMessage = `${summonerName}: `
     if (rankedSoloQ) {
       let rank = capitalizeFirstLetter(rankedSoloQ.tier) + ' ' + rankedSoloQ.rank;
-      rankMessage += `[SOLOQ ${rank} (${rankedSoloQ.leaguePoints} LP) | ${rankedSoloQ.wins}W/${rankedSoloQ.losses}L 
+      rankMessage += `[SOLOQ ${rank} (${rankedSoloQ.leaguePoints} LP) | ${rankedSoloQ.wins}W/${rankedSoloQ.losses}L
       WR: ${Math.round(rankedSoloQ.wins / (rankedSoloQ.wins + rankedSoloQ.losses) * 100)}%]`;
     }
     if (rankedFlexQ) {
@@ -97,13 +97,13 @@ export async function getRankString(channel, rankData, summonerName) {
 }
 
 export async function getSummonerDataTagline(channel, name){
-  if(name.includes('smolcatzzi') || name.includes('smolercatzzi') || name.includes('smolestcatzzi')) return;
+  // if(name.includes('smolcatzzi') || name.includes('smolercatzzi') || name.includes('smolestcatzzi')) return;
   const apiKey = RIOT_API_TOKEN;
 
   let accTag = name.split('#');
 
   const apiUrl = `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${accTag[0]}/${accTag[1]}`
-  
+
   try {
     const response = await fetch(apiUrl, {
       method: 'GET',
@@ -147,7 +147,7 @@ export async function getAccountDataForPuuid(channel, puuid){
   const apiKey = RIOT_API_TOKEN;
 
   const apiUrl = `https://europe.api.riotgames.com/riot/account/v1/accounts/by-puuid/${puuid}`
-  
+
   const response = await fetch(apiUrl, {
     method: 'GET',
     headers: {
@@ -278,7 +278,7 @@ export async function calculateAverageRank(rankDataArray) {
   }
 
   console.log(validRankDataArray);
-  
+
   // Calculate the sum of numerical values for each rank
   let totalRankValue = validRankDataArray.reduce(function(sum, rankData) {
     let rankValue = rankValues[rankData.tier];
