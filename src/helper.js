@@ -332,14 +332,44 @@ export function integerToRoman(roman) {
 
 export function getNameMapping(username) {
   const nameMappings = {
-    'chris5560': 'Nathaniel Flint#Scrin',
-    'amaar270': 'PvB Ekoko#Haku',
-    'callme_chilli': 'Chilli#2680',
     'catzzi': 'catzzi#euw',
     'yunarito': 'Yunarito#69420',
-    'rosnitzky': 'rosnitzky#EUW',
-    'vegazz__': 'Vegaz#uwu',
   };
 
   return nameMappings[username] || username;
 }
+
+export function getQueueTypeFromMessage(message) {
+  if (typeof message !== 'string' || !message.trim()) {
+    return { valid: false, queueId: null };
+  }
+
+  const words = message.trim().split(/\s+/); // Split by spaces, handling extra spaces
+  if (words.length < 2) {
+    return { valid: false, queueId: null };
+  }
+
+  const queueTypes = {
+    normal: 400,
+    solo: 420,
+    normalblind: 430,
+    flex: 440,
+    aram: 450,
+    clash: 700,
+    botmiddle: 830,
+    botintro: 840,
+    botbeginner: 850,
+    urf: 900,
+    arurf: 920,
+    ofa: 1020,
+    nexusblitz: 1300,
+  };
+
+  const queueType = words.length == 3 ? words[2].toLowerCase() : words[1].toLowerCase();
+  const queueId = queueTypes[queueType];
+
+  return queueId !== undefined
+    ? { valid: true, queueId }
+    : { valid: false, queueId: null };
+}
+
