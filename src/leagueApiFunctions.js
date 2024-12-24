@@ -109,13 +109,14 @@ export async function getLastGameData(channel, userstate, message) {
     const queueTypeInfo = getQueueTypeFromMessage(message); // Use helper function
     const parts = commandContent.split(' ');
 
+    console.log(parts, commandContent, queueTypeInfo);
+
     // Separate summoner name
-    const possibleSummonerName = parts.slice(0, -1).join(' ');
-    summonerName = possibleSummonerName === '' ? channel.replace('#', '') : possibleSummonerName;
-    summonerName = getNameMapping(summonerName);
+    summonerName = parts[0].includes('#') ? parts[0] : channel.replace('#', '');
 
     console.log(summonerName, queueTypeInfo);
 
+    summonerName = getNameMapping(summonerName);
 
     // Fetch summoner data
     const summonerData = await getSummonerDataTagline(channel, summonerName);
