@@ -64,6 +64,10 @@ const {
   getPointChart
 } = require('./subathonCounter.js');
 
+const {
+  getFollowage,
+} = require('./twitchApi.js');
+
 const options = {
   options: { debug: true },
   connection: {
@@ -108,6 +112,11 @@ client.on('message', (channel, userstate, message, self) => {
     return;
   }
 
+  // if (startsWith(message, '!followage')) {
+  //   getFollowage(userstate.username, channel);
+  //   return;
+  // }
+
   // League commands:
 
   if (startsWith(message, '!rank') || startsWith(message, '!elo')) {
@@ -140,22 +149,30 @@ client.on('message', (channel, userstate, message, self) => {
 
   if (startsWith(message, '!join') && initialize.channelsInfo[channel].enabled) {
     joinQueue(channel, userstate);
+    return;
   }
 
   if (startsWith(message, '!leave') && initialize.channelsInfo[channel].enabled) {
     leaveQueue(channel, userstate);
+    return;
   }
 
   if (startsWith(message, '!list') && initialize.channelsInfo[channel].enabled) {
     listQueue(channel);
+    return;
   }
 
   if (startsWith(message, '!scamout')) {
-    getTimeoutTime(channel)
+    getTimeoutTime(channel);
+    return;
   }
 
   // Duel commands:
   if (channel === '#catzzi' || channel === '#yunarito') {
+
+    if(userstate['first-msg']){
+      client.say(channel, 'FirstTimeLicka');
+    }
 
     if (messageCount % 60 === 0) {
       // client.say(channel, 'Momentan kann man für die Streamawards abstimmen! Stimmt für catzzi unter Beste/r Newcomer/in ab! Do your part ! owo7 https://streamawards.de');
@@ -167,54 +184,68 @@ client.on('message', (channel, userstate, message, self) => {
 
     if (startsWith(message, '!dream')) {
       dreamRank(channel);
+      return;
     }
 
     if (startsWith(message, '!duell')) {
       duel(channel, userstate, message);
+      return;
     }
 
     if (startsWith(message, '!accept')) {
       accept(channel, userstate, message);
+      return;
     }
 
     if (startsWith(message, '!decline')) {
       decline(channel, userstate, message);
+      return;
     }
 
     if (startsWith(message, '!moshpit')) {
       groupDuel(channel, userstate, message);
+      return;
     }
 
     if (startsWith(message, '!acceptmoshpit')) {
       acceptGroupDuel(channel, userstate, message);
+      return;
     }
 
     if (startsWith(message, '!declinemoshpit')) {
       declineGroupDuel(channel, userstate, message);
+      return;
     }
 
     if (startsWith(message, '!retract')) {
       retract(channel, userstate, message);
+      return;
+      return;
     }
 
     if (startsWith(message, '!duellinfo')) {
       duelInfo(channel, userstate, message);
+      return;
     }
 
     if(startsWith(message, '!duellstats')) {
       stats(channel, userstate, message);
+      return;
     }
 
     if(startsWith(message, '!duellboard')) {
       leaderboard(channel);
+      return;
     }
 
     if (startsWith(message, '!openfight')) {
       openContest(channel, userstate, message);
+      return;
     }
 
     if (startsWith(message, '!joinfight')) {
       joinContest(channel, userstate, message);
+      return;
     }
 
     //subathon commands
@@ -244,34 +275,42 @@ client.on('message', (channel, userstate, message, self) => {
   if(hasRights(userstate, channel)){
     if (startsWith(message, '!pick')) {
       pickFromQueue(channel, userstate, message);
+      return;
     }
 
     if (startsWith(message, '!enablequeue')) {
       enableQueue(channel);
+      return;
     }
 
     if (startsWith(message, '!disablequeue')) {
       disableQueue(channel);
+      return;
     }
 
     if (startsWith(message, '!scamreset')) {
-      resetTime(channel)
+      resetTime(channel);
+      return;
     }
 
     if (startsWith(message, '!scammed')) {
-      addTimeoutTime(channel)
+      addTimeoutTime(channel);
+      return;
     }
 
     if (startsWith(message, '!scamset')) {
-      setTime(channel, message)
+      setTime(channel, message);
+      return;
     }
 
     if (startsWith(message, '!happyswitch')) {
-      happyswitch(channel)
+      happyswitch(channel);
+      return;
     }
 
     if (startsWith(message, '!sadswitch')) {
-      sadswitch(channel)
+      sadswitch(channel);
+      return;
     }
   }
 
