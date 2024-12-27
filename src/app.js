@@ -112,10 +112,10 @@ client.on('message', (channel, userstate, message, self) => {
     return;
   }
 
-  // if (startsWith(message, '!followage')) {
-  //   getFollowage(userstate.username, channel);
-  //   return;
-  // }
+  if (startsWith(message, '!followage')) {
+    getFollowage(userstate.username, channel);
+    return;
+  }
 
   // League commands:
 

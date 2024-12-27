@@ -50,10 +50,7 @@ export async function getFollowage(user, channel) {
     }
 
     // API-Aufruf zum Abrufen der Follower-Daten
-    const url = `https://api.twitch.tv/helix/users/follows?from_id=${userId}&to_id=${channelId}`;
-
-    console.log(url);
-    console.log(OAUTH_TOKEN, CLIENT_ID);
+    const url = `https://api.twitch.tv/helix/channels/followers?broadcaster_id=${channelId}&user_id=${userId}`;
 
     const response = await fetch(url, {
       method: 'GET',
@@ -72,7 +69,7 @@ export async function getFollowage(user, channel) {
         const followDate = new Date(data.data[0].followed_at);
         const duration = calculateFollowDuration(followDate);
 
-        let result = `${user} folgt ${channel} seit `;
+        let result = `${user} folgt seit `;
         if (duration.years > 0) result += ` ${duration.years} Jahr(en), `;
         if (duration.months > 0) result += `${duration.months} Monat(en), `;
         if (duration.weeks > 0) result += `${duration.weeks} Woche(n) und `;
