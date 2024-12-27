@@ -70,9 +70,9 @@ export async function getFollowage(user, channel) {
         const duration = calculateFollowDuration(followDate);
 
         let result = `${user} folgt seit `;
-        if (duration.years > 0) result += ` ${duration.years} Jahr(en), `;
-        if (duration.months > 0) result += `${duration.months} Monat(en), `;
-        if (duration.weeks > 0) result += `${duration.weeks} Woche(n) und `;
+        if (duration.years > 0) result += ` ${duration.years} Jahr(en)` + (duration.months > 0 || duration.weeks > 0 || duration.days > 0 ? ', ' : '');
+        if (duration.months > 0) result += `${duration.months} Monat(en)` + (duration.weeks > 0 || duration.days > 0 ? ', ' : '');
+        if (duration.weeks > 0) result += `${duration.weeks} Woche(n)` + (duration.days > 0 ? ', ' : '');
         if (duration.days > 0) result += `${duration.days} Tag(en)`;
 
         client.say(channel, result);
