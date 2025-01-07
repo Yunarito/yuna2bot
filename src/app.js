@@ -123,7 +123,7 @@ client.on('message', (channel, userstate, message, self) => {
     if(channel === '#catzzi' && message.includes('mods')) {
       getSummonerRank(channel, userstate, "!rank Yunarito#69420,Leaveless#GGA,scremmys#6969");
     } else if(channel === '#catzzi' && !message.includes('#')) {
-      getSummonerRank(channel, userstate, "!rank catzzi#euw,smolercatzzi#6969,smolestcatzzi#6969"); //catzzi#euw,smolcatzzi#EUW,smolercatzzi#6969,smolestcatzzi#6969
+      getSummonerRank(channel, userstate, "!rank catzzi#euw,smolestcatzzi#6969"); //catzzi#euw,smolcatzzi#EUW,smolercatzzi#6969,smolestcatzzi#6969
     } else {
       getSummonerRank(channel, userstate, message);
     }
@@ -182,7 +182,7 @@ client.on('message', (channel, userstate, message, self) => {
       client.say(channel, 'owoCheer');
     }
 
-    if (startsWith(message, '!dream')) {
+    if (startsWith(message, '!goal')) {
       dreamRank(channel);
       return;
     }
