@@ -17,15 +17,15 @@ export function duel(channel, userstate, message) {
       client.say(channel, `@${username}, du kannst dich nicht selbst duellieren! nh `);
       return;
     }
-  
+
     const channelData = initialize.channelsInfo[channel];
     if (channelData.pendingDuels[username]) {
       client.say(channel, `@${username}, du hast bereits eine Ausstehende Duellanfrage! MADcat `);
       return;
     }
-    
+
     channelData.pendingDuels[username] = { opponent, timeout: null };
-    client.say(channel, `@${opponent}, du wurdest von @${username} zu einem Duell herausgefordert! 
+    client.say(channel, `@${opponent}, du wurdest von @${username} zu einem Duell herausgefordert!
       Schreibe !accept um anzunehmen! Verlierer ist 5 minuten im Timeout`);
 
     channelData.pendingDuels[username].timeout = setTimeout(() => {
@@ -37,7 +37,7 @@ export function duel(channel, userstate, message) {
 export function accept(channel, userstate, message) {
 
     let username = userstate.username;
-    
+
     const channelData = initialize.channelsInfo[channel];
 
     const challenger = Object.keys(channelData.pendingDuels).find(
@@ -51,13 +51,18 @@ export function accept(channel, userstate, message) {
 
     clearTimeout(channelData.pendingDuels[challenger].timeout);
     delete initialize.channelsInfo[channel].pendingDuels[challenger];
-    
+
     client.say(channel, `@${challenger} und @${username}, das Stinkerduell beginnt! PauseChamp`);
-  
+
     let stink1 = Math.floor(Math.random() * 100) + 1;
     let stink2 = Math.floor(Math.random() * 100) + 1;
-  
-    if (stink1 < stink2) {
+
+    if((challenger.toLowerCase() == "d4rkh4l3" || username.toLowerCase() == "d4rkh4l3") && Math.floor(Math.random() * 1000) + 1 == 420)
+    {
+      let darki = challenger.toLowerCase() == "d4rkh4l3" ? challenger : username;
+      client.say(channel, `@${darki} ist so dermaßen am stinken und unfair, der muss mal kurz duschen gehen owoFinger Smelly`);
+      timeout(darki, channel, 300); // Timeout the user
+    } else if (stink1 < stink2) {
       client.say(channel, `@${challenger} (${stink1}%) gewinnt das Stinkerduell @${username} (${stink2}%)! Smelly`);
       timeout(username, channel, 300); // Timeout the user
       updateUserStats(channel, challenger, true);  // Update stats for winner
@@ -79,7 +84,7 @@ export function accept(channel, userstate, message) {
 }
 
 export function decline(channel, userstate, message) {
-    
+
     let username = userstate.username;
 
     const challenger = Object.keys(initialize.channelsInfo[channel].pendingDuels).find(key => initialize.channelsInfo[channel].pendingDuels[key].opponent === username.toLowerCase());
@@ -103,24 +108,24 @@ export function decline(channel, userstate, message) {
 
 export function retract(channel, userstate, message) {
         let username = userstate.username;
-    
+
         const opponent = Object.keys(initialize.channelsInfo[channel].pendingDuels).find(key => key === username.toLowerCase());
-        
+
         if (!opponent) {
         client.say(channel, `@${username}, du hast keine ausstehenden Duellanfragen. Hmm`);
         return;
         }
-  
+
         console.log(initialize.channelsInfo[channel].pendingDuels[username]);
         clearTimeout(initialize.channelsInfo[channel].pendingDuels[username].timeout);
         delete initialize.channelsInfo[channel].pendingDuels[username];
-        
+
         client.say(channel, `@${username}, deine Duellanfrage wurde zurückgezogen. Yoink`);
 }
 
 export function duelInfo(channel, userstate, message) {
     let username = userstate.username;
-    client.say(channel, `@${username}, verfügbarer Befehle: 
+    client.say(channel, `@${username}, verfügbarer Befehle:
       !duell <username>, !accept, !decline, !retract, !duellinfo, !moshpit <name> <name2>.., !acceptmoshpit, !declinemoshpit, !openfight, !joinfight
       !duellstats, !duellboard`);
 }
@@ -160,7 +165,7 @@ export function groupDuel(channel, userstate, message) {
       timeout: null
   };
 
-  client.say(channel, `@${opponents.join(', @')}, ihr wurdet von @${username} zu einem Gruppenduell eingeladen! 
+  client.say(channel, `@${opponents.join(', @')}, ihr wurdet von @${username} zu einem Gruppenduell eingeladen!
   Schreibt !acceptmoshpit um beizutreten. Alle bis auf der Gewinner mit der niedrigsten Stinkung werden 5 Minuten im Timeout sein. chillCat `);
 
   channelData.pendingDuels[username].timeout = setTimeout(() => {
