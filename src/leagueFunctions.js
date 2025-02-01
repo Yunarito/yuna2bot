@@ -37,7 +37,7 @@ export async function dreamRank(channel) {
 
         let totalLpNeeded = lpToEmerald4(currentRank);
 
-        rankMessage += `${capitalizeFirstLetter(rankedSoloQ.tier)} ${rankedSoloQ.rank} ${rankedSoloQ.leaguePoints}LP - ${totalLpNeeded}LP bis Gold IV woah`;
+        rankMessage += `${capitalizeFirstLetter(rankedSoloQ.tier)} ${rankedSoloQ.rank} ${rankedSoloQ.leaguePoints}LP - ${totalLpNeeded}LP bis Emerald IV woah`;
 
         client.say(channel, rankMessage);
         return;
@@ -54,7 +54,7 @@ function lpToEmerald4(currentRank) {
     let currentTierIndex = tiers.indexOf(currentRank.tier);
 
     // Loop through until we hit Emerald 4
-    while (currentTierIndex < tiers.indexOf("Gold") || (currentTierIndex === tiers.indexOf("Gold") && currentRank.division > 4)) {
+    while (currentTierIndex < tiers.indexOf("Emerald") || (currentTierIndex === tiers.indexOf("Emerald") && currentRank.division > 4)) {
         // LP to promote to the next division
         totalLpNeeded += (lpPerDivision - currentRank.lp);
 
