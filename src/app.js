@@ -1,12 +1,15 @@
 import tmi from 'tmi.js';
-import { BOT_USERNAME, OAUTH_TOKEN, CHANNEL_NAME, BLOCKED_WORDS, RIOT_API_TOKEN } from './constants';
 import initialize from './initialize';
 import { dreamRank } from './leagueFunctions.js';
+// get everything from the .env file
+import dotenv from 'dotenv';
+dotenv.config();
 
 const {
   checkTwitchChat,
   startsWith,
-  twentyFour
+  twentyFour,
+  isHina
 } = require('./helper.js');
 
 const {
@@ -65,8 +68,10 @@ const {
 } = require('./subathonCounter.js');
 
 const {
-  getFollowage,
+  getFollowage
 } = require('./twitchApi.js');
+
+const BOT_USERNAME = process.env.BOT_USERNAME;
 
 const options = {
   options: { debug: true },
@@ -78,11 +83,14 @@ const options = {
     reconnectInterval: 1000,
   },
   identity: {
-    username: BOT_USERNAME,
-    password: OAUTH_TOKEN
+    username: process.env.BOT_USERNAME,
+    password: process.env.OAUTH_TOKEN
   },
-  channels: [CHANNEL_NAME]
+  channels: [process.env.CHANNEL_NAME]
 };
+
+console.log(process.env.BOT_USERNAME, process.env.OAUTH_TOKEN, process.env.CHANNEL_NAME);
+
 
 const client = new tmi.Client(options);
 
@@ -90,12 +98,18 @@ client.connect();
 
 let messageCount = 0;
 
+// i need to automatically renew the oauth token, so i can use it for the twitch api
+// setInterval(() => {
+//   client.api({
+
 // event handlers
 
 client.on('message', (channel, userstate, message, self) => {
   if (self) {
     return;
   }
+
+  isHina(userstate, channel);
 
   messageCount += 1;
 
@@ -313,13 +327,11 @@ client.on('message', (channel, userstate, message, self) => {
       return;
     }
   }
-
-  onMessageHandler(channel, userstate, message);
 });
 
-function onMessageHandler(channel, userstate, message) {
-  checkTwitchChat(userstate, message, channel);
-}
+// function onMessageHandler(channel, userstate, message) {
+//   checkTwitchChat(userstate, message, channel);
+// }
 
 // client.on('subgift', (channel, username, streakMonths, recipient, methods, userstate) => {
 //   if (channel === '#catzzi') {

@@ -1,6 +1,11 @@
 import fetch from 'node-fetch';
 import client from './app.js';
-import { RIOT_API_TOKEN, BLOCKED_WORDS } from './constants';
+import {
+  banUser
+} from './twitchApi.js';
+
+require('dotenv').config();
+const _RIOT_API_TOKEN = process.env.RIOT_API_TOKEN;
 
 export function twentyFour(channel) {
   client.say(channel, `Heute gibts einen 24 Stunden Stream mit: League, Winchallenge, MURMELN!!!!, hausgemachten Keksen und eventuell mehr. Dreht das Scamrad!!!`);
@@ -373,3 +378,11 @@ export function getQueueTypeFromMessage(message) {
     : { valid: false, queueId: null };
 }
 
+export function isHina(userstate, channel) {
+  const regex = /^hina\d+$/; //
+    if (regex.test(userstate.username)) {
+      banUser(userstate.username, channel);
+    } else {
+        return false;
+    }
+}

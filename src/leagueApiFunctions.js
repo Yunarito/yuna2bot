@@ -11,7 +11,9 @@ const {
 
 import fetch from 'node-fetch';
 import client from './app.js';
-import { RIOT_API_TOKEN } from './constants';
+
+require('dotenv').config();
+const RIOT_API_TOKEN = process.env.RIOT_API_TOKEN;
 
 export async function getSummonerRank(channel, userstate, message, multiSummoner = false) {
   let summonerName;
