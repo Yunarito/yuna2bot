@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 import client from './app.js';
+import initialize from './initialize';
 
 require('dotenv').config();
 const BOT_USERNAME = process.env.BOT_USERNAME;
@@ -193,6 +194,28 @@ export async function getFollowers(channel) {
     console.error('Error making the API call:', error);
     return null;
   }
+}
+
+export async function shoutout(channel) {
+
+  const channelId = await getUserId(channel.replace('#', ''));
+  const userId = await getUserId(initialize.channelsInfo[channel].shoutouts.shift());
+  const moderatorId = await getUserId(BOT_USERNAME.replace('#', ''));
+
+  const url = `https://api.twitch.tv/helix/chat/shoutouts?from_broadcaster_id=${channelId}&to_broadcaster_id=${userId}&moderator_id=${moderatorId}`
+
+  try {
+    await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${OAUTH_TOKEN.replace('oauth:', '')}`,
+        'Client-Id': CLIENT_ID,
+      },
+    });
+  } catch (error) {
+    console.error('Error making the API call:', error);
+  }
+
 }
 
 async function getUserId(username) {

@@ -68,7 +68,8 @@ const {
 } = require('./subathonCounter.js');
 
 const {
-  getFollowage
+  getFollowage,
+  shoutout
 } = require('./twitchApi.js');
 
 const BOT_USERNAME = process.env.BOT_USERNAME;
@@ -112,6 +113,8 @@ client.on('message', (channel, userstate, message, self) => {
   isHina(userstate, channel);
 
   messageCount += 1;
+
+  shoutout(channel, 'FieserFettsag');
 
   initialize.initializeChannel(channel);
 
@@ -326,6 +329,11 @@ client.on('message', (channel, userstate, message, self) => {
       sadswitch(channel);
       return;
     }
+
+    if (startsWith(message, '!so')) {
+      shoutout(channel);
+      return;
+    }
   }
 });
 
@@ -353,6 +361,14 @@ client.on('message', (channel, userstate, message, self) => {
 //     subHandler(channel, username, method)
 //   }
 // })
+
+
+client.on('raided', (channel, username, viewers) => {
+  if (!initialize.channelsInfo[channel].shoutout.includes(username)) {
+    initialize.channelsInfo[channel].shoutout.push(username);
+  }
+});
+
 
 // commands
 
