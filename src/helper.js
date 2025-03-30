@@ -5,7 +5,7 @@ import {
 } from './twitchApi.js';
 
 require('dotenv').config();
-const _RIOT_API_TOKEN = process.env.RIOT_API_TOKEN;
+const RIOT_API_TOKEN = process.env.RIOT_API_TOKEN;
 
 export function twentyFour(channel) {
   client.say(channel, `Heute gibts einen 24 Stunden Stream mit: League, Winchallenge, MURMELN!!!!, hausgemachten Keksen und eventuell mehr. Dreht das Scamrad!!!`);
