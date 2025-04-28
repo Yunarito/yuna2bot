@@ -199,7 +199,7 @@ export async function getFollowers(channel) {
 export async function shoutout(channel) {
 
   const channelId = await getUserId(channel.replace('#', ''));
-  const userId = await getUserId(initialize.channelsInfo[channel].shoutouts.shift());
+  const userId = await getUserId(initialize.channelsInfo[channel].shoutout.shift());
   const moderatorId = await getUserId(BOT_USERNAME.replace('#', ''));
 
   const url = `https://api.twitch.tv/helix/chat/shoutouts?from_broadcaster_id=${channelId}&to_broadcaster_id=${userId}&moderator_id=${moderatorId}`
