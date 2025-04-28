@@ -106,234 +106,239 @@ let messageCount = 0;
 // event handlers
 
 client.on('message', (channel, userstate, message, self) => {
+  try {
+    isHina(userstate, channel);
+
+    messageCount += 1;
+
+    shoutout(channel, 'FieserFettsag');
+
+    initialize.initializeChannel(channel);
+
+    if (userstate.username === BOT_USERNAME) {
+      console.log(`Not checking bot's messages.`);
+      return;
+    }
+
+    if (userstate.username === "streamlabs" && message.includes("hat €")) {
+      console.log(message, message.includes("hat €"));
+      donationHandler(channel, message);
+      return;
+    }
+
+    if (startsWith(message, '!followage')) {
+      getFollowage(userstate.username, channel);
+      return;
+    }
+
+    // League commands:
+
+    if (startsWith(message, '!rank') || startsWith(message, '!elo')) {
+      if(channel === '#catzzi' && message.includes('mods')) {
+        getSummonerRank(channel, userstate, "!rank Yunarito#69420,Leaveless#GGA,scremmys#6969");
+      } else if(channel === '#catzzi' && !message.includes('#')) {
+        getSummonerRank(channel, userstate, "!rank catzzi#euw,smolestcatzzi#6969"); //catzzi#euw,smolcatzzi#EUW,smolercatzzi#6969,smolestcatzzi#6969
+      } else {
+        getSummonerRank(channel, userstate, message);
+      }
+      return;
+    }
+
+    if (startsWith(message, '!avgrank') || startsWith(message, '!avgelo')) {
+      getAvgRankInMatch(channel, userstate, message);
+      return;
+    }
+
+    if (startsWith(message, '!lastgame')) {
+      getLastGameData(channel, userstate, message);
+      return;
+    }
+
+    if (startsWith(message, '!topmastery')) {
+      masteryscore(channel, userstate, message);
+      return;
+    }
+
+    // Queue commands:
+
+    if (startsWith(message, '!join') && initialize.channelsInfo[channel].enabled) {
+      joinQueue(channel, userstate);
+      return;
+    }
+
+    if (startsWith(message, '!leave') && initialize.channelsInfo[channel].enabled) {
+      leaveQueue(channel, userstate);
+      return;
+    }
+
+    if (startsWith(message, '!list') && initialize.channelsInfo[channel].enabled) {
+      listQueue(channel);
+      return;
+    }
+
+    if (startsWith(message, '!scamout')) {
+      getTimeoutTime(channel);
+      return;
+    }
+
+    // Duel commands:
+    if (channel === '#catzzi' || channel === '#yunarito') {
+
+      if(userstate['first-msg']){
+        client.say(channel, 'FirstTimeLicka');
+      }
+
+      if (messageCount % 60 === 0) {
+        // client.say(channel, 'Momentan kann man für die Streamawards abstimmen! Stimmt für catzzi unter Beste/r Newcomer/in ab! Do your part ! owo7 https://streamawards.de');
+      }
+
+      if (message.includes('owoCheer')) {
+        client.say(channel, 'owoCheer');
+      }
+
+      if (startsWith(message, '!goal')) {
+        dreamRank(channel);
+        return;
+      }
+
+      if (startsWith(message, '!duell')) {
+        duel(channel, userstate, message);
+        return;
+      }
+
+      if (startsWith(message, '!accept')) {
+        accept(channel, userstate, message);
+        return;
+      }
+
+      if (startsWith(message, '!decline')) {
+        decline(channel, userstate, message);
+        return;
+      }
+
+      if (startsWith(message, '!moshpit')) {
+        groupDuel(channel, userstate, message);
+        return;
+      }
+
+      if (startsWith(message, '!acceptmoshpit')) {
+        acceptGroupDuel(channel, userstate, message);
+        return;
+      }
+
+      if (startsWith(message, '!declinemoshpit')) {
+        declineGroupDuel(channel, userstate, message);
+        return;
+      }
+
+      if (startsWith(message, '!retract')) {
+        retract(channel, userstate, message);
+        return;
+        return;
+      }
+
+      if (startsWith(message, '!duellinfo')) {
+        duelInfo(channel, userstate, message);
+        return;
+      }
+
+      if(startsWith(message, '!duellstats')) {
+        stats(channel, userstate, message);
+        return;
+      }
+
+      if(startsWith(message, '!duellboard')) {
+        leaderboard(channel);
+        return;
+      }
+
+      if (startsWith(message, '!openfight')) {
+        openContest(channel, userstate, message);
+        return;
+      }
+
+      if (startsWith(message, '!joinfight')) {
+        joinContest(channel, userstate, message);
+        return;
+      }
+
+      //subathon commands
+
+      /*
+        if (startsWith(message, '!mypoints')) {
+          getChannelPoints(channel, userstate['display-name']);
+        }
+
+        if (startsWith(message, '!totalpoints')) {
+          getChannelTotalPoints(channel);
+        }
+
+        if (startsWith(message, '!pointchart')) {
+          getPointChart(channel);
+        }
+      */
+    }
+
+    if (startsWith(message, '!commands')) {
+      client.say(channel, 'Die Commands könnt ihr hier finden: https://yunarito.de/yuna2bot');
+      return;
+    }
+
+    // Mod or Streamer commands:
+
+    if(hasRights(userstate, channel)){
+      if (startsWith(message, '!pick')) {
+        pickFromQueue(channel, userstate, message);
+        return;
+      }
+
+      if (startsWith(message, '!enablequeue')) {
+        enableQueue(channel);
+        return;
+      }
+
+      if (startsWith(message, '!disablequeue')) {
+        disableQueue(channel);
+        return;
+      }
+
+      if (startsWith(message, '!scamreset')) {
+        resetTime(channel);
+        return;
+      }
+
+      if (startsWith(message, '!scammed')) {
+        addTimeoutTime(channel);
+        return;
+      }
+
+      if (startsWith(message, '!scamset')) {
+        setTime(channel, message);
+        return;
+      }
+
+      if (startsWith(message, '!happyswitch')) {
+        happyswitch(channel);
+        return;
+      }
+
+      if (startsWith(message, '!sadswitch')) {
+        sadswitch(channel);
+        return;
+      }
+
+      if (startsWith(message, '!so')) {
+        shoutout(channel);
+        return;
+      }
+    }
+  } catch (error) {
+    console.error('Error in message event handler:', error);
+
+    client.say(channel, `Nö, kein Bock angySit`);
+  }
   if (self) {
     return;
-  }
-
-  isHina(userstate, channel);
-
-  messageCount += 1;
-
-  shoutout(channel, 'FieserFettsag');
-
-  initialize.initializeChannel(channel);
-
-  if (userstate.username === BOT_USERNAME) {
-    console.log(`Not checking bot's messages.`);
-    return;
-  }
-
-  if (userstate.username === "streamlabs" && message.includes("hat €")) {
-    console.log(message, message.includes("hat €"));
-    donationHandler(channel, message);
-    return;
-  }
-
-  if (startsWith(message, '!followage')) {
-    getFollowage(userstate.username, channel);
-    return;
-  }
-
-  // League commands:
-
-  if (startsWith(message, '!rank') || startsWith(message, '!elo')) {
-    if(channel === '#catzzi' && message.includes('mods')) {
-      getSummonerRank(channel, userstate, "!rank Yunarito#69420,Leaveless#GGA,scremmys#6969");
-    } else if(channel === '#catzzi' && !message.includes('#')) {
-      getSummonerRank(channel, userstate, "!rank catzzi#euw,smolestcatzzi#6969"); //catzzi#euw,smolcatzzi#EUW,smolercatzzi#6969,smolestcatzzi#6969
-    } else {
-      getSummonerRank(channel, userstate, message);
-    }
-    return;
-  }
-
-  if (startsWith(message, '!avgrank') || startsWith(message, '!avgelo')) {
-    getAvgRankInMatch(channel, userstate, message);
-    return;
-  }
-
-  if (startsWith(message, '!lastgame')) {
-    getLastGameData(channel, userstate, message);
-    return;
-  }
-
-  if (startsWith(message, '!topmastery')) {
-    masteryscore(channel, userstate, message);
-    return;
-  }
-
-  // Queue commands:
-
-  if (startsWith(message, '!join') && initialize.channelsInfo[channel].enabled) {
-    joinQueue(channel, userstate);
-    return;
-  }
-
-  if (startsWith(message, '!leave') && initialize.channelsInfo[channel].enabled) {
-    leaveQueue(channel, userstate);
-    return;
-  }
-
-  if (startsWith(message, '!list') && initialize.channelsInfo[channel].enabled) {
-    listQueue(channel);
-    return;
-  }
-
-  if (startsWith(message, '!scamout')) {
-    getTimeoutTime(channel);
-    return;
-  }
-
-  // Duel commands:
-  if (channel === '#catzzi' || channel === '#yunarito') {
-
-    if(userstate['first-msg']){
-      client.say(channel, 'FirstTimeLicka');
-    }
-
-    if (messageCount % 60 === 0) {
-      // client.say(channel, 'Momentan kann man für die Streamawards abstimmen! Stimmt für catzzi unter Beste/r Newcomer/in ab! Do your part ! owo7 https://streamawards.de');
-    }
-
-    if (message.includes('owoCheer')) {
-      client.say(channel, 'owoCheer');
-    }
-
-    if (startsWith(message, '!goal')) {
-      dreamRank(channel);
-      return;
-    }
-
-    if (startsWith(message, '!duell')) {
-      duel(channel, userstate, message);
-      return;
-    }
-
-    if (startsWith(message, '!accept')) {
-      accept(channel, userstate, message);
-      return;
-    }
-
-    if (startsWith(message, '!decline')) {
-      decline(channel, userstate, message);
-      return;
-    }
-
-    if (startsWith(message, '!moshpit')) {
-      groupDuel(channel, userstate, message);
-      return;
-    }
-
-    if (startsWith(message, '!acceptmoshpit')) {
-      acceptGroupDuel(channel, userstate, message);
-      return;
-    }
-
-    if (startsWith(message, '!declinemoshpit')) {
-      declineGroupDuel(channel, userstate, message);
-      return;
-    }
-
-    if (startsWith(message, '!retract')) {
-      retract(channel, userstate, message);
-      return;
-      return;
-    }
-
-    if (startsWith(message, '!duellinfo')) {
-      duelInfo(channel, userstate, message);
-      return;
-    }
-
-    if(startsWith(message, '!duellstats')) {
-      stats(channel, userstate, message);
-      return;
-    }
-
-    if(startsWith(message, '!duellboard')) {
-      leaderboard(channel);
-      return;
-    }
-
-    if (startsWith(message, '!openfight')) {
-      openContest(channel, userstate, message);
-      return;
-    }
-
-    if (startsWith(message, '!joinfight')) {
-      joinContest(channel, userstate, message);
-      return;
-    }
-
-    //subathon commands
-
-    /*
-      if (startsWith(message, '!mypoints')) {
-        getChannelPoints(channel, userstate['display-name']);
-      }
-
-      if (startsWith(message, '!totalpoints')) {
-        getChannelTotalPoints(channel);
-      }
-
-      if (startsWith(message, '!pointchart')) {
-        getPointChart(channel);
-      }
-    */
-  }
-
-  if (startsWith(message, '!commands')) {
-    client.say(channel, 'Die Commands könnt ihr hier finden: https://yunarito.de/yuna2bot');
-    return;
-  }
-
-  // Mod or Streamer commands:
-
-  if(hasRights(userstate, channel)){
-    if (startsWith(message, '!pick')) {
-      pickFromQueue(channel, userstate, message);
-      return;
-    }
-
-    if (startsWith(message, '!enablequeue')) {
-      enableQueue(channel);
-      return;
-    }
-
-    if (startsWith(message, '!disablequeue')) {
-      disableQueue(channel);
-      return;
-    }
-
-    if (startsWith(message, '!scamreset')) {
-      resetTime(channel);
-      return;
-    }
-
-    if (startsWith(message, '!scammed')) {
-      addTimeoutTime(channel);
-      return;
-    }
-
-    if (startsWith(message, '!scamset')) {
-      setTime(channel, message);
-      return;
-    }
-
-    if (startsWith(message, '!happyswitch')) {
-      happyswitch(channel);
-      return;
-    }
-
-    if (startsWith(message, '!sadswitch')) {
-      sadswitch(channel);
-      return;
-    }
-
-    if (startsWith(message, '!so')) {
-      shoutout(channel);
-      return;
-    }
   }
 });
 
