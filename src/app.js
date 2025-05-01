@@ -135,7 +135,7 @@ client.on('message', (channel, userstate, message, self) => {
 
     if (startsWith(message, '!rank') || startsWith(message, '!elo')) {
       if(channel === '#catzzi' && message.includes('mods')) {
-        getSummonerRank(channel, userstate, "!rank Yunarito#69420,Leaveless#GGA,scremmys#6969");
+        getSummonerRank(channel, userstate, "!rank Yunarito#69420,Leaveless#bruch,scremmys#6969");
       } else if(channel === '#catzzi' && !message.includes('#')) {
         getSummonerRank(channel, userstate, "!rank catzzi#euw,smolestcatzzi#6969"); //catzzi#euw,smolcatzzi#EUW,smolercatzzi#6969,smolestcatzzi#6969
       } else {
