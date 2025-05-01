@@ -111,8 +111,6 @@ client.on('message', (channel, userstate, message, self) => {
 
     messageCount += 1;
 
-    shoutout(channel, 'FieserFettsag');
-
     initialize.initializeChannel(channel);
 
     if (userstate.username === BOT_USERNAME) {
