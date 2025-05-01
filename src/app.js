@@ -107,11 +107,12 @@ let messageCount = 0;
 
 client.on('message', (channel, userstate, message, self) => {
   try {
-    isHina(userstate, channel);
 
     messageCount += 1;
 
     initialize.initializeChannel(channel);
+
+    isHina(userstate, channel);
 
     if (userstate.username === BOT_USERNAME) {
       console.log(`Not checking bot's messages.`);
