@@ -90,12 +90,14 @@ const options = {
   channels: [process.env.CHANNEL_NAME]
 };
 
-console.log(process.env.BOT_USERNAME, process.env.OAUTH_TOKEN, process.env.CHANNEL_NAME);
-
-
 const client = new tmi.Client(options);
 
-client.connect();
+client.connect().catch(
+  (err) => {
+    console.error('Error connecting to Twitch:', err);
+    process.exit(1); // Exit the process if connection fails
+  }
+);
 
 let messageCount = 0;
 
