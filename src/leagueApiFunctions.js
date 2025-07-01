@@ -44,7 +44,7 @@ export async function getSummonerRank(channel, userstate, message, multiSummoner
 
       let summonerIds = [];
       summonerResponses.forEach(response => {
-        summonerIds.push(response.id);
+        summonerIds.push(response.puuid);
       })
 
       let rankDatas = [];
@@ -79,7 +79,9 @@ export async function getSummonerRank(channel, userstate, message, multiSummoner
 
       if(summonerData == null) return;
 
-      const summonerId = summonerData.id;
+      console.log('Summoner Data:', summonerData);
+
+      const summonerId = summonerData.puuid;
 
       const rankData = await getRankDataForSummonerId(channel, summonerId)
 

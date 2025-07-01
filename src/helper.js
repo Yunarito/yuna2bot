@@ -172,7 +172,9 @@ export async function getAccountDataForPuuid(channel, puuid){
 
 export async function getRankDataForSummonerId(channel, summonerId) {
   const apiKey = RIOT_API_TOKEN;
-    const rankUrl = `https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/${summonerId}`;
+    const rankUrl = `https://euw1.api.riotgames.com/lol/league/v4/entries/by-puuid/${summonerId}`;
+    console.log(rankUrl);
+
     const rankResponse = await fetch(rankUrl, {
       method: 'GET',
       headers: {
