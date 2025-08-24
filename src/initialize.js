@@ -6,7 +6,7 @@ const initialize = {
             this.channelsInfo[channel] = {
                 pendingDuels: {},
                 queue: [],
-                shoutout: [],
+                shoutout: {},
                 enabled: false,
                 timeoutTime: 300,
                 happyHour: false,

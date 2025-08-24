@@ -197,25 +197,38 @@ export async function getFollowers(channel) {
 }
 
 export async function shoutout(channel) {
+  const channelInfo = initialize.channelsInfo[channel];
+  const usernames = Object.keys(channelInfo.shoutout);
+  if (usernames.length === 0) return; // nothing to shoutout
+
+  const username = usernames[0]; // just grab the first one
 
   const channelId = await getUserId(channel.replace('#', ''));
-  const userId = await getUserId(initialize.channelsInfo[channel].shoutout.shift());
   const moderatorId = await getUserId(BOT_USERNAME.replace('#', ''));
+
+  const userId = await getUserId(username);
 
   const url = `https://api.twitch.tv/helix/chat/shoutouts?from_broadcaster_id=${channelId}&to_broadcaster_id=${userId}&moderator_id=${moderatorId}`
 
   try {
-    await fetch(url, {
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${OAUTH_TOKEN.replace('oauth:', '')}`,
         'Client-Id': CLIENT_ID,
       },
     });
+    if (response.ok) {
+      console.log(`Shoutout successful for ${username} in channel ${channel}`);
+      delete channelInfo.shoutout[username];
+    } else {
+      const errorData = await response.json();
+      console.error(`Failed to give shoutout: ${response.status} - ${response.statusText}`);
+      console.error(errorData);
+    }
   } catch (error) {
     console.error('Error making the API call:', error);
   }
-
 }
 
 async function getUserId(username) {

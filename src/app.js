@@ -371,12 +371,12 @@ client.on('message', (channel, userstate, message, self) => {
 
 
 client.on('raided', (channel, username, viewers) => {
-  if (!initialize.channelsInfo[channel].shoutout.includes(username)) {
-    initialize.channelsInfo[channel].shoutout.push(username);
-    initialize.channelsInfo[channel].shoutout[username] = setTimeout(() => {
-      delete initialize.channelsInfo[channel].shoutout[username];
-    }, 60 * 10); // 10 minutes
+  if (!initialize.channelsInfo[channel].shoutout[username]) {
+    initialize.channelsInfo[channel].shoutout[username] = {};
   }
+  initialize.channelsInfo[channel].shoutout[username].timeout = setTimeout(() => {
+    delete initialize.channelsInfo[channel].shoutout[username];
+  }, 1000 * 60 * 10); // 10 minutes
 });
 
 
