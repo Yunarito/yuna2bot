@@ -1,2 +1,12 @@
 require = require("esm")(module/*, options*/)
-module.exports = require("./app.js")
+
+const { validateAndScheduleInitialRefresh } = require("./twitchAuth.js");
+
+validateAndScheduleInitialRefresh()
+  .then(() => {
+    module.exports = require("./app.js")
+  })
+  .catch((error) => {
+    console.error('Failed to obtain a valid Twitch OAuth token:', error);
+    process.exit(1);
+  });

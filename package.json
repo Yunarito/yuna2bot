@@ -5,6 +5,7 @@
   "main": "src",
   "scripts": {
     "start": "node src/index.js",
+    "auth": "node src/scripts/authorizeTwitch.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Yunarito",
@@ -13,6 +14,7 @@
     "dotenv": "^16.4.7",
     "esm": "^3.2.25",
     "mysql2": "^3.12.0",
+    "node-fetch": "^2.7.0",
     "tmi.js": "^1.5.0"
   }
 }

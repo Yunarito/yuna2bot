@@ -1,12 +1,34 @@
 const fetch = require('node-fetch');
 import client from './app.js';
 import initialize from './initialize';
+import { getAccessToken, refreshAccessToken } from './twitchAuth.js';
 
 require('dotenv').config();
 const BOT_USERNAME = process.env.BOT_USERNAME;
 const CLIENT_ID = process.env.CLIENT_ID;
-const OAUTH_TOKEN = process.env.OAUTH_TOKEN;
 const CHANNEL_NAME = process.env.CHANNEL_NAME;
+
+// Shared fetch wrapper: attaches auth headers and, on a 401, refreshes the
+// token once and retries before giving up.
+async function twitchFetch(url, options = {}) {
+  const doFetch = (token) => fetch(url, {
+    ...options,
+    headers: {
+      ...options.headers,
+      'Authorization': `Bearer ${token}`,
+      'Client-Id': CLIENT_ID,
+    },
+  });
+
+  let response = await doFetch(getAccessToken());
+
+  if (response.status === 401) {
+    await refreshAccessToken();
+    response = await doFetch(getAccessToken());
+  }
+
+  return response;
+}
 
 
 export async function timeout(user, channel, duration) {
@@ -23,13 +45,9 @@ export async function timeout(user, channel, duration) {
     };
 
     try {
-        const response = await fetch(url, {
+        const response = await twitchFetch(url, {
         method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${OAUTH_TOKEN.replace('oauth:', '')}`,
-            'Client-Id': CLIENT_ID,
-            'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
         });
 
@@ -59,13 +77,7 @@ export async function getFollowage(user, channel) {
     // API-Aufruf zum Abrufen der Follower-Daten
     const url = `https://api.twitch.tv/helix/channels/followers?broadcaster_id=${channelId}&user_id=${userId}`;
 
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${OAUTH_TOKEN.replace('oauth:', '')}`,
-        'Client-Id': CLIENT_ID,
-      },
-    });
+    const response = await twitchFetch(url);
 
     if (response.ok) {
       const data = await response.json();
@@ -107,12 +119,7 @@ export async function banUser(user, channel) {
   const ageUrl = `https://api.twitch.tv/helix/users/follows?from_id=${userId}&to_id=${channelId}`;
 
   try {
-    const ageResponse = await fetch(ageUrl, {
-      headers: {
-        'Authorization': `Bearer ${OAUTH_TOKEN.replace('oauth:', '')}`,
-        'Client-Id': CLIENT_ID,
-      },
-    });
+    const ageResponse = await twitchFetch(ageUrl);
 
     if (ageResponse.ok) {
       const ageData = await ageResponse.json();
@@ -145,13 +152,9 @@ export async function banUser(user, channel) {
       },
     };
 
-    const response = await fetch(url, {
+    const response = await twitchFetch(url, {
       method: 'POST',
-      headers: {
-          'Authorization': `Bearer ${OAUTH_TOKEN.replace('oauth:', '')}`,
-          'Client-Id': CLIENT_ID,
-          'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     });
 
@@ -173,13 +176,7 @@ export async function getFollowers(channel) {
   const url = `https://api.twitch.tv/helix/users/follows?to_id=${channelId}`;
 
   try {
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${OAUTH_TOKEN.replace('oauth:', '')}`,
-        'Client-Id': CLIENT_ID,
-      },
-    });
+    const response = await twitchFetch(url);
 
     if (response.ok) {
       const data = await response.json();
@@ -211,13 +208,7 @@ export async function shoutout(channel) {
   const url = `https://api.twitch.tv/helix/chat/shoutouts?from_broadcaster_id=${channelId}&to_broadcaster_id=${userId}&moderator_id=${moderatorId}`
 
   try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${OAUTH_TOKEN.replace('oauth:', '')}`,
-        'Client-Id': CLIENT_ID,
-      },
-    });
+    const response = await twitchFetch(url, { method: 'POST' });
     if (response.ok) {
       console.log(`Shoutout successful for ${username} in channel ${channel}`);
       delete channelInfo.shoutout[username];
@@ -235,13 +226,7 @@ async function getUserId(username) {
   const url = `https://api.twitch.tv/helix/users?login=${username}`;
 
   try {
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${OAUTH_TOKEN.replace('oauth:', '')}`,
-        'Client-Id': CLIENT_ID,
-      },
-    });
+    const response = await twitchFetch(url);
 
     if (response.ok) {
       const data = await response.json();

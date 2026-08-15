@@ -73,6 +73,11 @@ const {
   timeout
 } = require('./twitchApi.js');
 
+const {
+  getAccessToken,
+  refreshAccessToken
+} = require('./twitchAuth.js');
+
 const BOT_USERNAME = process.env.BOT_USERNAME;
 
 const options = {
@@ -86,7 +91,9 @@ const options = {
   },
   identity: {
     username: process.env.BOT_USERNAME,
-    password: process.env.OAUTH_TOKEN
+    // tmi.js calls this fresh on every (re)connect, so a token refreshed
+    // in the background is always picked up automatically.
+    password: () => `oauth:${getAccessToken()}`
   },
   channels: [process.env.CHANNEL_NAME]
 };
@@ -100,11 +107,17 @@ client.connect().catch(
   }
 );
 
-let messageCount = 0;
+// Reactive fallback: if chat gets disconnected for a reason other than us
+// calling client.disconnect() ourselves, make sure we're not just retrying
+// with a dead token.
+client.on('disconnected', (reason) => {
+  console.error('Twitch chat disconnected:', reason);
+  refreshAccessToken().catch((error) => {
+    console.error('Failed to refresh Twitch token after disconnect:', error);
+  });
+});
 
-// i need to automatically renew the oauth token, so i can use it for the twitch api
-// setInterval(() => {
-//   client.api({
+let messageCount = 0;
 
 // event handlers
 
