@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const db = require('./db.js');
 
 import { DefaultDeserializer } from 'v8';
 import client from './app.js';
@@ -17,20 +18,20 @@ function ensureStatsFileExists() {
     if (!fs.existsSync(statsDir)) {
       fs.mkdirSync(statsDir, { recursive: true });
     }
-  
+
     // Check if the file exists and create it if it doesn't
     if (!fs.existsSync(statsFilePath)) {
       fs.writeFileSync(statsFilePath, JSON.stringify({}));
       console.log('User stats file created.');
     }
-} 
+}
 
 function ensureSubathonFileExists() {
     // Ensure the directory exists
     if (!fs.existsSync(statsDir)) {
       fs.mkdirSync(statsDir, { recursive: true });
     }
-  
+
     // Check if the file exists and create it if it doesn't
     if (!fs.existsSync(subathonFilePath)) {
       fs.writeFileSync(subathonFilePath, JSON.stringify({}));
@@ -65,23 +66,40 @@ function writeUserStats(stats) {
 // Update win/loss record for a user
 function updateUserStats(channel, username, isWinner) {
     const stats = readUserStats();
-  
+
     if (!stats[channel]) {
       stats[channel] = {};
     }
-  
+
     if (!stats[channel][username]) {
       stats[channel][username] = { wins: 0, losses: 0 };
     }
-  
+
     if (isWinner) {
       stats[channel][username].wins += 1;
     } else {
       stats[channel][username].losses += 1;
     }
-  
+
     writeUserStats(stats);
+
+    upsertDuelStatsInDb(channel, username, isWinner).catch((err) => {
+      console.error('Error writing duel stats to database:', err);
+    });
   }
+
+// Mirrors updateUserStats' JSON write into the duel_stats table.
+async function upsertDuelStatsInDb(channel, username, isWinner) {
+  const winsIncrement = isWinner ? 1 : 0;
+  const lossesIncrement = isWinner ? 0 : 1;
+
+  await db.query(
+    `INSERT INTO duel_stats (channel, username, wins, losses)
+     VALUES (?, ?, ?, ?)
+     ON DUPLICATE KEY UPDATE wins = wins + VALUES(wins), losses = losses + VALUES(losses)`,
+    [channel, username, winsIncrement, lossesIncrement]
+  );
+}
 
 // Function to handle the stats command
 function stats(channel, userstate, message) {
@@ -95,19 +113,19 @@ function stats(channel, userstate, message) {
     }
     const stats = readUserStats();
     const userStats = (stats[channel] && stats[channel][username]) || { wins: 0, losses: 0 };
-  
+
     client.say(channel, `@${username}, deine Duellstats: Wins: ${userStats.wins}, Losses: ${userStats.losses} (${(userStats.wins / (userStats.wins + userStats.losses) * 100).toFixed(2)}%)`);
 }
 
 function getLeaderboard(channel) {
     const stats = readUserStats();
     const channelStats = stats[channel] || {};
-  
+
     const leaderboard = Object.entries(channelStats)
       .map(([username, { wins, losses }]) => ({ username, wins, losses }))
       .sort((a, b) => b.wins - a.wins || a.losses - b.losses)
       .slice(0, 5); // Top 5
-  
+
     return leaderboard;
 }
 
@@ -139,7 +157,7 @@ function addSubathonPoints(channel, username, points) {
   }
 
   console.log(channel, username, points, subathonData[channel]);
-  
+
 
   subathonData[channel].points += points;
   subathonData[channel][username].points += points;
