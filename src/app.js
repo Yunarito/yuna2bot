@@ -226,7 +226,7 @@ client.on('message', (channel, userstate, message, self) => {
         return;
       }
 
-      if (startsWith(message, '!decline')) {
+      if (startsWith(message, '!run')) {
         decline(channel, userstate, message);
         return;
       }
@@ -246,9 +246,8 @@ client.on('message', (channel, userstate, message, self) => {
         return;
       }
 
-      if (startsWith(message, '!retract')) {
+      if (startsWith(message, '!rückzug')) {
         retract(channel, userstate, message);
-        return;
         return;
       }
 
