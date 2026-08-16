@@ -1,11 +1,11 @@
 import client from './app.js';
 import initialize from './initialize';
 
-const { 
-    addSubathonPoints, 
-    readSubathonData, 
+const {
+    addSubathonPoints,
     getPointTable,
-    writeSubathonData
+    getSubathonUserPoints,
+    getSubathonTotalPoints,
 } = require('./userStats.js');
 
 export function happyswitch(channel) {
@@ -20,73 +20,73 @@ export function sadswitch(channel) {
     client.say(channel, `Die Happyhour ist nun ausgeschaltet.`);
 }
 
-export function donationHandler(channel, message) {
+export async function donationHandler(channel, message) {
     const regex = /€(\d+(?:\.\d{1,2})?)/;
     const match = message.match(regex);
     const username = message.split(' ')[0];
 
-    const pointTable = getPointTable(channel);
+    const pointTable = await getPointTable(channel);
 
     let points = match ? match[1] * pointTable.donations.euro.points : 0;
 
-    addSubathonPoints(channel, username, points);
+    await addSubathonPoints(channel, username, points);
 }
 
-export function cheerHandler(channel, userstate, message) {
+export async function cheerHandler(channel, userstate, message) {
     let user = userstate['display-name'];
 
-    const pointTable = getPointTable(channel);
+    const pointTable = await getPointTable(channel);
 
     // Regular expression to match "Cheer" followed by digits
     const regex = /Cheer(\d+)/g;
-    
+
     // Array to hold all the matched numbers
     let match;
     let total = 0;
-    
+
     // Loop through all matches and sum the numbers
     while ((match = regex.exec(message)) !== null) {
         total += parseInt(match[1], 10);  // Convert the captured number to integer and add it to the total
     }
 
-    let points = pointTable.cheers.hundred.points * (total/100);      
+    let points = pointTable.cheers.hundred.points * (total/100);
 
-    addSubathonPoints(channel, user, points);
+    await addSubathonPoints(channel, user, points);
 }
 
-export function subHandler(channel, user, method) {
-    
+export async function subHandler(channel, user, method) {
+
     const subPlan = method.plan == "Prime" ? method.plan.toLowerCase() : method.plan / 1000;
-    
-    const pointTable = getPointTable(channel);
+
+    const pointTable = await getPointTable(channel);
 
     let points = pointTable.subscriptions[subPlan].points || 0;
 
-    addSubathonPoints(channel, user, points);
+    await addSubathonPoints(channel, user, points);
 }
 
-export function subGiftHandler(channel, user, method) {
+export async function subGiftHandler(channel, user, method) {
     const subPlan = method.plan / 1000;
-    
-    const pointTable = getPointTable(channel);
+
+    const pointTable = await getPointTable(channel);
 
     let points = pointTable.subscriptions[subPlan].points || 0;
 
-    addSubathonPoints(channel, user, points);
+    await addSubathonPoints(channel, user, points);
 }
 
-export function resubHandler(channel, user, method) {
+export async function resubHandler(channel, user, method) {
     const subPlan = method.plan == "Prime" ? method.plan.toLowerCase() : method.plan / 1000;
-    
-    const pointTable = getPointTable(channel);  
+
+    const pointTable = await getPointTable(channel);
 
     let points = pointTable.subscriptions[subPlan].points || 0;
 
-    addSubathonPoints(channel, user, points);
+    await addSubathonPoints(channel, user, points);
 }
 
-export function getPointChart(channel) {
-    const pointTable = getPointTable(channel);
+export async function getPointChart(channel) {
+    const pointTable = await getPointTable(channel);
 
     // client.say(channel, initialize.channelsInfo[channel].enabled);
 
@@ -101,38 +101,16 @@ export function getPointChart(channel) {
     client.say(channel, pointChart);
 }
 
-export function getChannelPoints(channel, username) {
-    const subathonData = readSubathonData();
-    
-    if (!subathonData[channel]) {
-        subathonData[channel] = {
-            points: 0,
-        };
-        writeSubathonData(subathonData);
-    }
+export async function getChannelPoints(channel, username) {
+    const userPoints = await getSubathonUserPoints(channel, username);
 
-    if (!subathonData[channel][username]) {
-        subathonData[channel][username] = {
-            points: 0,
-        };
-        writeSubathonData(subathonData);
-    }
-
-
-    let points = Math.round(subathonData[channel][username].points * 100)/100+"".replace(',', '.');
+    let points = Math.round(userPoints * 100)/100+"".replace(',', '.');
     client.say(channel, `@${username}, du hast ${points} Punkte zum Subathon beigetragen.`);
 }
 
-export function getChannelTotalPoints(channel) {
-    const subathonData = readSubathonData();
-    
-    if (!subathonData[channel]) {
-        subathonData[channel] = {
-            points: 0,
-        };
-        writeSubathonData(subathonData);
-    }
+export async function getChannelTotalPoints(channel) {
+    const totalPoints = await getSubathonTotalPoints(channel);
 
-    let points = Math.round(subathonData[channel].points)+"".replace('.', ',');
+    let points = Math.round(totalPoints)+"".replace('.', ',');
     client.say(channel, `Der aktuelle Subathon hat ${points} Punkte.`);
 }
