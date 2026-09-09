@@ -11,6 +11,7 @@ const {
 
 import fetch from 'node-fetch';
 import client from './app.js';
+import { t } from './i18n';
 
 require('dotenv').config();
 const RIOT_API_TOKEN = process.env.RIOT_API_TOKEN;
@@ -140,7 +141,7 @@ export async function getLastGameData(channel, userstate, message) {
     );
 
     if (!gameResponse.ok) {
-      client.say(channel, 'Keine vergangenen Spiele gefunden.');
+      client.say(channel, t(channel, 'league.noPastGames'));
       return;
     }
 
@@ -172,7 +173,7 @@ export async function getLastGameData(channel, userstate, message) {
     }
 
     if (!lastGame) {
-      client.say(channel, `Kein Spiel im Modus "${parts[parts.length - 1]}" gefunden.`);
+      client.say(channel, t(channel, 'league.noGameInMode', { mode: parts[parts.length - 1] }));
       return;
     }
 
@@ -210,19 +211,19 @@ export async function getLastGameData(channel, userstate, message) {
     const goldPerMinute = (participantId.goldEarned / (matchData.info.gameDuration / 60)).toFixed(2);
     const totalDamageDealtToChampions = participantId.totalDamageDealtToChampions;
     const championId = participantId.championName;
-    const win = participantId.win ? 'Gewonnen' : 'Verloren';
+    const win = participantId.win ? t(channel, 'league.won') : t(channel, 'league.lost');
     const hours = Math.floor(matchData.info.gameDuration / 60);
     const minutes = matchData.info.gameDuration % 60;
     const date = new Date(matchData.info.gameCreation);
-    const matchType = idToMode[matchData.info.queueId] || 'Unbekannter Modus';
+    const matchType = idToMode[matchData.info.queueId] || t(channel, 'league.unknownMode');
 
     const lgString = `${summonerName}: ${date.toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })} | ${matchType} | ${win} | ${hours}:${("0" + minutes).slice(-2)} |
-      ${championId} | KDA: ${kda} | CS/Min: ${csPerMinute} | Gold/Min: ${goldPerMinute} | Schaden: ${totalDamageDealtToChampions}`;
+      ${championId} | KDA: ${kda} | CS/Min: ${csPerMinute} | Gold/Min: ${goldPerMinute} | ${t(channel, 'league.damageLabel')}: ${totalDamageDealtToChampions}`;
 
     client.say(channel, lgString);
   } catch (error) {
     console.error('Error:', error);
-    client.say(channel, 'Fehler beim Abrufen der Spieldaten.');
+    client.say(channel, t(channel, 'league.fetchError'));
   }
 }
 
@@ -273,7 +274,7 @@ export async function masteryscore(channel, userstate, message) {
           .then(response => response.json())
           .then(championData => {
             let champion = Object.values(championData.data).find(champ => champ.key == championId).name
-            client.say(channel, `${summonerName}: ${champion} Lvl ${championLevel} (${championPoints.toLocaleString()}) Punkte`)
+            client.say(channel, t(channel, 'league.masteryResult', { summoner: summonerName, champion, level: championLevel, points: championPoints.toLocaleString() }))
           })
         })
         .catch(error => console.log('Error fetching latest version:', error));
@@ -305,7 +306,7 @@ let summonerName;
         return;
       }
 
-      client.say(channel, 'Durchschnittlicher ingame Rang: ' + avgrank)
+      client.say(channel, t(channel, 'league.avgRankPrefix') + avgrank)
 
     return
   } catch (error) {

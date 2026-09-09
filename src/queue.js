@@ -1,30 +1,31 @@
 import client from './app.js';
 import initialize from './initialize';
+import { t } from './i18n';
 
 export function joinQueue(channel, userstate) {
     if (!initialize.channelsInfo[channel].queue.includes(userstate.username)) {
         initialize.channelsInfo[channel].queue.push(userstate.username);
-        client.say(channel, `${userstate.username} ist der Schlange beigetreten. catWait`);
+        client.say(channel, t(channel, 'queue.joined', { username: userstate.username }));
     } else {
-        client.say(channel, `@${userstate.username}, du bist bereits in der Schlange.`);
+        client.say(channel, t(channel, 'queue.alreadyIn', { username: userstate.username }));
     }
 }
 
 export function leaveQueue(channel, userstate) {
     if (initialize.channelsInfo[channel].queue.includes(userstate.username)) {
         initialize.channelsInfo[channel].queue = initialize.channelsInfo[channel].queue.filter(user => user !== userstate.username);
-        client.say(channel, `${userstate.username} hat die Schlange verlassen. catLeave`);
+        client.say(channel, t(channel, 'queue.left', { username: userstate.username }));
     } else {
-        client.say(channel, `@${userstate.username}, du bist nicht in der Schlange.`);
+        client.say(channel, t(channel, 'queue.notIn', { username: userstate.username }));
     }
 }
 
 export function listQueue(channel, userstate) {
     if (initialize.channelsInfo[channel].queue.length > 0) {
         const userList = initialize.channelsInfo[channel].queue.join(', ');
-        client.say(channel, `Schlange: ${userList}`);
+        client.say(channel, t(channel, 'queue.list', { list: userList }));
     } else {
-        client.say(channel, 'Die Schlange ist leer.');
+        client.say(channel, t(channel, 'queue.empty'));
     }
 }
 
@@ -43,21 +44,21 @@ export function pickFromQueue(channel, userstate, message) {
 
         if (pickedUsers.length > 0) {
         const pickedList = pickedUsers.join(', ');
-        client.say(channel, `${numPicks} ausgewählt: ${pickedList}`);
+        client.say(channel, t(channel, 'queue.picked', { count: numPicks, list: pickedList }));
         } else {
-        client.say(channel, 'Die Schlange ist leer.');
+        client.say(channel, t(channel, 'queue.empty'));
         }
     } else {
-        client.say(channel, 'Die Schlange ist momentan aus.');
+        client.say(channel, t(channel, 'queue.offNotice'));
     }
     }
 
 export function enableQueue(channel) {
     initialize.channelsInfo[channel].enabled = true;
-    client.say(channel, 'Die Schlange ist nun eingeschaltet.');
+    client.say(channel, t(channel, 'queue.enabled'));
     }
 
 export function disableQueue(channel) {
     initialize.channelsInfo[channel].enabled = false;
-    client.say(channel, 'Die Schlange ist nun ausgeschaltet.');
+    client.say(channel, t(channel, 'queue.disabled'));
 }

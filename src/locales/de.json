@@ -1,0 +1,131 @@
+{
+  "errors": {
+    "generic": "Nö, kein Bock angySit"
+  },
+  "commands": {
+    "link": "Die Commands könnt ihr hier finden: https://yunarito.de/yuna2bot",
+    "help": "!rank/!elo <name,name2>, !avgrank/!avgelo <name>, !lastgame <name>, !topmastery <name>, !join, !leave, !list"
+  },
+  "language": {
+    "invalid": "Bitte gib eine gültige Sprache an (de, en).",
+    "set": "Sprache für diesen Kanal gesetzt auf: {{locale}}"
+  },
+  "queue": {
+    "joined": "{{username}} ist der Schlange beigetreten. catWait",
+    "alreadyIn": "@{{username}}, du bist bereits in der Schlange.",
+    "left": "{{username}} hat die Schlange verlassen. catLeave",
+    "notIn": "@{{username}}, du bist nicht in der Schlange.",
+    "list": "Schlange: {{list}}",
+    "empty": "Die Schlange ist leer.",
+    "picked": "{{count}} ausgewählt: {{list}}",
+    "offNotice": "Die Schlange ist momentan aus.",
+    "enabled": "Die Schlange ist nun eingeschaltet.",
+    "disabled": "Die Schlange ist nun ausgeschaltet."
+  },
+  "timeout": {
+    "reset": "Timeouttimer zurückgesetzt.",
+    "needSeconds": "Bitte gib eine Zeit in Sekunden an.",
+    "set": "Timeout gesetzt zu: {{minutes}} m [{{seconds}} s]",
+    "added": "Neuer Timeout: {{minutes}} m [{{seconds}} s]",
+    "next": "Nächster Timeout: {{minutes}} m [{{seconds}} s]"
+  },
+  "timedMessage": {
+    "needText": "Bitte gib eine Nachricht an.",
+    "set": "Timed Message gesetzt zu: \"{{text}}\"",
+    "notSet": "Es ist noch keine Timed Message gesetzt. Nutze !settimedmessage <Nachricht>.",
+    "enabled": "Timed Messages sind nun eingeschaltet.",
+    "disabled": "Timed Messages sind nun ausgeschaltet.",
+    "needInterval": "Bitte gib eine gültige Anzahl an Nachrichten an.",
+    "intervalSet": "Timed Message Intervall gesetzt zu: alle {{interval}} Nachrichten"
+  },
+  "duel": {
+    "needOpponent": "@{{username}}, bitte nenne einen Gegner. Prayge ",
+    "cantSelf": "@{{username}}, du kannst dich nicht selbst duellieren! nh ",
+    "alreadyPending": "@{{username}}, du hast bereits eine Ausstehende Duellanfrage! MADcat ",
+    "challenge": "@{{opponent}}, du wurdest von @{{username}} zu einem Duell herausgefordert!\n      Schreibe !accept um anzunehmen! Verlierer ist 5 minuten im Timeout",
+    "expired": "@{{username}}, deine Duellanfrage an @{{opponent}} is abgelaufen. SadCat",
+    "noPending": "@{{username}}, du hast keine ausstehenden Duellanfragen.",
+    "noPendingHmm": "@{{username}}, du hast keine ausstehenden Duellanfragen. Hmm",
+    "begins": "@{{challenger}} und @{{username}}, das Stinkerduell beginnt! PauseChamp",
+    "darki": "@{{user}} ist so dermaßen am stinken und unfair, der muss mal kurz duschen gehen owoFinger Smelly",
+    "win": "@{{winner}} ({{winnerScore}}%) gewinnt das Stinkerduell @{{loser}} ({{loserScore}}%)! Smelly",
+    "tie": "Unentschieden! @{{a}} ({{aScore}}%) und @{{b}} ({{bScore}}%) stinken gleich stark! Smelly",
+    "tieTimeout": "@{{a}} und @{{b}} sind nun im Timeout pepePoint .",
+    "declineInvalid": "@{{username}}, du kannst keine Duellanfrage ablehnen, die du nie erhalten hast KEKW",
+    "declined": "@{{challenger}}, deine Duellanfrage an @{{username}} wurde abgelehnt. SadCat",
+    "retracted": "@{{username}}, deine Duellanfrage wurde zurückgezogen. Yoink",
+    "info": "@{{username}}, verfügbare Befehle:\n      !duell <username>, !accept, !decline, !retract, !duellinfo, !moshpit <name> <name2>.., !acceptmoshpit, !declinemoshpit, !openfight, !joinfight\n      !duellstats, !duellboard"
+  },
+  "groupDuel": {
+    "needOpponent": "@{{username}}, bitte nenne mindestens einen Gegner. FlowerCatJAM",
+    "cantSelf": "@{{username}}, nenn dich nicht selbst! fricc",
+    "duplicate": "@{{username}}, doppelte Gegner erkannt. Bitte nur unterschiedliche Namen nennen. fricc",
+    "alreadyPending": "@{{username}}, du hast bereits ein ausstehendes Duell",
+    "challenge": "@{{opponents}}, ihr wurdet von @{{username}} zu einem Gruppenduell eingeladen!\n  Schreibt !acceptmoshpit um beizutreten. Alle bis auf der Gewinner mit der niedrigsten Stinkung werden 5 Minuten im Timeout sein. chillCat ",
+    "expired": "@{{username}}, deine Gruppenduellanfrage an {{opponents}} ist abgelaufen. SadCat",
+    "noPending": "@{{username}}, du hast keine ausstehenden Gruppenduelle. Hmm",
+    "accepted": "@{{username}} hat das Duell angenommen. Warte auf das Annehmen oder Ablehnen der anderen Teilnehmer. chillCat",
+    "noPendingDecline": "@{{username}}, du hat keine ausstehenden Anfragen für Gruppenduelle, die du ablehnen kannst. Hmm",
+    "declined": "@{{username}} hat das Gruppenduell abgelehnt. Warten auf die verbleibenden Teilnehmer. catWait",
+    "cancelled": "@{{challenger}}, es gibt nicht genug Teilnehmer. Das Gruppenduell wurde abgebrochen. SadCat",
+    "winner": "@{{winner}} gewinnt das Duell mit einer Stinkung von {{score}}%! owofinger",
+    "loser": "@{{loser}} ({{score}}%) verliert das Duell und ist im Timeout ."
+  },
+  "contest": {
+    "alreadyActive": "@{{username}}, es gibt bereits einen Stinkkrieg. Bitte warte bis dieser endet. Hmm",
+    "started": "@{{username}} hat einen Stinkkrieg gestartet! HYPERYump Schreibe !joinfight um teilzunehmen!\n     Der Stinkkrieg ended in {{minutes}} Minuten.",
+    "none": "@{{username}}, es gibt keine aktiven Stinkkrieg Deadge .",
+    "alreadyJoined": "@{{username}}, du bist bereits im Stinkkrieg Madge .",
+    "joined": "@{{username}} ist dem Stinkkrieg beigetreten! owoCheer Fight ",
+    "noneToEnd": "Es gibt keinen aktiven Stinkkrieg zu beenden.",
+    "noParticipants": "Der Stinkkrieg hatte keine Teilnehmer. Deadge",
+    "ended": "Der Stinkkrieg ist zu Ende! Gewinner: {{winners}} mit einer Stinkung von {{score}}%! owofinger",
+    "loserResult": "@{{loser}} stinkt zu {{score}}% und hat verloren. fricc"
+  },
+  "subathon": {
+    "happyOn": "Die Happyhour ist nun eingeschaltet.",
+    "happyOff": "Die Happyhour ist nun ausgeschaltet.",
+    "pointsUnit": "Punkte",
+    "pointChartHeader": "Punkteübersicht: ",
+    "userPoints": "@{{username}}, du hast {{points}} Punkte zum Subathon beigetragen.",
+    "totalPoints": "Der aktuelle Subathon hat {{points}} Punkte."
+  },
+  "stats": {
+    "duelStats": "@{{username}}, deine Duellstats: Wins: {{wins}}, Losses: {{losses}} ({{pct}}%)",
+    "noLeaderboard": "Kein Bestenliste vorhanden.",
+    "leaderboardHeader": "Top 5 Duelisten: "
+  },
+  "followage": {
+    "error": "Ich konnte die Follow-Dauer für {{user}} nicht ermitteln.",
+    "prefix": "{{user}} folgt seit ",
+    "years": "Jahr(en)",
+    "months": "Monat(en)",
+    "weeks": "Woche(n)",
+    "days": "Tag(en)",
+    "notFollowing": "{{user}} folgt {{channel}} nicht.",
+    "fetchError": "Ein Fehler ist aufgetreten. Ich konnte die Follow-Dauer für {{user}} nicht ermitteln."
+  },
+  "league": {
+    "noPastGames": "Keine vergangenen Spiele gefunden.",
+    "noGameInMode": "Kein Spiel im Modus \"{{mode}}\" gefunden.",
+    "won": "Gewonnen",
+    "lost": "Verloren",
+    "unknownMode": "Unbekannter Modus",
+    "damageLabel": "Schaden",
+    "fetchError": "Fehler beim Abrufen der Spieldaten.",
+    "avgRankPrefix": "Durchschnittlicher ingame Rang: ",
+    "masteryResult": "{{summoner}}: {{champion}} Lvl {{level}} ({{points}}) Punkte",
+    "dreamRankError": "Da ist n Fehler iwie oder so fricc riot.",
+    "dreamRankProgress": "{{tier}} {{rank}} {{lp}}LP - {{needed}}LP bis Emerald IV woah",
+    "unranked": "{{summoner}} ist unranked."
+  },
+  "helper": {
+    "useRiotId": "Bitte nutze RiotID wie \"Yunarito#69420\".",
+    "messageDeleted": "@{{username}}, sorry! Deine Nachricht wurde gelöscht.",
+    "accountNotFound": "Account nicht gefunden",
+    "notSummoner": "Der Account ist kein League-Summoner",
+    "riotApiError": "Riot API Fehler fricc",
+    "rankFetchError": "Datenziehung des Accounts nicht möglich",
+    "notInGame": "Spieler ist nicht in einem Spiel"
+  }
+}

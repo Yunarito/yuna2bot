@@ -5,6 +5,7 @@ const db = require('./db.js');
 import { DefaultDeserializer } from 'v8';
 import client from './app.js';
 import initialize from './initialize';
+import { t } from './i18n';
 
 // Path to the JSON file that stores user statistics
 const statsDir = path.join(__dirname, 'json', 'userStats');
@@ -104,11 +105,16 @@ async function stats(channel, userstate, message) {
       userStats = await getDuelStatsFromDb(channel, username);
     } catch (err) {
       console.error('Error reading duel stats from database:', err);
-      client.say(channel, `Nö, kein Bock angySit`);
+      client.say(channel, t(channel, 'errors.generic'));
       return;
     }
 
-    client.say(channel, `@${username}, deine Duellstats: Wins: ${userStats.wins}, Losses: ${userStats.losses} (${(userStats.wins / (userStats.wins + userStats.losses) * 100).toFixed(2)}%)`);
+    client.say(channel, t(channel, 'stats.duelStats', {
+      username,
+      wins: userStats.wins,
+      losses: userStats.losses,
+      pct: (userStats.wins / (userStats.wins + userStats.losses) * 100).toFixed(2)
+    }));
 }
 
 async function getDuelStatsFromDb(channel, username) {
@@ -135,14 +141,14 @@ async function leaderboard(channel) {
       topUsers = await getLeaderboard(channel);
     } catch (err) {
       console.error('Error reading leaderboard from database:', err);
-      client.say(channel, `Nö, kein Bock angySit`);
+      client.say(channel, t(channel, 'errors.generic'));
       return;
     }
 
     if (topUsers.length === 0) {
-      client.say(channel, `Kein Bestenliste vorhanden.`);
+      client.say(channel, t(channel, 'stats.noLeaderboard'));
     } else {
-      let leaderboardMessage = `Top 5 Duelisten: `;
+      let leaderboardMessage = t(channel, 'stats.leaderboardHeader');
       leaderboardMessage += topUsers.map((user, index) => `${index + 1}. @${user.username} - [${user.wins}:${user.losses}]`).join(' | ');
       client.say(channel, leaderboardMessage);
     }

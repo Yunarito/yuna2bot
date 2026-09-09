@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 import client from './app.js';
 import initialize from './initialize';
 import { getAccessToken, refreshAccessToken } from './twitchAuth.js';
+import { t } from './i18n';
 
 require('dotenv').config();
 const BOT_USERNAME = process.env.BOT_USERNAME;
@@ -71,7 +72,7 @@ export async function getFollowage(user, channel) {
 
     if (!userId || !channelId) {
       console.log('Benutzer oder Kanal nicht gefunden.');
-      return `Ich konnte die Follow-Dauer für ${user} nicht ermitteln.`;
+      return t(channel, 'followage.error', { user });
     }
 
     // API-Aufruf zum Abrufen der Follower-Daten
@@ -88,25 +89,25 @@ export async function getFollowage(user, channel) {
         const followDate = new Date(data.data[0].followed_at);
         const duration = calculateFollowDuration(followDate);
 
-        let result = `${user} folgt seit `;
-        if (duration.years > 0) result += ` ${duration.years} Jahr(en)` + (duration.months > 0 || duration.weeks > 0 || duration.days > 0 ? ', ' : '');
-        if (duration.months > 0) result += `${duration.months} Monat(en)` + (duration.weeks > 0 || duration.days > 0 ? ', ' : '');
-        if (duration.weeks > 0) result += `${duration.weeks} Woche(n)` + (duration.days > 0 ? ', ' : '');
-        if (duration.days > 0) result += `${duration.days} Tag(en)`;
+        let result = t(channel, 'followage.prefix', { user });
+        if (duration.years > 0) result += ` ${duration.years} ${t(channel, 'followage.years')}` + (duration.months > 0 || duration.weeks > 0 || duration.days > 0 ? ', ' : '');
+        if (duration.months > 0) result += `${duration.months} ${t(channel, 'followage.months')}` + (duration.weeks > 0 || duration.days > 0 ? ', ' : '');
+        if (duration.weeks > 0) result += `${duration.weeks} ${t(channel, 'followage.weeks')}` + (duration.days > 0 ? ', ' : '');
+        if (duration.days > 0) result += `${duration.days} ${t(channel, 'followage.days')}`;
 
         client.say(channel, result);
       } else {
-        client.say(channel, `${user} folgt ${channel} nicht.`);
+        client.say(channel, t(channel, 'followage.notFollowing', { user, channel }));
       }
     } else {
       const errorData = await response.json();
       console.error(`Fehler beim Abrufen der Follow-Daten: ${response.status} - ${response.statusText}`);
       console.error(errorData);
-      client.say(channel, `Ein Fehler ist aufgetreten. Ich konnte die Follow-Dauer für ${user} nicht ermitteln.`);
+      client.say(channel, t(channel, 'followage.fetchError', { user }));
     }
   } catch (error) {
     console.error('Fehler beim Abrufen der Follow-Dauer:', error);
-    client.say(channel, `Ein Fehler ist aufgetreten. Ich konnte die Follow-Dauer für ${user} nicht ermitteln.`);
+    client.say(channel, t(channel, 'followage.fetchError', { user }));
   }
 }
 

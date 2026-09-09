@@ -1,5 +1,6 @@
 import client from './app.js';
 import initialize from './initialize';
+import { t } from './i18n';
 import { timeout } from './twitchApi.js';
 const {
   updateUserStats,
@@ -9,27 +10,26 @@ export function duel(channel, userstate, message) {
     let command = message.trim().split(' ');
     let username = userstate.username;
     if (command.length < 2) {
-      client.say(channel, `@${username}, bitte nenne einen Gegner. Prayge `);
+      client.say(channel, t(channel, 'duel.needOpponent', { username }));
       return;
     }
     const opponent = command[1].replace('@', '').toLowerCase();
     if (opponent === username.toLowerCase()) {
-      client.say(channel, `@${username}, du kannst dich nicht selbst duellieren! nh `);
+      client.say(channel, t(channel, 'duel.cantSelf', { username }));
       return;
     }
 
     const channelData = initialize.channelsInfo[channel];
     if (channelData.pendingDuels[username]) {
-      client.say(channel, `@${username}, du hast bereits eine Ausstehende Duellanfrage! MADcat `);
+      client.say(channel, t(channel, 'duel.alreadyPending', { username }));
       return;
     }
 
     channelData.pendingDuels[username] = { opponent, timeout: null };
-    client.say(channel, `@${opponent}, du wurdest von @${username} zu einem Duell herausgefordert!
-      Schreibe !accept um anzunehmen! Verlierer ist 5 minuten im Timeout`);
+    client.say(channel, t(channel, 'duel.challenge', { opponent, username }));
 
     channelData.pendingDuels[username].timeout = setTimeout(() => {
-      client.say(channel, `@${username}, deine Duellanfrage an @${opponent} is abgelaufen. SadCat`);
+      client.say(channel, t(channel, 'duel.expired', { username, opponent }));
       delete channelData.pendingDuels[username];
     }, 60000); // 60 seconds
 }
@@ -45,14 +45,14 @@ export function accept(channel, userstate, message) {
     );
 
     if (!challenger) {
-      client.say(channel, `@${username}, du hast keine ausstehenden Duellanfragen.`);
+      client.say(channel, t(channel, 'duel.noPending', { username }));
       return;
     }
 
     clearTimeout(channelData.pendingDuels[challenger].timeout);
     delete initialize.channelsInfo[channel].pendingDuels[challenger];
 
-    client.say(channel, `@${challenger} und @${username}, das Stinkerduell beginnt! PauseChamp`);
+    client.say(channel, t(channel, 'duel.begins', { challenger, username }));
 
     let stink1 = Math.floor(Math.random() * 100) + 1;
     let stink2 = Math.floor(Math.random() * 100) + 1;
@@ -60,25 +60,25 @@ export function accept(channel, userstate, message) {
     if((challenger.toLowerCase() == "d4rkh4l3" || username.toLowerCase() == "d4rkh4l3") && Math.floor(Math.random() * 1000) + 1 == 420)
     {
       let darki = challenger.toLowerCase() == "d4rkh4l3" ? challenger : username;
-      client.say(channel, `@${darki} ist so dermaßen am stinken und unfair, der muss mal kurz duschen gehen owoFinger Smelly`);
+      client.say(channel, t(channel, 'duel.darki', { user: darki }));
       timeout(darki, channel, 300); // Timeout the user
     } else if (stink1 < stink2) {
-      client.say(channel, `@${challenger} (${stink1}%) gewinnt das Stinkerduell @${username} (${stink2}%)! Smelly`);
+      client.say(channel, t(channel, 'duel.win', { winner: challenger, winnerScore: stink1, loser: username, loserScore: stink2 }));
       timeout(username, channel, 300); // Timeout the user
       updateUserStats(channel, challenger, true);  // Update stats for winner
       updateUserStats(channel, username, false);   // Update stats for loser
     } else if (stink1 > stink2) {
-      client.say(channel, `@${username} (${stink2}%) gewinnt das Stinkerduell @${challenger} (${stink1}%)! Smelly`);
+      client.say(channel, t(channel, 'duel.win', { winner: username, winnerScore: stink2, loser: challenger, loserScore: stink1 }));
       timeout(challenger, channel, 300); // Timeout the user
       updateUserStats(channel, username, true);  // Update stats for winner
       updateUserStats(channel, challenger, false);   // Update stats for loser
     } else {
-      client.say(channel, `Unentschieden! @${challenger} (${stink1}%) und @${username} (${stink2}%) stinken gleich stark! Smelly`);
+      client.say(channel, t(channel, 'duel.tie', { a: challenger, aScore: stink1, b: username, bScore: stink2 }));
       timeout(username, channel, 300); // Timeout both users
       timeout(challenger, channel, 300);
       updateUserStats(channel, username, false);  // Update stats for tie
       updateUserStats(channel, challenger, false);
-      client.say(channel, `@${challenger} und @${username} sind nun im Timeout pepePoint .`);
+      client.say(channel, t(channel, 'duel.tieTimeout', { a: challenger, b: username }));
     }
 
 }
@@ -90,20 +90,20 @@ export function decline(channel, userstate, message) {
     const challenger = Object.keys(initialize.channelsInfo[channel].pendingDuels).find(key => initialize.channelsInfo[channel].pendingDuels[key].opponent === username.toLowerCase());
 
     if (!challenger) {
-      client.say(channel, `@${username}, du hast keine ausstehenden Duellanfragen.`);
+      client.say(channel, t(channel, 'duel.noPending', { username }));
       return;
     }
 
     const challengerIndex = initialize.channelsInfo[channel].pendingDuels[challenger];
 
     if (challengerIndex.opponent !== username.toLowerCase()) {
-      client.say(channel, `@${username}, du kannst keine Duellanfrage ablehnen, die du nie erhalten hast KEKW`);
+      client.say(channel, t(channel, 'duel.declineInvalid', { username }));
       return;
     }
 
     clearTimeout(initialize.channelsInfo[channel].pendingDuels[challenger].timeout);
     delete initialize.channelsInfo[channel].pendingDuels[challenger];
-    client.say(channel, `@${challenger}, deine Duellanfrage an @${username} wurde abgelehnt. SadCat`);
+    client.say(channel, t(channel, 'duel.declined', { challenger, username }));
 }
 
 export function retract(channel, userstate, message) {
@@ -112,7 +112,7 @@ export function retract(channel, userstate, message) {
         const opponent = Object.keys(initialize.channelsInfo[channel].pendingDuels).find(key => key === username.toLowerCase());
 
         if (!opponent) {
-        client.say(channel, `@${username}, du hast keine ausstehenden Duellanfragen. Hmm`);
+        client.say(channel, t(channel, 'duel.noPendingHmm', { username }));
         return;
         }
 
@@ -120,14 +120,12 @@ export function retract(channel, userstate, message) {
         clearTimeout(initialize.channelsInfo[channel].pendingDuels[username].timeout);
         delete initialize.channelsInfo[channel].pendingDuels[username];
 
-        client.say(channel, `@${username}, deine Duellanfrage wurde zurückgezogen. Yoink`);
+        client.say(channel, t(channel, 'duel.retracted', { username }));
 }
 
 export function duelInfo(channel, userstate, message) {
     let username = userstate.username;
-    client.say(channel, `@${username}, verfügbarer Befehle:
-      !duell <username>, !accept, !decline, !retract, !duellinfo, !moshpit <name> <name2>.., !acceptmoshpit, !declinemoshpit, !openfight, !joinfight
-      !duellstats, !duellboard`);
+    client.say(channel, t(channel, 'duel.info', { username }));
 }
 
 // Group duel functions
@@ -137,25 +135,25 @@ export function groupDuel(channel, userstate, message) {
   const username = userstate.username;
 
   if (command.length < 2) {
-      client.say(channel, `@${username}, bitte nenne mindestens einen Gegner. FlowerCatJAM`);
+      client.say(channel, t(channel, 'groupDuel.needOpponent', { username }));
       return;
   }
 
   const opponents = command.slice(1).map(opponent => opponent.replace('@', '').toLowerCase());
 
   if (opponents.includes(username.toLowerCase())) {
-      client.say(channel, `@${username}, nenn dich nicht selbst! fricc`);
+      client.say(channel, t(channel, 'groupDuel.cantSelf', { username }));
       return;
   }
 
   if (new Set(opponents).size !== opponents.length) {
-      client.say(channel, `@${username}, doppelte Gegner erkannt. Bitte nur unterschiedliche Namen nennen. fricc`);
+      client.say(channel, t(channel, 'groupDuel.duplicate', { username }));
       return;
   }
 
   const channelData = initialize.channelsInfo[channel];
   if (channelData.pendingDuels[username]) {
-      client.say(channel, `@${username}, du hast bereits ein ausstehendes Duell`);
+      client.say(channel, t(channel, 'groupDuel.alreadyPending', { username }));
       return;
   }
 
@@ -165,11 +163,10 @@ export function groupDuel(channel, userstate, message) {
       timeout: null
   };
 
-  client.say(channel, `@${opponents.join(', @')}, ihr wurdet von @${username} zu einem Gruppenduell eingeladen!
-  Schreibt !acceptmoshpit um beizutreten. Alle bis auf der Gewinner mit der niedrigsten Stinkung werden 5 Minuten im Timeout sein. chillCat `);
+  client.say(channel, t(channel, 'groupDuel.challenge', { opponents: opponents.join(', @'), username }));
 
   channelData.pendingDuels[username].timeout = setTimeout(() => {
-      client.say(channel, `@${username}, deine Gruppenduellanfrage an ${opponents.join(', ')} ist abgelaufen. SadCat`);
+      client.say(channel, t(channel, 'groupDuel.expired', { username, opponents: opponents.join(', ') }));
       delete channelData.pendingDuels[username];
   }, 120000); // 120 seconds
 }
@@ -183,7 +180,7 @@ export function acceptGroupDuel(channel, userstate, message) {
   );
 
   if (!challenger) {
-      client.say(channel, `@${username}, du hast keine ausstehenden Gruppenduelle. Hmm`);
+      client.say(channel, t(channel, 'groupDuel.noPending', { username }));
       return;
   }
 
@@ -196,7 +193,7 @@ export function acceptGroupDuel(channel, userstate, message) {
       delete channelData.pendingDuels[challenger];
       startGroupDuel(channel, duel.opponents);
   } else {
-      client.say(channel, `@${username} hat das Duell angenommen. Warte auf das Annehmen oder Ablehnen der anderen Teilnehmer. chillCat`);
+      client.say(channel, t(channel, 'groupDuel.accepted', { username }));
   }
 }
 
@@ -210,7 +207,7 @@ export function declineGroupDuel(channel, userstate, message) {
   );
 
   if (!challenger) {
-      client.say(channel, `@${username}, du hat keine ausstehenden Anfragen für Gruppenduelle, die du ablehnen kannst. Hmm`);
+      client.say(channel, t(channel, 'groupDuel.noPendingDecline', { username }));
       return;
   }
 
@@ -224,13 +221,13 @@ export function declineGroupDuel(channel, userstate, message) {
       duel.accepted.delete(username); // Remove user from accepted list if they had accepted
   }
 
-  client.say(channel, `@${username} hat das Gruppenduell abgelehnt. Warten auf die verbleibenden Teilnehmer. catWait`);
+  client.say(channel, t(channel, 'groupDuel.declined', { username }));
 
   if (duel.opponents.length < 2) {
       // If fewer than two participants remain, cancel the duel
       clearTimeout(duel.timeout);
       delete channelData.pendingDuels[challenger];
-      client.say(channel, `@${challenger}, es gibt nicht genug Teilnehmer. Das Gruppenduell wurde abgebrochen. SadCat`);
+      client.say(channel, t(channel, 'groupDuel.cancelled', { challenger }));
   }
 }
 
@@ -244,10 +241,10 @@ function startGroupDuel(channel, participants) {
   scores.sort((a, b) => a.score - b.score); // Sort in ascending order by score
   const winner = scores[0];
 
-  client.say(channel, `@${winner.name} gewinnt das Duell mit einer Stinkung von ${winner.score}%! owofinger`);
+  client.say(channel, t(channel, 'groupDuel.winner', { winner: winner.name, score: winner.score }));
 
   scores.slice(1).forEach(loser => {
-      client.say(channel, `@${loser.name} (${loser.score}%) verliert das Duell und ist im Timeout .`);
+      client.say(channel, t(channel, 'groupDuel.loser', { loser: loser.name, score: loser.score }));
       timeout(loser.name, channel, 300); // Timeout losers
       updateUserStats(channel, loser.name, false);  // Update stats for losers
   });
@@ -262,7 +259,7 @@ export function openContest(channel, userstate, message) {
   const channelData = initialize.channelsInfo[channel] || (initialize.channelsInfo[channel] = {});
 
   if (channelData.currentContest) {
-      client.say(channel, `@${username}, es gibt bereits einen Stinkkrieg. Bitte warte bis dieser endet. Hmm`);
+      client.say(channel, t(channel, 'contest.alreadyActive', { username }));
       return;
   }
 
@@ -275,8 +272,7 @@ export function openContest(channel, userstate, message) {
       }, contestDuration)
   };
 
-  client.say(channel, `@${username} hat einen Stinkkrieg gestartet! HYPERYump Schreibe !joinfight um teilzunehmen!
-     Der Stinkkrieg ended in ${contestDuration / 1000 / 60} Minuten.`);
+  client.say(channel, t(channel, 'contest.started', { username, minutes: contestDuration / 1000 / 60 }));
 }
 
 export function joinContest(channel, userstate, message) {
@@ -284,31 +280,31 @@ export function joinContest(channel, userstate, message) {
   const channelData = initialize.channelsInfo[channel];
 
   if (!channelData || !channelData.currentContest) {
-      client.say(channel, `@${username}, es gibt keine aktiven Stinkkrieg Deadge .`);
+      client.say(channel, t(channel, 'contest.none', { username }));
       return;
   }
 
   if (channelData.currentContest.participants.has(username)) {
-      client.say(channel, `@${username}, du bist bereits im Stinkkrieg Madge .`);
+      client.say(channel, t(channel, 'contest.alreadyJoined', { username }));
       return;
   }
 
   channelData.currentContest.participants.add(username);
-  client.say(channel, `@${username} ist dem Stinkkrieg beigetreten! owoCheer Fight `);
+  client.say(channel, t(channel, 'contest.joined', { username }));
 }
 
 function endContest(channel) {
   const channelData = initialize.channelsInfo[channel];
 
   if (!channelData || !channelData.currentContest) {
-      client.say(channel, `Es gibt keinen aktiven Stinkkrieg zu beenden.`);
+      client.say(channel, t(channel, 'contest.noneToEnd'));
       return;
   }
 
   const participants = Array.from(channelData.currentContest.participants);
 
   if (participants.length < 1) {
-      client.say(channel, `Der Stinkkrieg hatte keine Teilnehmer. Deadge`);
+      client.say(channel, t(channel, 'contest.noParticipants'));
   } else {
       const scores = participants.map(participant => ({
           name: participant,
@@ -323,12 +319,12 @@ function endContest(channel) {
 
       const winnerNames = winners.map(winner => `@${winner.name}`).join(', ');
 
-      client.say(channel, `Der Stinkkrieg ist zu Ende! Gewinner: ${winnerNames} mit einer Stinkung von ${minScore}%! owofinger`);
+      client.say(channel, t(channel, 'contest.ended', { winners: winnerNames, score: minScore }));
 
       // winners.forEach(winner => updateUserStats(channel, winner.name, true));
       // Notify non-winning participants
       scores.filter(participant => participant.score !== minScore).forEach(loser => {
-          client.say(channel, `@${loser.name} stinkt zu ${loser.score}% und hat verloren. fricc`);
+          client.say(channel, t(channel, 'contest.loserResult', { loser: loser.name, score: loser.score }));
           // updateUserStats(channel, loser.name, false);
           timeout(loser.name, channel, 60);
       });

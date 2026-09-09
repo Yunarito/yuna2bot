@@ -3,6 +3,7 @@ import client from './app.js';
 import {
   banUser
 } from './twitchApi.js';
+import { t } from './i18n';
 
 require('dotenv').config();
 const RIOT_API_TOKEN = process.env.RIOT_API_TOKEN;
@@ -12,7 +13,7 @@ export function twentyFour(channel) {
 }
 
 export async function getSummonerData(channel, summonerName) {
-  client.say(channel, 'Bitte nutze RiotID wie "Yunarito#69420".');
+  client.say(channel, t(channel, 'helper.useRiotId'));
   return null;
   const apiKey = RIOT_API_TOKEN; // Replace with your League of Legends API key
   const apiUrl = `https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`
@@ -54,7 +55,7 @@ export function checkTwitchChat(userstate, message, channel) {
   shouldSendMessage = BLOCKED_WORDS.some(blockedWord => message.includes(blockedWord.toLowerCase()))
   if (shouldSendMessage) {
     // tell user
-    client.say(channel, `@${userstate.username}, sorry!  Deine Nachricht wurde gelöscht.`)
+    client.say(channel, t(channel, 'helper.messageDeleted', { username: userstate.username }))
     // delete message
     client.deletemessage(channel, userstate.id)
   }
@@ -118,7 +119,7 @@ export async function getSummonerDataTagline(channel, name){
     });
 
     if (!response.ok) {
-      client.say(channel, `Account nicht gefunden`);
+      client.say(channel, t(channel, 'helper.accountNotFound'));
       // throw new Error('Account not found');
       return;
     }
@@ -134,7 +135,7 @@ export async function getSummonerDataTagline(channel, name){
     });
 
     if (!summonerResponse.ok) {
-      client.say(channel, `Der Account ist kein League-Summoner`);
+      client.say(channel, t(channel, 'helper.notSummoner'));
       // throw new Error('Account has no league summoner');
       return;
     }
@@ -144,7 +145,7 @@ export async function getSummonerDataTagline(channel, name){
     return data;
   } catch (error) {
     console.log(error);
-    client.say(channel, `Riot API Fehler fricc`);
+    client.say(channel, t(channel, 'helper.riotApiError'));
   }
 }
 
@@ -161,7 +162,7 @@ export async function getAccountDataForPuuid(channel, puuid){
   });
 
   if (!response.ok) {
-    client.say(channel, `Account nicht gefunden`);
+    client.say(channel, t(channel, 'helper.accountNotFound'));
     // throw new Error('Account not found');
     return;
   }
@@ -184,7 +185,7 @@ export async function getRankDataForSummonerId(channel, summonerId) {
 
     if (!rankResponse.ok) {
       console.log(rankResponse);
-      client.say(channel, `Datenziehung des Accounts nicht möglich`);
+      client.say(channel, t(channel, 'helper.rankFetchError'));
       // throw new Error('Unable to fetch summoner rank data');
       return;
     }
@@ -237,7 +238,7 @@ export async function getLiveMatchDataForSummonerId(channel, summonerId) {
   });
 
   if (!matchData.ok) {
-    client.say(channel, `Spieler ist nicht in einem Spiel`);
+    client.say(channel, t(channel, 'helper.notInGame'));
     // throw new Error('Unable to fetch summoner live match data');
     return;
   }

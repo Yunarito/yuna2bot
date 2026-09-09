@@ -1,4 +1,5 @@
 import client from './app.js';
+import { t } from './i18n';
 
 const {
     getSummonerDataTagline,
@@ -19,7 +20,7 @@ export async function dreamRank(channel) {
 
     if (!response || !response.ok && response.status === 404) {
         console.log(response);
-        client.say(channel, `Da ist n Fehler iwie oder so fricc riot.`);
+        client.say(channel, t(channel, 'league.dreamRankError'));
         return;
     }
 
@@ -37,13 +38,18 @@ export async function dreamRank(channel) {
 
         let totalLpNeeded = lpToEmerald4(currentRank);
 
-        rankMessage += `${capitalizeFirstLetter(rankedSoloQ.tier)} ${rankedSoloQ.rank} ${rankedSoloQ.leaguePoints}LP - ${totalLpNeeded}LP bis Emerald IV woah`;
+        rankMessage += t(channel, 'league.dreamRankProgress', {
+            tier: capitalizeFirstLetter(rankedSoloQ.tier),
+            rank: rankedSoloQ.rank,
+            lp: rankedSoloQ.leaguePoints,
+            needed: totalLpNeeded
+        });
 
         client.say(channel, rankMessage);
         return;
     }
 
-    client.say(channel, `${summonerName} ist unranked.`);
+    client.say(channel, t(channel, 'league.unranked', { summoner: summonerName }));
     return;
 }
 

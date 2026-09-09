@@ -1,0 +1,131 @@
+{
+  "errors": {
+    "generic": "Nah, not feeling it angySit"
+  },
+  "commands": {
+    "link": "You can find the commands here: https://yunarito.de/yuna2bot",
+    "help": "!rank/!elo <name,name2>, !avgrank/!avgelo <name>, !lastgame <name>, !topmastery <name>, !join, !leave, !list"
+  },
+  "language": {
+    "invalid": "Please provide a valid language (de, en).",
+    "set": "Language for this channel set to: {{locale}}"
+  },
+  "queue": {
+    "joined": "{{username}} has joined the queue. catWait",
+    "alreadyIn": "@{{username}}, you are already in the queue.",
+    "left": "{{username}} has left the queue. catLeave",
+    "notIn": "@{{username}}, you are not in the queue.",
+    "list": "Queue: {{list}}",
+    "empty": "The queue is empty.",
+    "picked": "{{count}} picked: {{list}}",
+    "offNotice": "The queue is currently off.",
+    "enabled": "The queue is now enabled.",
+    "disabled": "The queue is now disabled."
+  },
+  "timeout": {
+    "reset": "Timeout timer has been reset.",
+    "needSeconds": "Please provide a time in seconds.",
+    "set": "Timeout set to: {{minutes}} m [{{seconds}} s]",
+    "added": "New timeout: {{minutes}} m [{{seconds}} s]",
+    "next": "Next timeout: {{minutes}} m [{{seconds}} s]"
+  },
+  "timedMessage": {
+    "needText": "Please provide a message.",
+    "set": "Timed message set to: \"{{text}}\"",
+    "notSet": "No timed message has been set yet. Use !settimedmessage <message>.",
+    "enabled": "Timed messages are now enabled.",
+    "disabled": "Timed messages are now disabled.",
+    "needInterval": "Please provide a valid number of messages.",
+    "intervalSet": "Timed message interval set to: every {{interval}} messages"
+  },
+  "duel": {
+    "needOpponent": "@{{username}}, please name an opponent. Prayge ",
+    "cantSelf": "@{{username}}, you can't duel yourself! nh ",
+    "alreadyPending": "@{{username}}, you already have a pending duel request! MADcat ",
+    "challenge": "@{{opponent}}, you've been challenged to a duel by @{{username}}!\n      Type !accept to accept! The loser gets timed out for 5 minutes",
+    "expired": "@{{username}}, your duel request to @{{opponent}} has expired. SadCat",
+    "noPending": "@{{username}}, you have no pending duel requests.",
+    "noPendingHmm": "@{{username}}, you have no pending duel requests. Hmm",
+    "begins": "@{{challenger}} and @{{username}}, the stink duel begins! PauseChamp",
+    "darki": "@{{user}} is so incredibly smelly and unfair, they really need a shower owoFinger Smelly",
+    "win": "@{{winner}} ({{winnerScore}}%) wins the stink duel against @{{loser}} ({{loserScore}}%)! Smelly",
+    "tie": "Draw! @{{a}} ({{aScore}}%) and @{{b}} ({{bScore}}%) stink equally bad! Smelly",
+    "tieTimeout": "@{{a}} and @{{b}} are now both in timeout pepePoint .",
+    "declineInvalid": "@{{username}}, you can't decline a duel request you never received KEKW",
+    "declined": "@{{challenger}}, your duel request to @{{username}} was declined. SadCat",
+    "retracted": "@{{username}}, your duel request has been retracted. Yoink",
+    "info": "@{{username}}, available commands:\n      !duell <username>, !accept, !decline, !retract, !duellinfo, !moshpit <name> <name2>.., !acceptmoshpit, !declinemoshpit, !openfight, !joinfight\n      !duellstats, !duellboard"
+  },
+  "groupDuel": {
+    "needOpponent": "@{{username}}, please name at least one opponent. FlowerCatJAM",
+    "cantSelf": "@{{username}}, don't name yourself! fricc",
+    "duplicate": "@{{username}}, duplicate opponents detected. Please name only different people. fricc",
+    "alreadyPending": "@{{username}}, you already have a pending duel",
+    "challenge": "@{{opponents}}, you've been invited to a group duel by @{{username}}!\n  Type !acceptmoshpit to join. Everyone except the winner with the lowest stink score will be timed out for 5 minutes. chillCat ",
+    "expired": "@{{username}}, your group duel request to {{opponents}} has expired. SadCat",
+    "noPending": "@{{username}}, you have no pending group duels. Hmm",
+    "accepted": "@{{username}} has accepted the duel. Waiting for the other participants to accept or decline. chillCat",
+    "noPendingDecline": "@{{username}}, you have no pending group duel requests to decline. Hmm",
+    "declined": "@{{username}} has declined the group duel. Waiting for the remaining participants. catWait",
+    "cancelled": "@{{challenger}}, there aren't enough participants left. The group duel has been cancelled. SadCat",
+    "winner": "@{{winner}} wins the duel with a stink score of {{score}}%! owofinger",
+    "loser": "@{{loser}} ({{score}}%) loses the duel and is now in timeout ."
+  },
+  "contest": {
+    "alreadyActive": "@{{username}}, there's already a stink war going on. Please wait until it ends. Hmm",
+    "started": "@{{username}} started a stink war! HYPERYump Type !joinfight to participate!\n     The stink war ends in {{minutes}} minutes.",
+    "none": "@{{username}}, there's no active stink war Deadge .",
+    "alreadyJoined": "@{{username}}, you're already in the stink war Madge .",
+    "joined": "@{{username}} has joined the stink war! owoCheer Fight ",
+    "noneToEnd": "There's no active stink war to end.",
+    "noParticipants": "The stink war had no participants. Deadge",
+    "ended": "The stink war has ended! Winner(s): {{winners}} with a stink score of {{score}}%! owofinger",
+    "loserResult": "@{{loser}} stinks at {{score}}% and has lost. fricc"
+  },
+  "subathon": {
+    "happyOn": "Happy hour is now enabled.",
+    "happyOff": "Happy hour is now disabled.",
+    "pointsUnit": "points",
+    "pointChartHeader": "Point overview: ",
+    "userPoints": "@{{username}}, you've contributed {{points}} points to the subathon.",
+    "totalPoints": "The current subathon has {{points}} points."
+  },
+  "stats": {
+    "duelStats": "@{{username}}, your duel stats: Wins: {{wins}}, Losses: {{losses}} ({{pct}}%)",
+    "noLeaderboard": "No leaderboard available yet.",
+    "leaderboardHeader": "Top 5 duelists: "
+  },
+  "followage": {
+    "error": "I couldn't determine the follow duration for {{user}}.",
+    "prefix": "{{user}} has been following for ",
+    "years": "year(s)",
+    "months": "month(s)",
+    "weeks": "week(s)",
+    "days": "day(s)",
+    "notFollowing": "{{user}} does not follow {{channel}}.",
+    "fetchError": "An error occurred. I couldn't determine the follow duration for {{user}}."
+  },
+  "league": {
+    "noPastGames": "No past games found.",
+    "noGameInMode": "No game found in mode \"{{mode}}\".",
+    "won": "Won",
+    "lost": "Lost",
+    "unknownMode": "Unknown mode",
+    "damageLabel": "Damage",
+    "fetchError": "Error fetching game data.",
+    "avgRankPrefix": "Average in-game rank: ",
+    "masteryResult": "{{summoner}}: {{champion}} Lvl {{level}} ({{points}}) points",
+    "dreamRankError": "Something's wrong somehow fricc riot.",
+    "dreamRankProgress": "{{tier}} {{rank}} {{lp}}LP - {{needed}}LP until Emerald IV woah",
+    "unranked": "{{summoner}} is unranked."
+  },
+  "helper": {
+    "useRiotId": "Please use a Riot ID like \"Yunarito#69420\".",
+    "messageDeleted": "@{{username}}, sorry! Your message has been deleted.",
+    "accountNotFound": "Account not found",
+    "notSummoner": "This account is not a League summoner",
+    "riotApiError": "Riot API error fricc",
+    "rankFetchError": "Unable to fetch account data",
+    "notInGame": "Player is not in a game"
+  }
+}

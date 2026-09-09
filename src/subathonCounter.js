@@ -1,5 +1,6 @@
 import client from './app.js';
 import initialize from './initialize';
+import { t } from './i18n';
 
 const {
     addSubathonPoints,
@@ -11,13 +12,13 @@ const {
 export function happyswitch(channel) {
     initialize.channelsInfo[channel].happyHour = true;
 
-    client.say(channel, `Die Happyhour ist nun eingeschaltet.`);
+    client.say(channel, t(channel, 'subathon.happyOn'));
 }
 
 export function sadswitch(channel) {
-    initialize.channelsInfo[channel].happyHour = false;    
+    initialize.channelsInfo[channel].happyHour = false;
 
-    client.say(channel, `Die Happyhour ist nun ausgeschaltet.`);
+    client.say(channel, t(channel, 'subathon.happyOff'));
 }
 
 export async function donationHandler(channel, message) {
@@ -88,29 +89,30 @@ export async function resubHandler(channel, user, method) {
 export async function getPointChart(channel) {
     const pointTable = await getPointTable(channel);
 
-    // client.say(channel, initialize.channelsInfo[channel].enabled);
+    const pointsUnit = t(channel, 'subathon.pointsUnit');
 
-    let pointChart = 'Punkteübersicht: ';
-    pointChart += pointTable.subscriptions['1'].name + ' - ' + pointTable.subscriptions['1'].points + ' Punkte, ';
-    pointChart += pointTable.subscriptions['2'].name + ' - ' + pointTable.subscriptions['2'].points + ' Punkte, ';
-    pointChart += pointTable.subscriptions['3'].name + ' - ' + pointTable.subscriptions['3'].points + ' Punkte, ';
-    pointChart += pointTable.subscriptions['prime'].name + ' - ' + pointTable.subscriptions['prime'].points + ' Punkte, ';
-    pointChart += pointTable.cheers['hundred'].name + ' - ' + pointTable.cheers['hundred'].points + ' Punkte, ';
-    pointChart += pointTable.donations['euro'].name + ' - ' + pointTable.donations['euro'].points + ' Punkte.';
+    const entries = [
+        `${pointTable.subscriptions['1'].name} - ${pointTable.subscriptions['1'].points} ${pointsUnit}`,
+        `${pointTable.subscriptions['2'].name} - ${pointTable.subscriptions['2'].points} ${pointsUnit}`,
+        `${pointTable.subscriptions['3'].name} - ${pointTable.subscriptions['3'].points} ${pointsUnit}`,
+        `${pointTable.subscriptions['prime'].name} - ${pointTable.subscriptions['prime'].points} ${pointsUnit}`,
+        `${pointTable.cheers['hundred'].name} - ${pointTable.cheers['hundred'].points} ${pointsUnit}`,
+        `${pointTable.donations['euro'].name} - ${pointTable.donations['euro'].points} ${pointsUnit}`,
+    ];
 
-    client.say(channel, pointChart);
+    client.say(channel, t(channel, 'subathon.pointChartHeader') + entries.join(', ') + '.');
 }
 
 export async function getChannelPoints(channel, username) {
     const userPoints = await getSubathonUserPoints(channel, username);
 
     let points = Math.round(userPoints * 100)/100+"".replace(',', '.');
-    client.say(channel, `@${username}, du hast ${points} Punkte zum Subathon beigetragen.`);
+    client.say(channel, t(channel, 'subathon.userPoints', { username, points }));
 }
 
 export async function getChannelTotalPoints(channel) {
     const totalPoints = await getSubathonTotalPoints(channel);
 
     let points = Math.round(totalPoints)+"".replace('.', ',');
-    client.say(channel, `Der aktuelle Subathon hat ${points} Punkte.`);
+    client.say(channel, t(channel, 'subathon.totalPoints', { points }));
 }

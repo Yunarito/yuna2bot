@@ -1,32 +1,33 @@
 import client from './app.js';
 import initialize from './initialize';
+import { t } from './i18n';
 
 export function setTimedMessage(channel, message) {
     const text = message.split(' ').slice(1).join(' ').trim();
 
     if (!text) {
-        client.say(channel, 'Please provide a message.');
+        client.say(channel, t(channel, 'timedMessage.needText'));
         return;
     }
 
     initialize.channelsInfo[channel].timedMessage.text = text;
-    client.say(channel, `Timed message set to: "${text}"`);
+    client.say(channel, t(channel, 'timedMessage.set', { text }));
 }
 
 export function enableTimedMessage(channel) {
     if (!initialize.channelsInfo[channel].timedMessage.text) {
-        client.say(channel, 'No timed message has been set yet. Use !settimedmessage <message>.');
+        client.say(channel, t(channel, 'timedMessage.notSet'));
         return;
     }
 
     initialize.channelsInfo[channel].timedMessage.enabled = true;
     initialize.channelsInfo[channel].timedMessage.counter = 0;
-    client.say(channel, 'Timed messages are now enabled.');
+    client.say(channel, t(channel, 'timedMessage.enabled'));
 }
 
 export function disableTimedMessage(channel) {
     initialize.channelsInfo[channel].timedMessage.enabled = false;
-    client.say(channel, 'Timed messages are now disabled.');
+    client.say(channel, t(channel, 'timedMessage.disabled'));
 }
 
 export function setTimedMessageInterval(channel, message) {
@@ -34,13 +35,13 @@ export function setTimedMessageInterval(channel, message) {
     const interval = parseInt(parts[1]);
 
     if (!parts[1] || isNaN(interval) || interval < 1) {
-        client.say(channel, 'Please provide a valid number of messages.');
+        client.say(channel, t(channel, 'timedMessage.needInterval'));
         return;
     }
 
     initialize.channelsInfo[channel].timedMessage.interval = interval;
     initialize.channelsInfo[channel].timedMessage.counter = 0;
-    client.say(channel, `Timed message interval set to: every ${interval} messages`);
+    client.say(channel, t(channel, 'timedMessage.intervalSet', { interval }));
 }
 
 export function checkTimedMessage(channel) {

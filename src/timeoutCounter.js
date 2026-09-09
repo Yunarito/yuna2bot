@@ -1,9 +1,10 @@
 import client from './app.js';
 import initialize from './initialize';
+import { t } from './i18n';
 
 export function resetTime(channel) {
     initialize.channelsInfo[channel].timeoutTime = 300;
-    client.say(channel, 'Timeouttimer zurückgesetzt.');
+    client.say(channel, t(channel, 'timeout.reset'));
 }
 
 export function setTime(channel, message) {
@@ -11,13 +12,13 @@ export function setTime(channel, message) {
     let parts = message.split(' ');
 
     if(!parts[1]){
-        client.say(channel, 'Bitte gib eine Zeit in Sekunden an.');
+        client.say(channel, t(channel, 'timeout.needSeconds'));
         return
     }
 
     initialize.channelsInfo[channel].timeoutTime = parseInt(parts[1]);
     const timeoutMinutes = initialize.channelsInfo[channel].timeoutTime / 60;
-    client.say(channel, `Timeout gesetzt zu: ${timeoutMinutes} m [${initialize.channelsInfo[channel].timeoutTime} s]`);
+    client.say(channel, t(channel, 'timeout.set', { minutes: timeoutMinutes, seconds: initialize.channelsInfo[channel].timeoutTime }));
 }
 
 export function addTimeoutTime(channel) {
@@ -25,10 +26,10 @@ export function addTimeoutTime(channel) {
 
     const timeoutMinutes = initialize.channelsInfo[channel].timeoutTime / 60;
 
-    client.say(channel, `Neuer Timeout: ${timeoutMinutes} m [${initialize.channelsInfo[channel].timeoutTime} s]`);
+    client.say(channel, t(channel, 'timeout.added', { minutes: timeoutMinutes, seconds: initialize.channelsInfo[channel].timeoutTime }));
 }
 
 export function getTimeoutTime(channel) {
     const timeoutMinutes = initialize.channelsInfo[channel].timeoutTime / 60;
-    client.say(channel, `Nächster Timeout: ${timeoutMinutes} m [${initialize.channelsInfo[channel].timeoutTime} s]`);
+    client.say(channel, t(channel, 'timeout.next', { minutes: timeoutMinutes, seconds: initialize.channelsInfo[channel].timeoutTime }));
 }

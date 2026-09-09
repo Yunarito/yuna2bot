@@ -63,6 +63,12 @@ const {
 } = require('./timedMessages.js');
 
 const {
+  t,
+  setLocale,
+  isSupportedLocale
+} = require('./i18n.js');
+
+const {
   cheerHandler,
   subGiftHandler,
   subHandler,
@@ -296,7 +302,7 @@ client.on('message', (channel, userstate, message, self) => {
     }
 
     if (startsWith(message, '!commands')) {
-      client.say(channel, 'Die Commands könnt ihr hier finden: https://yunarito.de/yuna2bot');
+      client.say(channel, t(channel, 'commands.link'));
       return;
     }
 
@@ -367,11 +373,22 @@ client.on('message', (channel, userstate, message, self) => {
         setTimedMessageInterval(channel, message);
         return;
       }
+
+      if (startsWith(message, '!setlanguage')) {
+        const locale = message.split(' ')[1];
+        if (locale && isSupportedLocale(locale)) {
+          setLocale(channel, locale);
+          client.say(channel, t(channel, 'language.set', { locale }));
+        } else {
+          client.say(channel, t(channel, 'language.invalid'));
+        }
+        return;
+      }
     }
   } catch (error) {
     console.error('Error in message event handler:', error);
 
-    client.say(channel, `Nö, kein Bock angySit`);
+    client.say(channel, t(channel, 'errors.generic'));
   }
   if (self) {
     return;
@@ -417,7 +434,7 @@ client.on('raided', (channel, username, viewers) => {
 // commands
 
 function commands(channel) {
-  client.say(channel, '!rank/!elo <name,name2>, !avgrank/!avgelo <name>, !lastgame <name>, !topmastery <name>, !join, !leave, !list');
+  client.say(channel, t(channel, 'commands.help'));
 }
 
 function hasRights(userstate, channel) {
