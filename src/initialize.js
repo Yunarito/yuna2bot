@@ -10,6 +10,12 @@ const initialize = {
                 enabled: false,
                 timeoutTime: 300,
                 happyHour: false,
+                timedMessage: {
+                    enabled: false,
+                    text: '',
+                    interval: 60,
+                    counter: 0,
+                },
             };
         }
     }

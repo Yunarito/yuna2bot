@@ -55,6 +55,14 @@ const {
 } = require('./userStats.js');
 
 const {
+  setTimedMessage,
+  enableTimedMessage,
+  disableTimedMessage,
+  setTimedMessageInterval,
+  checkTimedMessage
+} = require('./timedMessages.js');
+
+const {
   cheerHandler,
   subGiftHandler,
   subHandler,
@@ -117,14 +125,10 @@ client.on('disconnected', (reason) => {
   });
 });
 
-let messageCount = 0;
-
 // event handlers
 
 client.on('message', (channel, userstate, message, self) => {
   try {
-
-    messageCount += 1;
 
     initialize.initializeChannel(channel);
 
@@ -134,6 +138,8 @@ client.on('message', (channel, userstate, message, self) => {
       console.log(`Not checking bot's messages.`);
       return;
     }
+
+    checkTimedMessage(channel);
 
     if (userstate.username === "streamlabs" && message.includes("hat €")) {
       console.log(message, message.includes("hat €"));
@@ -201,10 +207,6 @@ client.on('message', (channel, userstate, message, self) => {
 
       if(userstate['first-msg']){
         client.say(channel, 'FirstTimeLicka');
-      }
-
-      if (messageCount % 60 === 0) {
-        // client.say(channel, 'Momentan kann man für die Streamawards abstimmen! Stimmt für catzzi unter Beste/r Newcomer/in ab! Do your part ! owo7 https://streamawards.de');
       }
 
       if (message.includes('owoCheer')) {
@@ -343,6 +345,26 @@ client.on('message', (channel, userstate, message, self) => {
 
       if (startsWith(message, '!so')) {
         shoutout(channel);
+        return;
+      }
+
+      if (startsWith(message, '!settimedmessage')) {
+        setTimedMessage(channel, message);
+        return;
+      }
+
+      if (startsWith(message, '!enabletimedmessage')) {
+        enableTimedMessage(channel);
+        return;
+      }
+
+      if (startsWith(message, '!disabletimedmessage')) {
+        disableTimedMessage(channel);
+        return;
+      }
+
+      if (startsWith(message, '!timedmessageinterval')) {
+        setTimedMessageInterval(channel, message);
         return;
       }
     }
