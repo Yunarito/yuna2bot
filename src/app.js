@@ -55,7 +55,9 @@ const {
 } = require('./userStats.js');
 
 const {
-  setTimedMessage,
+  addTimedMessage,
+  removeTimedMessage,
+  listTimedMessages,
   enableTimedMessage,
   disableTimedMessage,
   setTimedMessageInterval,
@@ -67,6 +69,11 @@ const {
   setLocale,
   isSupportedLocale
 } = require('./i18n.js');
+
+const {
+  loadChannelSettings,
+  saveChannelSettings
+} = require('./channelSettings.js');
 
 const {
   cheerHandler,
@@ -83,6 +90,7 @@ const {
 
 const {
   getFollowage,
+  getUptime,
   shoutout,
   timeout
 } = require('./twitchApi.js');
@@ -138,6 +146,11 @@ client.on('message', (channel, userstate, message, self) => {
 
     initialize.initializeChannel(channel);
 
+    if (!initialize.channelsInfo[channel].settingsLoaded) {
+      initialize.channelsInfo[channel].settingsLoaded = true;
+      loadChannelSettings(channel);
+    }
+
     isHina(userstate, channel);
 
     if (userstate.username === BOT_USERNAME) {
@@ -155,6 +168,16 @@ client.on('message', (channel, userstate, message, self) => {
 
     if (startsWith(message, '!followage')) {
       getFollowage(userstate.username, channel);
+      return;
+    }
+
+    if (startsWith(message, '!uptime')) {
+      getUptime(channel);
+      return;
+    }
+
+    if (startsWith(message, '!listtimedmessages')) {
+      listTimedMessages(channel);
       return;
     }
 
@@ -354,18 +377,23 @@ client.on('message', (channel, userstate, message, self) => {
         return;
       }
 
-      if (startsWith(message, '!settimedmessage')) {
-        setTimedMessage(channel, message);
+      if (startsWith(message, '!addtimedmessage')) {
+        addTimedMessage(channel, message);
+        return;
+      }
+
+      if (startsWith(message, '!removetimedmessage')) {
+        removeTimedMessage(channel, message);
         return;
       }
 
       if (startsWith(message, '!enabletimedmessage')) {
-        enableTimedMessage(channel);
+        enableTimedMessage(channel, message);
         return;
       }
 
       if (startsWith(message, '!disabletimedmessage')) {
-        disableTimedMessage(channel);
+        disableTimedMessage(channel, message);
         return;
       }
 
@@ -378,6 +406,7 @@ client.on('message', (channel, userstate, message, self) => {
         const locale = message.split(' ')[1];
         if (locale && isSupportedLocale(locale)) {
           setLocale(channel, locale);
+          saveChannelSettings(channel);
           client.say(channel, t(channel, 'language.set', { locale }));
         } else {
           client.say(channel, t(channel, 'language.invalid'));

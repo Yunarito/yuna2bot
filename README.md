@@ -81,12 +81,33 @@ Timeout Timer commands:
     - !scamset <time>                                       --> Sets the timeoutcounter to the given seconds.
 
 
-Timed Message commands (Mod commands):
+Timed Message commands:
 
-    - !settimedmessage <text>                               --> Sets the message that gets posted periodically.
+Each timed message runs independently with its own interval, so you can have several posting on different cadences at the same time (e.g. socials every 40 messages, a discord plug every 150).
 
-    - !enabletimedmessage                                   --> Turns the timed message on (a message must be set first).
+    - !listtimedmessages                                    --> Lists all timed messages with their number, interval, and on/off status.
 
-    - !disabletimedmessage                                  --> Turns the timed message off.
+    Mod commands:
 
-    - !timedmessageinterval <number>                        --> Sets how many chat messages must pass between posts (default: 60).
+    - !addtimedmessage <interval> <text>                    --> Adds a new timed message that posts every <interval> chat messages.
+
+    - !removetimedmessage <number>                          --> Removes a message by its number (see !listtimedmessages).
+
+    - !enabletimedmessage <number|all>                      --> Turns a specific message on, or all of them.
+
+    - !disabletimedmessage <number|all>                     --> Turns a specific message off, or all of them.
+
+    - !timedmessageinterval <number> <interval>             --> Changes the interval of an existing message.
+
+
+Uptime:
+
+    - !uptime                                               --> Shows how long the channel has been live, or that it's offline.
+
+
+Language:
+
+    - !setlanguage <de|en> (Mod command)                    --> Sets the bot's reply language for this channel.
+
+
+All of the settings above (queue on/off, timeout timer, happy hour, timed messages, language) are persisted to the database and survive a bot restart. See `src/json/userStats/schema.sql` for a fresh install, or `src/json/userStats/migrations/` to add the new tables to an existing database.

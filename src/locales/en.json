@@ -30,13 +30,22 @@
     "next": "Next timeout: {{minutes}} m [{{seconds}} s]"
   },
   "timedMessage": {
-    "needText": "Please provide a message.",
-    "set": "Timed message set to: \"{{text}}\"",
-    "notSet": "No timed message has been set yet. Use !settimedmessage <message>.",
-    "enabled": "Timed messages are now enabled.",
-    "disabled": "Timed messages are now disabled.",
-    "needInterval": "Please provide a valid number of messages.",
-    "intervalSet": "Timed message interval set to: every {{interval}} messages"
+    "usage": "Usage: !addtimedmessage <interval> <message>",
+    "added": "Message #{{count}} added (every {{interval}} messages): \"{{text}}\"",
+    "invalidIndex": "Please provide a valid number (see !listtimedmessages).",
+    "invalidTarget": "Please provide a valid number or \"all\" (see !listtimedmessages).",
+    "removed": "Removed message #{{index}}: \"{{text}}\"",
+    "listEmpty": "No timed messages are set. Use !addtimedmessage <interval> <message>.",
+    "listHeader": "Timed messages: ",
+    "statusOn": "on",
+    "statusOff": "off",
+    "every": "every {{interval}} messages",
+    "enabledOne": "Message #{{index}} is now enabled.",
+    "enabledAll": "All timed messages are now enabled.",
+    "disabledOne": "Message #{{index}} is now disabled.",
+    "disabledAll": "All timed messages are now disabled.",
+    "intervalUsage": "Usage: !timedmessageinterval <number> <interval>",
+    "intervalSet": "Interval for message #{{index}} set to: every {{interval}} messages"
   },
   "duel": {
     "needOpponent": "@{{username}}, please name an opponent. Prayge ",
@@ -118,6 +127,13 @@
     "dreamRankError": "Something's wrong somehow fricc riot.",
     "dreamRankProgress": "{{tier}} {{rank}} {{lp}}LP - {{needed}}LP until Emerald IV woah",
     "unranked": "{{summoner}} is unranked."
+  },
+  "uptime": {
+    "live": "{{channel}} has been live for {{duration}}.",
+    "offline": "{{channel}} is currently offline.",
+    "error": "I couldn't determine the live status for {{channel}}.",
+    "hours": "hour(s)",
+    "minutes": "minute(s)"
   },
   "helper": {
     "useRiotId": "Please use a Riot ID like \"Yunarito#69420\".",

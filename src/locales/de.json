@@ -30,13 +30,22 @@
     "next": "Nächster Timeout: {{minutes}} m [{{seconds}} s]"
   },
   "timedMessage": {
-    "needText": "Bitte gib eine Nachricht an.",
-    "set": "Timed Message gesetzt zu: \"{{text}}\"",
-    "notSet": "Es ist noch keine Timed Message gesetzt. Nutze !settimedmessage <Nachricht>.",
-    "enabled": "Timed Messages sind nun eingeschaltet.",
-    "disabled": "Timed Messages sind nun ausgeschaltet.",
-    "needInterval": "Bitte gib eine gültige Anzahl an Nachrichten an.",
-    "intervalSet": "Timed Message Intervall gesetzt zu: alle {{interval}} Nachrichten"
+    "usage": "Verwendung: !addtimedmessage <Intervall> <Nachricht>",
+    "added": "Nachricht #{{count}} hinzugefügt (alle {{interval}} Nachrichten): \"{{text}}\"",
+    "invalidIndex": "Bitte gib eine gültige Nummer an (siehe !listtimedmessages).",
+    "invalidTarget": "Bitte gib eine gültige Nummer oder \"all\" an (siehe !listtimedmessages).",
+    "removed": "Nachricht #{{index}} entfernt: \"{{text}}\"",
+    "listEmpty": "Es sind keine Timed Messages gesetzt. Nutze !addtimedmessage <Intervall> <Nachricht>.",
+    "listHeader": "Timed Messages: ",
+    "statusOn": "an",
+    "statusOff": "aus",
+    "every": "alle {{interval}} Nachrichten",
+    "enabledOne": "Nachricht #{{index}} ist nun eingeschaltet.",
+    "enabledAll": "Alle Timed Messages sind nun eingeschaltet.",
+    "disabledOne": "Nachricht #{{index}} ist nun ausgeschaltet.",
+    "disabledAll": "Alle Timed Messages sind nun ausgeschaltet.",
+    "intervalUsage": "Verwendung: !timedmessageinterval <Nummer> <Intervall>",
+    "intervalSet": "Intervall von Nachricht #{{index}} gesetzt zu: alle {{interval}} Nachrichten"
   },
   "duel": {
     "needOpponent": "@{{username}}, bitte nenne einen Gegner. Prayge ",
@@ -118,6 +127,13 @@
     "dreamRankError": "Da ist n Fehler iwie oder so fricc riot.",
     "dreamRankProgress": "{{tier}} {{rank}} {{lp}}LP - {{needed}}LP bis Emerald IV woah",
     "unranked": "{{summoner}} ist unranked."
+  },
+  "uptime": {
+    "live": "{{channel}} ist bereits seit {{duration}} live.",
+    "offline": "{{channel}} ist aktuell offline.",
+    "error": "Ich konnte den Live-Status von {{channel}} nicht ermitteln.",
+    "hours": "Stunde(n)",
+    "minutes": "Minute(n)"
   },
   "helper": {
     "useRiotId": "Bitte nutze RiotID wie \"Yunarito#69420\".",

@@ -1,6 +1,7 @@
 import client from './app.js';
 import initialize from './initialize';
 import { t } from './i18n';
+import { saveChannelSettings } from './channelSettings';
 
 const {
     addSubathonPoints,
@@ -11,12 +12,14 @@ const {
 
 export function happyswitch(channel) {
     initialize.channelsInfo[channel].happyHour = true;
+    saveChannelSettings(channel);
 
     client.say(channel, t(channel, 'subathon.happyOn'));
 }
 
 export function sadswitch(channel) {
     initialize.channelsInfo[channel].happyHour = false;
+    saveChannelSettings(channel);
 
     client.say(channel, t(channel, 'subathon.happyOff'));
 }

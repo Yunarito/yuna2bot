@@ -1,6 +1,7 @@
 import client from './app.js';
 import initialize from './initialize';
 import { t } from './i18n';
+import { saveChannelSettings } from './channelSettings';
 
 export function joinQueue(channel, userstate) {
     if (!initialize.channelsInfo[channel].queue.includes(userstate.username)) {
@@ -55,10 +56,12 @@ export function pickFromQueue(channel, userstate, message) {
 
 export function enableQueue(channel) {
     initialize.channelsInfo[channel].enabled = true;
+    saveChannelSettings(channel);
     client.say(channel, t(channel, 'queue.enabled'));
     }
 
 export function disableQueue(channel) {
     initialize.channelsInfo[channel].enabled = false;
+    saveChannelSettings(channel);
     client.say(channel, t(channel, 'queue.disabled'));
 }

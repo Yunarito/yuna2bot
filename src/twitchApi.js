@@ -111,6 +111,44 @@ export async function getFollowage(user, channel) {
   }
 }
 
+export async function getUptime(channel) {
+  try {
+    const channelId = await getUserId(channel.replace('#', ''));
+    const url = `https://api.twitch.tv/helix/streams?user_id=${channelId}`;
+
+    const response = await twitchFetch(url);
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error(`Failed to get stream info: ${response.status} - ${response.statusText}`);
+      console.error(errorData);
+      client.say(channel, t(channel, 'uptime.error', { channel: channel.replace('#', '') }));
+      return;
+    }
+
+    const data = await response.json();
+
+    if (data.data.length === 0) {
+      client.say(channel, t(channel, 'uptime.offline', { channel: channel.replace('#', '') }));
+      return;
+    }
+
+    const startedAt = new Date(data.data[0].started_at);
+    const diff = new Date() - startedAt;
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+    let duration = '';
+    if (hours > 0) duration += `${hours} ${t(channel, 'uptime.hours')}` + (minutes > 0 ? ', ' : '');
+    if (minutes > 0 || hours === 0) duration += `${minutes} ${t(channel, 'uptime.minutes')}`;
+
+    client.say(channel, t(channel, 'uptime.live', { channel: channel.replace('#', ''), duration }));
+  } catch (error) {
+    console.error('Error fetching uptime:', error);
+    client.say(channel, t(channel, 'uptime.error', { channel: channel.replace('#', '') }));
+  }
+}
+
 export async function banUser(user, channel) {
 
   //check the user age if its younger than 30 days, then ban the user
