@@ -17,6 +17,9 @@ const SCOPES = [
   'moderator:manage:banned_users',
   'moderator:manage:shoutouts',
   'moderator:read:followers',
+  'user:read:chat',
+  'user:write:chat',
+  'user:bot'
 ].join(' ');
 
 const CLIENT_ID = process.env.CLIENT_ID;
