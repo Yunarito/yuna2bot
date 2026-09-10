@@ -68,30 +68,47 @@ export function saveChannelSettings(channel) {
   ).catch(err => console.error(`Error saving channel settings for ${channel}:`, err));
 }
 
-export function saveTimedMessages(channel) {
-  const channelInfo = initialize.channelsInfo[channel];
-  if (!channelInfo) return;
+// `position` is the 0-based index of the message within a channel's
+// timedMessages array - it doubles as the DB row's position and is what
+// (channel, position) uniquely identifies, so the functions below can target
+// a single row instead of rewriting the whole list on every mutation.
 
-  const messages = channelInfo.timedMessages;
+export function insertTimedMessage(channel, position, entry) {
+  db.query(
+    'INSERT INTO timed_messages (channel, position, message, message_interval, enabled) VALUES (?, ?, ?, ?, ?)',
+    [channel, position, entry.text, entry.interval, entry.enabled ? 1 : 0]
+  ).catch(err => console.error(`Error inserting timed message for ${channel}:`, err));
+}
 
+// Deletes the row at `position` and shifts every later row's position down
+// by one so positions stay contiguous (0..n-1) and keep matching the
+// in-memory array's indices after the splice.
+export function deleteTimedMessage(channel, position) {
   (async () => {
     try {
-      await db.query('DELETE FROM timed_messages WHERE channel = ?', [channel]);
-      if (messages.length > 0) {
-        const values = messages.map((entry, position) => [
-          channel,
-          position,
-          entry.text,
-          entry.interval,
-          entry.enabled ? 1 : 0,
-        ]);
-        await db.query(
-          'INSERT INTO timed_messages (channel, position, message, message_interval, enabled) VALUES ?',
-          [values]
-        );
-      }
+      await db.query('DELETE FROM timed_messages WHERE channel = ? AND position = ?', [channel, position]);
+      await db.query(
+        'UPDATE timed_messages SET position = position - 1 WHERE channel = ? AND position > ?',
+        [channel, position]
+      );
     } catch (err) {
-      console.error(`Error saving timed messages for ${channel}:`, err);
+      console.error(`Error deleting timed message for ${channel}:`, err);
     }
   })();
+}
+
+// `position` null/undefined updates every row for the channel (the "all" target).
+export function updateTimedMessageEnabled(channel, position, enabled) {
+  const query = position == null
+    ? db.query('UPDATE timed_messages SET enabled = ? WHERE channel = ?', [enabled ? 1 : 0, channel])
+    : db.query('UPDATE timed_messages SET enabled = ? WHERE channel = ? AND position = ?', [enabled ? 1 : 0, channel, position]);
+
+  query.catch(err => console.error(`Error updating timed message enabled flag for ${channel}:`, err));
+}
+
+export function updateTimedMessageInterval(channel, position, interval) {
+  db.query(
+    'UPDATE timed_messages SET message_interval = ? WHERE channel = ? AND position = ?',
+    [interval, channel, position]
+  ).catch(err => console.error(`Error updating timed message interval for ${channel}:`, err));
 }

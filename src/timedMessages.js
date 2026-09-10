@@ -1,7 +1,7 @@
 import client from './app.js';
 import initialize from './initialize';
 import { t } from './i18n';
-import { saveTimedMessages } from './channelSettings';
+import { insertTimedMessage, deleteTimedMessage, updateTimedMessageEnabled, updateTimedMessageInterval } from './channelSettings';
 
 export function addTimedMessage(channel, message) {
     const parts = message.split(' ');
@@ -14,8 +14,9 @@ export function addTimedMessage(channel, message) {
     }
 
     const messages = initialize.channelsInfo[channel].timedMessages;
-    messages.push({ text, interval, enabled: true, counter: 0 });
-    saveTimedMessages(channel);
+    const entry = { text, interval, enabled: true, counter: 0 };
+    messages.push(entry);
+    insertTimedMessage(channel, messages.length - 1, entry);
     client.say(channel, t(channel, 'timedMessage.added', { count: messages.length, interval, text }));
 }
 
@@ -29,7 +30,7 @@ export function removeTimedMessage(channel, message) {
     }
 
     const [removed] = messages.splice(index - 1, 1);
-    saveTimedMessages(channel);
+    deleteTimedMessage(channel, index - 1);
     client.say(channel, t(channel, 'timedMessage.removed', { index, text: removed.text }));
 }
 
@@ -74,13 +75,13 @@ export function enableTimedMessage(channel, message) {
         return;
     }
 
+    const isAll = message.split(' ')[1].toLowerCase() === 'all';
     targets.forEach(entry => {
         entry.enabled = true;
         entry.counter = 0;
     });
-    saveTimedMessages(channel);
+    updateTimedMessageEnabled(channel, isAll ? null : parseInt(message.split(' ')[1]) - 1, true);
 
-    const isAll = message.split(' ')[1].toLowerCase() === 'all';
     client.say(channel, t(channel, isAll ? 'timedMessage.enabledAll' : 'timedMessage.enabledOne', {
         index: message.split(' ')[1]
     }));
@@ -94,12 +95,12 @@ export function disableTimedMessage(channel, message) {
         return;
     }
 
+    const isAll = message.split(' ')[1].toLowerCase() === 'all';
     targets.forEach(entry => {
         entry.enabled = false;
     });
-    saveTimedMessages(channel);
+    updateTimedMessageEnabled(channel, isAll ? null : parseInt(message.split(' ')[1]) - 1, false);
 
-    const isAll = message.split(' ')[1].toLowerCase() === 'all';
     client.say(channel, t(channel, isAll ? 'timedMessage.disabledAll' : 'timedMessage.disabledOne', {
         index: message.split(' ')[1]
     }));
@@ -119,7 +120,7 @@ export function setTimedMessageInterval(channel, message) {
     const entry = messages[index - 1];
     entry.interval = interval;
     entry.counter = 0;
-    saveTimedMessages(channel);
+    updateTimedMessageInterval(channel, index - 1, interval);
     client.say(channel, t(channel, 'timedMessage.intervalSet', { index, interval }));
 }
 
