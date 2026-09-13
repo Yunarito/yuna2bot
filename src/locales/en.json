@@ -135,6 +135,9 @@
     "hours": "hour(s)",
     "minutes": "minute(s)"
   },
+  "shoutout": {
+    "withGame": "@{{username}} has been playing {{game}} before they raided here!"
+  },
   "helper": {
     "useRiotId": "Please use a Riot ID like \"Yunarito#69420\".",
     "messageDeleted": "@{{username}}, sorry! Your message has been deleted.",

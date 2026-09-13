@@ -259,6 +259,35 @@ export async function shoutout(channel) {
   } catch (error) {
     console.error('Error making the API call:', error);
   }
+
+  await announceShoutout(channel, userId, username);
+}
+
+// Posts a text shoutout with the target's last-played game, since Twitch's
+// native shoutout card doesn't show up for everyone (e.g. mobile, 3rd-party clients).
+async function announceShoutout(channel, userId, username) {
+  if (!userId) return;
+
+  try {
+    const url = `https://api.twitch.tv/helix/channels?broadcaster_id=${userId}`;
+    const response = await twitchFetch(url);
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error(`Failed to get channel info for shoutout: ${response.status} - ${response.statusText}`);
+      console.error(errorData);
+      return;
+    }
+
+    const data = await response.json();
+    const info = data.data[0];
+    if (!info || !info.game_name) return;
+
+    const displayName = info.broadcaster_name || username;
+    client.say(channel, t(channel, 'shoutout.withGame', { username: displayName, game: info.game_name }));
+  } catch (error) {
+    console.error('Error fetching channel info for shoutout:', error);
+  }
 }
 
 async function getUserId(username) {
