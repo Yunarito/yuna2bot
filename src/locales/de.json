@@ -143,5 +143,55 @@
     "riotApiError": "Riot API Fehler fricc",
     "rankFetchError": "Datenziehung des Accounts nicht möglich",
     "notInGame": "Spieler ist nicht in einem Spiel"
+  },
+  "excavation": {
+    "tier": {
+      "casual": "Casual-Grabung",
+      "epic": "Epische Grabung",
+      "legendary": "Legendäre Grabung"
+    },
+    "rarity": {
+      "common": "gewöhnlichen",
+      "uncommon": "ungewöhnlichen",
+      "rare": "seltenen",
+      "epic": "epischen",
+      "legendary": "legendären"
+    },
+    "dig": {
+      "found": "@{{username}} gräbt einen {{rarity}} {{item}} aus!",
+      "bust": "@{{username}}s {{tier}} bringt diesmal nichts zutage.",
+      "cooldown": "@{{username}}, noch am Abkühlen - versuch's in {{minutes}}m {{seconds}}s nochmal.",
+      "skeletonComplete": "@{{username}} hat gerade das KOMPLETTE {{species}}-Skelett vervollständigt!"
+    },
+    "fossils": {
+      "empty": "@{{username}} hat noch keine Fossilien gefunden.",
+      "summary": "Fossilien von @{{username}}: {{summary}}",
+      "detail": "@{{username}}s {{species}}: {{detail}}",
+      "unknownSpecies": "Unbekannter Dinosaurier \"{{species}}\". Nutze !fossils für die Liste."
+    },
+    "gems": {
+      "empty": "@{{username}} hat noch keine Edelsteine gefunden.",
+      "summary": "Edelsteine von @{{username}}: {{summary}}"
+    },
+    "rewards": {
+      "usage": "Verwendung: !setdigreward <casual|epic|legendary> <rewardId>",
+      "set": "Die {{tier}} ist nun mit Reward-ID {{rewardId}} verknüpft.",
+      "list": "Custom Rewards: ",
+      "listEmpty": "Für diesen Kanal sind noch keine Custom Rewards eingerichtet.",
+      "noBroadcasterAuth": "Für diesen Kanal liegt keine Broadcaster-Autorisierung vor - nutze zuerst \"Bot beitreten lassen\" auf der Website."
+    },
+    "cooldownToggle": {
+      "usage": "Verwendung: !digcooldown <on|off>",
+      "enabled": "Der eigene Pro-Nutzer-Cooldown des Bots ist nun an.",
+      "disabled": "Der eigene Pro-Nutzer-Cooldown des Bots ist nun aus - es zählt nur noch der Twitch-seitige Global Cooldown des jeweiligen Rewards."
+    },
+    "cooldownConfig": {
+      "usage": "Verwendung: !setdigcooldown <casual|epic|legendary> <Sekunden>",
+      "set": "Der Cooldown für {{tier}} beträgt nun {{seconds}}s.",
+      "list": "Grabungs-Cooldowns: "
+    },
+    "testdig": {
+      "usage": "Verwendung: !testdig <casual|epic|legendary> [@user]"
+    }
   }
 }

@@ -381,6 +381,10 @@ export function getQueueTypeFromMessage(message) {
     : { valid: false, queueId: null };
 }
 
+export function hasRights(userstate, channel) {
+  return userstate['user-type'] === 'mod' || userstate.username === channel.replace('#', '');
+}
+
 export function isHina(userstate, channel) {
   const regex = /^hina\d+$/; //
     if (regex.test(userstate.username)) {

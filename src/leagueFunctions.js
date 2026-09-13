@@ -24,7 +24,7 @@ export async function dreamRank(channel) {
         return;
     }
 
-    let rankData = await getRankDataForSummonerId(channel, response.id);
+    let rankData = await getRankDataForSummonerId(channel, response.puuid);
 
     if (rankData.length > 0) {
         const rankedSoloQ = rankData.find((entry) => entry.queueType === 'RANKED_SOLO_5x5');

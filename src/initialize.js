@@ -10,6 +10,7 @@ const initialize = {
                 enabled: false,
                 timeoutTime: 300,
                 happyHour: false,
+                cooldownEnabled: true,
                 settingsLoaded: false,
                 // Each entry runs independently: { text, interval, enabled, counter }.
                 // interval/counter are both in "chat messages seen", not time.

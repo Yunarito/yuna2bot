@@ -1,11 +1,15 @@
 const fs = require('fs');
 const path = require('path');
-const db = require('./db.js');
+const Table = require('./dbTable.js');
 
 import { DefaultDeserializer } from 'v8';
 import client from './app.js';
 import initialize from './initialize';
 import { t } from './i18n';
+
+const duelStatsTable = new Table('duel_stats');
+const subathonPointsTable = new Table('subathon_points');
+const pointValuesTable = new Table('point_values');
 
 // Path to the JSON file that stores user statistics
 const statsDir = path.join(__dirname, 'json', 'userStats');
@@ -78,14 +82,9 @@ function updateUserStats(channel, username, isWinner) {
 
 // Mirrors updateUserStats' JSON write into the duel_stats table.
 async function upsertDuelStatsInDb(channel, username, isWinner) {
-  const winsIncrement = isWinner ? 1 : 0;
-  const lossesIncrement = isWinner ? 0 : 1;
-
-  await db.query(
-    `INSERT INTO duel_stats (channel, username, wins, losses)
-     VALUES (?, ?, ?, ?)
-     ON DUPLICATE KEY UPDATE wins = wins + VALUES(wins), losses = losses + VALUES(losses)`,
-    [channel, username, winsIncrement, lossesIncrement]
+  await duelStatsTable.upsert(
+    { channel, username, wins: isWinner ? 1 : 0, losses: isWinner ? 0 : 1 },
+    { increment: ['wins', 'losses'] }
   );
 }
 
@@ -118,21 +117,12 @@ async function stats(channel, userstate, message) {
 }
 
 async function getDuelStatsFromDb(channel, username) {
-  const [rows] = await db.query(
-    'SELECT wins, losses FROM duel_stats WHERE channel = ? AND username = ?',
-    [channel, username]
-  );
-
-  return rows[0] || { wins: 0, losses: 0 };
+  const row = await duelStatsTable.findOne({ channel, username });
+  return row || { wins: 0, losses: 0 };
 }
 
 async function getLeaderboard(channel) {
-    const [rows] = await db.query(
-      'SELECT username, wins, losses FROM duel_stats WHERE channel = ? ORDER BY wins DESC, losses ASC LIMIT 5',
-      [channel]
-    );
-
-    return rows;
+    return duelStatsTable.findMany({ channel }, { orderBy: 'wins DESC, losses ASC', limit: 5 });
 }
 
 async function leaderboard(channel) {
@@ -157,30 +147,16 @@ async function leaderboard(channel) {
 // Subathon logic
 
 async function addSubathonPoints(channel, username, points) {
-  await db.query(
-    `INSERT INTO subathon_points (channel, username, points)
-     VALUES (?, ?, ?)
-     ON DUPLICATE KEY UPDATE points = points + VALUES(points)`,
-    [channel, username, points]
-  );
+  await subathonPointsTable.upsert({ channel, username, points }, { increment: ['points'] });
 }
 
 async function getSubathonUserPoints(channel, username) {
-  const [rows] = await db.query(
-    'SELECT points FROM subathon_points WHERE channel = ? AND username = ?',
-    [channel, username]
-  );
-
-  return rows[0] ? Number(rows[0].points) : 0;
+  const row = await subathonPointsTable.findOne({ channel, username });
+  return row ? Number(row.points) : 0;
 }
 
 async function getSubathonTotalPoints(channel) {
-  const [rows] = await db.query(
-    'SELECT SUM(points) AS total FROM subathon_points WHERE channel = ?',
-    [channel]
-  );
-
-  return rows[0].total !== null ? Number(rows[0].total) : 0;
+  return subathonPointsTable.sum('points', { channel });
 }
 
 // Maps a point_values row onto the nested shape subathonCounter.js expects
@@ -197,7 +173,7 @@ const POINT_VALUE_SHAPE = {
 async function getPointTable(channel) {
   const isHappyHour = !!(initialize.channelsInfo[channel] && initialize.channelsInfo[channel].happyHour);
 
-  const [rows] = await db.query('SELECT source_type, label, normal_points, happy_points FROM point_values');
+  const rows = await pointValuesTable.findMany();
 
   const pointTable = { subscriptions: {}, cheers: {}, donations: {} };
 

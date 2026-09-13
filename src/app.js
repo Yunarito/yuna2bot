@@ -1,6 +1,5 @@
 import tmi from 'tmi.js';
 import initialize from './initialize';
-import { dreamRank } from './leagueFunctions.js';
 // get everything from the .env file
 import dotenv from 'dotenv';
 dotenv.config();
@@ -8,6 +7,7 @@ dotenv.config();
 const {
   checkTwitchChat,
   startsWith,
+  hasRights,
   twentyFour,
   isHina
 } = require('./helper.js');
@@ -36,23 +36,10 @@ const {
 } = require('./timeoutCounter.js');
 
 const {
-  duel,
-  accept,
-  decline,
-  retract,
-  duelInfo,
-  groupDuel,
-  acceptGroupDuel,
-  declineGroupDuel,
-  openContest,
-  joinContest
-} = require('./stinkfight.js');
-
-const {
-  stats,
-  leaderboard,
   getPointTable,
 } = require('./userStats.js');
+
+const { channelHandlers, rankOverrides } = require('./channels');
 
 const {
   addTimedMessage,
@@ -184,13 +171,9 @@ client.on('message', (channel, userstate, message, self) => {
     // League commands:
 
     if (startsWith(message, '!rank') || startsWith(message, '!elo')) {
-      if(channel === '#catzzi' && message.includes('mods')) {
-        getSummonerRank(channel, userstate, "!rank Yunarito#69420,Leaveless#bruch,scremmys#6969");
-      } else if(channel === '#catzzi' && !message.includes('#')) {
-        getSummonerRank(channel, userstate, "!rank catzzi#euw,smolestcatzzi#6969"); //catzzi#euw,smolcatzzi#EUW,smolercatzzi#6969,smolestcatzzi#6969
-      } else {
-        getSummonerRank(channel, userstate, message);
-      }
+      const rankOverride = rankOverrides[channel];
+      const effectiveMessage = rankOverride ? rankOverride(message) : message;
+      getSummonerRank(channel, userstate, effectiveMessage);
       return;
     }
 
@@ -231,97 +214,9 @@ client.on('message', (channel, userstate, message, self) => {
       return;
     }
 
-    // Duel commands:
-    if (channel === '#catzzi' || channel === '#yunarito') {
-
-      if(userstate['first-msg']){
-        client.say(channel, 'FirstTimeLicka');
-      }
-
-      if (message.includes('owoCheer')) {
-        client.say(channel, 'owoCheer');
-      }
-
-      if (startsWith(message, '!goal')) {
-        dreamRank(channel);
-        return;
-      }
-
-      if (startsWith(message, '!duell')) {
-        duel(channel, userstate, message);
-        return;
-      }
-
-      if (startsWith(message, '!accept')) {
-        accept(channel, userstate, message);
-        return;
-      }
-
-      if (startsWith(message, '!run')) {
-        decline(channel, userstate, message);
-        return;
-      }
-
-      if (startsWith(message, '!moshpit')) {
-        groupDuel(channel, userstate, message);
-        return;
-      }
-
-      if (startsWith(message, '!acceptmoshpit')) {
-        acceptGroupDuel(channel, userstate, message);
-        return;
-      }
-
-      if (startsWith(message, '!declinemoshpit')) {
-        declineGroupDuel(channel, userstate, message);
-        return;
-      }
-
-      if (startsWith(message, '!rückzug')) {
-        retract(channel, userstate, message);
-        return;
-      }
-
-      if (startsWith(message, '!duellinfo')) {
-        duelInfo(channel, userstate, message);
-        return;
-      }
-
-      if(startsWith(message, '!duellstats')) {
-        stats(channel, userstate, message);
-        return;
-      }
-
-      if(startsWith(message, '!duellboard')) {
-        leaderboard(channel);
-        return;
-      }
-
-      if (startsWith(message, '!openfight')) {
-        openContest(channel, userstate, message);
-        return;
-      }
-
-      if (startsWith(message, '!joinfight')) {
-        joinContest(channel, userstate, message);
-        return;
-      }
-
-      //subathon commands
-
-      /*
-        if (startsWith(message, '!mypoints')) {
-          getChannelPoints(channel, userstate['display-name']);
-        }
-
-        if (startsWith(message, '!totalpoints')) {
-          getChannelTotalPoints(channel);
-        }
-
-        if (startsWith(message, '!pointchart')) {
-          getPointChart(channel);
-        }
-      */
+    // Per-channel commands (duel/excavation/etc. - see src/channels/):
+    if (channelHandlers[channel] && channelHandlers[channel](channel, userstate, message)) {
+      return;
     }
 
     if (startsWith(message, '!commands')) {
@@ -464,10 +359,6 @@ client.on('raided', (channel, username, viewers) => {
 
 function commands(channel) {
   client.say(channel, t(channel, 'commands.help'));
-}
-
-function hasRights(userstate, channel) {
-  return userstate['user-type'] === 'mod' || userstate.username === channel.replace('#', '');
 }
 
 export default client;

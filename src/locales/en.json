@@ -143,5 +143,55 @@
     "riotApiError": "Riot API error fricc",
     "rankFetchError": "Unable to fetch account data",
     "notInGame": "Player is not in a game"
+  },
+  "excavation": {
+    "tier": {
+      "casual": "casual dig",
+      "epic": "epic dig",
+      "legendary": "legendary dig"
+    },
+    "rarity": {
+      "common": "common",
+      "uncommon": "uncommon",
+      "rare": "rare",
+      "epic": "epic",
+      "legendary": "legendary"
+    },
+    "dig": {
+      "found": "@{{username}} digs up a {{rarity}} {{item}}!",
+      "bust": "@{{username}}'s {{tier}} comes up empty this time.",
+      "cooldown": "@{{username}}, still cooling down - try again in {{minutes}}m {{seconds}}s.",
+      "skeletonComplete": "@{{username}} just completed the FULL {{species}} skeleton!"
+    },
+    "fossils": {
+      "empty": "@{{username}} hasn't found any fossils yet.",
+      "summary": "@{{username}}'s fossils: {{summary}}",
+      "detail": "@{{username}}'s {{species}}: {{detail}}",
+      "unknownSpecies": "Unknown dinosaur \"{{species}}\". Try !fossils to see the list."
+    },
+    "gems": {
+      "empty": "@{{username}} hasn't found any gems yet.",
+      "summary": "@{{username}}'s gems: {{summary}}"
+    },
+    "rewards": {
+      "usage": "Usage: !setdigreward <casual|epic|legendary> <rewardId>",
+      "set": "The {{tier}} dig is now mapped to reward id {{rewardId}}.",
+      "list": "Custom rewards: ",
+      "listEmpty": "This channel has no Custom Rewards set up yet.",
+      "noBroadcasterAuth": "No broadcaster authorization on file for this channel - use \"let bot join\" on the website first."
+    },
+    "cooldownToggle": {
+      "usage": "Usage: !digcooldown <on|off>",
+      "enabled": "The bot's own per-user dig cooldown is now on.",
+      "disabled": "The bot's own per-user dig cooldown is now off - relying on each reward's Twitch-side Global Cooldown instead."
+    },
+    "cooldownConfig": {
+      "usage": "Usage: !setdigcooldown <casual|epic|legendary> <seconds>",
+      "set": "The {{tier}} dig cooldown is now {{seconds}}s.",
+      "list": "Dig cooldowns: "
+    },
+    "testdig": {
+      "usage": "Usage: !testdig <casual|epic|legendary> [@user]"
+    }
   }
 }
