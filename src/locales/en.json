@@ -196,5 +196,10 @@
     "testdig": {
       "usage": "Usage: !testdig <casual|epic|legendary> [@user]"
     }
+  },
+  "roll": {
+    "invalidSides": "@{{username}}, please provide a valid number of sides (2 or more).",
+    "result": "@{{username}} rolls a d{{sides}} and gets {{result}}!",
+    "natOne": "@{{username}} rolled a NATURAL 1! SadCat Timeout incoming..."
   }
 }

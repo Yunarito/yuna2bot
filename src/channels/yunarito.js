@@ -1,9 +1,11 @@
 import { handleMessage as handleDuelMessage } from './duelChannelHandler.js';
 import { handleMessage as handleExcavationMessage } from './excavationChannelHandler.js';
+import { handleMessage as handleRollMessage } from './rollChannelHandler.js';
 
-// #yunarito runs both the stink-duel feature and the excavation minigame
-// (it's also the streamer's own channel, used to test the latter).
+// #yunarito runs the stink-duel feature, the excavation minigame, and !roll
+// (it's also the streamer's own channel, used to test these).
 export function handleMessage(channel, userstate, message) {
   return handleDuelMessage(channel, userstate, message)
-    || handleExcavationMessage(channel, userstate, message);
+    || handleExcavationMessage(channel, userstate, message)
+    || handleRollMessage(channel, userstate, message);
 }
