@@ -25,6 +25,11 @@ function roll(channel, userstate, message) {
   const args = cleanMessage(message).split(/\s+/).filter(Boolean);
   let sides = DEFAULT_SIDES;
 
+  if (args.slice(1).join(' ').toLowerCase() === 'a cigarette') {
+    client.say(channel, t(channel, 'roll.cigarette', { username }));
+    return;
+  }
+
   if (args.length > 1) {
     const parsed = parseInt(args[1], 10);
     if (!Number.isInteger(parsed) || parsed < 2) {

@@ -201,6 +201,7 @@
     "invalidSides": "@{{username}}, please provide a valid number of sides (2 or more).",
     "result": "@{{username}} rolls a d{{sides}} and gets {{result}}!",
     "natOne": "@{{username}} rolled a NATURAL 1! SadCat Timeout incoming...",
-    "natTwenty": "@{{username}} rolled a NATURAL 20! owofinger Critical hit!"
+    "natTwenty": "@{{username}} rolled a NATURAL 20! owofinger Critical hit!",
+    "cigarette": "@{{username}} rolls a cigarette and lights up pepeSmoke Smoke break!"
   }
 }
