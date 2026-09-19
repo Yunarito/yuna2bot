@@ -4,7 +4,7 @@ import { t } from '../i18n.js';
 import { timeout } from '../twitchApi.js';
 
 const DEFAULT_SIDES = 20;
-const NAT_ONE_TIMEOUT_SECONDS = 300;
+const NAT_ONE_TIMEOUT_SECONDS = 120;
 
 // Shared by every channel that runs the !roll dice command (#itzpinky_, #yunarito).
 export function handleMessage(channel, userstate, message) {
