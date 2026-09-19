@@ -16,9 +16,13 @@ export function handleMessage(channel, userstate, message) {
   return false;
 }
 
+function cleanMessage(message) {
+  return message.replace(/[\u{E0000}-\u{E007F}\p{Cf}\p{Mn}]/gu, '').trim();
+}
+
 function roll(channel, userstate, message) {
   const username = userstate.username;
-  const args = message.trim().split(/\s+/);
+  const args = cleanMessage(message).split(/\s+/).filter(Boolean);
   let sides = DEFAULT_SIDES;
 
   if (args.length > 1) {
@@ -36,5 +40,7 @@ function roll(channel, userstate, message) {
   if (result === 1) {
     client.say(channel, t(channel, 'roll.natOne', { username }));
     timeout(username, channel, NAT_ONE_TIMEOUT_SECONDS);
+  } else if (sides === DEFAULT_SIDES && result === DEFAULT_SIDES) {
+    client.say(channel, t(channel, 'roll.natTwenty', { username }));
   }
 }
