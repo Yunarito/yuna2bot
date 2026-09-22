@@ -202,6 +202,7 @@
     "result": "@{{username}} rolls a d{{sides}} and gets {{result}}!",
     "natOne": "@{{username}} rolled a NATURAL 1! SadCat Timeout incoming...",
     "natTwenty": "@{{username}} rolled a NATURAL 20! owofinger Critical hit!",
-    "cigarette": "@{{username}} rolls a cigarette and lights up pepeSmoke Smoke break!"
+    "cigarette": "@{{username}} rolls a cigarette and lights up pepeSmoke Smoke break!",
+    "cooldown": "@{{username}}, you can roll again in {{minutes}} minute(s)."
   }
 }

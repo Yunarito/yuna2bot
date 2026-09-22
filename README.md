@@ -93,9 +93,9 @@ Each timed message runs independently with its own interval, so you can have sev
 
     - !removetimedmessage <number>                          --> Removes a message by its number (see !listtimedmessages).
 
-    - !enabletimedmessage <number|all>                      --> Turns a specific message on, or all of them.
+    - !enabletimedmessage <number|all> (alias: !tmon)       --> Turns a specific message on, or all of them.
 
-    - !disabletimedmessage <number|all>                     --> Turns a specific message off, or all of them.
+    - !disabletimedmessage <number|all> (alias: !tmoff)     --> Turns a specific message off, or all of them.
 
     - !timedmessageinterval <number> <interval>             --> Changes the interval of an existing message.
 

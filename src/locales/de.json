@@ -202,6 +202,7 @@
     "result": "@{{username}} würfelt einen d{{sides}} und bekommt {{result}}!",
     "natOne": "@{{username}} hat eine NATÜRLICHE 1 gewürfelt! SadCat Timeout incoming...",
     "natTwenty": "@{{username}} hat eine NATÜRLICHE 20 gewürfelt! owofinger Kritischer Treffer!",
-    "cigarette": "@{{username}} dreht sich eine Zigarette und zündet sie an pepeSmoke Rauchpause!"
+    "cigarette": "@{{username}} dreht sich eine Zigarette und zündet sie an pepeSmoke Rauchpause!",
+    "cooldown": "@{{username}}, du kannst in {{minutes}} Minute(n) wieder würfeln."
   }
 }

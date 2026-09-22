@@ -282,12 +282,12 @@ client.on('message', (channel, userstate, message, self) => {
         return;
       }
 
-      if (startsWith(message, '!enabletimedmessage')) {
+      if (startsWith(message, '!enabletimedmessage') || startsWith(message, '!tmon')) {
         enableTimedMessage(channel, message);
         return;
       }
 
-      if (startsWith(message, '!disabletimedmessage')) {
+      if (startsWith(message, '!disabletimedmessage') || startsWith(message, '!tmoff')) {
         disableTimedMessage(channel, message);
         return;
       }
