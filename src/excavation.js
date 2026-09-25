@@ -195,7 +195,10 @@ function announceDigResult(channel, username, tier, result) {
 export async function handleRedemption(channel, event) {
   try {
     const rewardRow = await rewardsTable.findOne({ channel, reward_id: event.reward.id });
-    if (!rewardRow) return; // not a reward we're mapped to - ignore
+    if (!rewardRow) {
+      console.log(`Excavation: reward ${event.reward.id} on ${channel} isn't bound to a tier - ignoring (use !setdigreward).`);
+      return;
+    }
 
     const tier = rewardRow.tier;
     const result = await performDig(channel, event.user_id, event.user_login, tier);

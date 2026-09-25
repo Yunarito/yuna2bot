@@ -33,12 +33,30 @@ function hasRedemptionsScope(row) {
 // WebSocket transport requires a *user* access token with channel:read:redemptions
 // scope (the broadcaster's own, from broadcasterAuth.js / the website's "let bot
 // join" flow) - an app access token won't work here, unlike webhook-transport EventSub.
+// Skip reasons are logged once per channel per reason (this runs every 30s
+// from configSync.js), so a silently-skipped channel is visible without spam.
+const warnedSkips = new Set();
+function warnSkipOnce(channel, reason) {
+  const key = `${channel}:${reason}`;
+  if (warnedSkips.has(key)) return;
+  warnedSkips.add(key);
+  console.warn(`EventSub: not subscribing ${channel} - ${reason}`);
+}
+
 async function subscribeChannel(row) {
-  if (!currentSessionId || subscribedChannels.has(row.channel) || !hasRedemptionsScope(row)) return;
+  if (!currentSessionId || subscribedChannels.has(row.channel)) return;
+
+  if (!hasRedemptionsScope(row)) {
+    warnSkipOnce(row.channel, `stored scope "${row.scope}" lacks channel:read:redemptions (use "let bot join" again)`);
+    return;
+  }
 
   try {
     const token = await getBroadcasterAccessToken(row.channel);
-    if (!token) return;
+    if (!token) {
+      warnSkipOnce(row.channel, 'no usable access token');
+      return;
+    }
 
     const response = await fetch('https://api.twitch.tv/helix/eventsub/subscriptions', {
       method: 'POST',
@@ -83,6 +101,7 @@ function handleNotification(message) {
 
   const event = message.payload.event;
   const channel = `#${event.broadcaster_user_login}`;
+  console.log(`EventSub: redemption on ${channel} by ${event.user_login}, reward "${event.reward.title}" (${event.reward.id})`);
   handleRedemption(channel, event).catch((error) => {
     console.error(`Error handling redemption for ${channel}:`, error);
   });
