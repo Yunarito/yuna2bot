@@ -204,5 +204,8 @@
     "natTwenty": "@{{username}} rolled a NATURAL 20! owofinger Critical hit!",
     "cigarette": "@{{username}} rolls a cigarette and lights up pepeSmoke Smoke break!",
     "cooldown": "@{{username}}, you can roll again in {{minutes}} minute(s)."
+  },
+  "ross": {
+    "count": "Pinky let out her inner Bob Ross for the {{count}}{{ordinal}} time! 🎨"
   }
 }

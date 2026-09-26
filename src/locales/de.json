@@ -204,5 +204,8 @@
     "natTwenty": "@{{username}} hat eine NATÜRLICHE 20 gewürfelt! owofinger Kritischer Treffer!",
     "cigarette": "@{{username}} dreht sich eine Zigarette und zündet sie an pepeSmoke Rauchpause!",
     "cooldown": "@{{username}}, du kannst in {{minutes}} Minute(n) wieder würfeln."
+  },
+  "ross": {
+    "count": "Pinky hat zum {{count}}. Mal ihren inneren Bob Ross rausgelassen! 🎨"
   }
 }
