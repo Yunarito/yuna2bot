@@ -60,7 +60,7 @@ function lpToEmerald4(currentRank) {
     let currentTierIndex = tiers.indexOf(currentRank.tier);
 
     // Loop through until we hit Emerald 4
-    while (currentTierIndex < tiers.indexOf("Emerald") || (currentTierIndex === tiers.indexOf("Emerald") && currentRank.division > 4)) {
+    while (currentTierIndex < tiers.indexOf("Diamond") || (currentTierIndex === tiers.indexOf("Diamond") && currentRank.division > 4)) {
         // LP to promote to the next division
         totalLpNeeded += (lpPerDivision - currentRank.lp);
 
