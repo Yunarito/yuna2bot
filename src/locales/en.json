@@ -125,7 +125,7 @@
     "avgRankPrefix": "Average in-game rank: ",
     "masteryResult": "{{summoner}}: {{champion}} Lvl {{level}} ({{points}}) points",
     "dreamRankError": "Something's wrong somehow fricc riot.",
-    "dreamRankProgress": "{{tier}} {{rank}} {{lp}}LP - {{needed}}LP until Emerald IV woah",
+    "dreamRankProgress": "{{tier}} {{rank}} {{lp}}LP - {{needed}}LP until Diamond IV woah",
     "unranked": "{{summoner}} is unranked."
   },
   "uptime": {
