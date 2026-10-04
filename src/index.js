@@ -4,6 +4,7 @@ const { validateAndScheduleInitialRefresh } = require("./twitchAuth.js");
 const { initBroadcasterTokens } = require("./broadcasterAuth.js");
 const { startEventSub } = require("./eventSub.js");
 const { startConfigSync } = require("./configSync.js");
+const { startWatchtimeTracking } = require("./watchtime.js");
 
 validateAndScheduleInitialRefresh()
   .then(() => {
@@ -21,6 +22,9 @@ validateAndScheduleInitialRefresh()
     // Picks up website-panel changes (channel settings, timed messages, new
     // "let bot join" authorizations) on a timer instead of requiring a restart.
     startConfigSync();
+
+    // Credits everyone in chat with watchtime every few minutes while live.
+    startWatchtimeTracking();
   })
   .catch((error) => {
     console.error('Failed to obtain a valid Twitch OAuth token:', error);

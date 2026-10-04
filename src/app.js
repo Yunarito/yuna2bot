@@ -82,6 +82,8 @@ const {
   timeout
 } = require('./twitchApi.js');
 
+const { getWatchtime, isWatchtimeChannel } = require('./watchtime.js');
+
 const {
   getAccessToken,
   refreshAccessToken
@@ -160,6 +162,11 @@ client.on('message', (channel, userstate, message, self) => {
 
     if (startsWith(message, '!uptime')) {
       getUptime(channel);
+      return;
+    }
+
+    if (startsWith(message, '!watchtime') && isWatchtimeChannel(channel)) {
+      getWatchtime(channel, userstate, message);
       return;
     }
 

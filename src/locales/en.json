@@ -135,6 +135,10 @@
     "hours": "hour(s)",
     "minutes": "minute(s)"
   },
+  "watchtime": {
+    "result": "{{user}} has watched {{channel}} for {{duration}}.",
+    "none": "I haven't seen {{user}} watching yet."
+  },
   "shoutout": {
     "withGame": "@{{username}} has been playing {{game}} before they raided here!"
   },

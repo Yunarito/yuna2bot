@@ -11,7 +11,7 @@ const CHANNEL_NAME = process.env.CHANNEL_NAME;
 
 // Shared fetch wrapper: attaches auth headers and, on a 401, refreshes the
 // token once and retries before giving up.
-async function twitchFetch(url, options = {}) {
+export async function twitchFetch(url, options = {}) {
   const doFetch = (token) => fetch(url, {
     ...options,
     headers: {
@@ -290,7 +290,7 @@ async function announceShoutout(channel, userId, username) {
   }
 }
 
-async function getUserId(username) {
+export async function getUserId(username) {
   const url = `https://api.twitch.tv/helix/users?login=${username}`;
 
   try {

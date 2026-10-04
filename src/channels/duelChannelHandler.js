@@ -30,7 +30,7 @@ export function handleMessage(channel, userstate, message) {
     client.say(channel, 'owoCheer');
   }
 
-  if (startsWith(message, '!goal')) {
+  if (startsWith(message, '!goal') || startsWith(message, '!dream')) {
     dreamRank(channel);
     return true;
   }
