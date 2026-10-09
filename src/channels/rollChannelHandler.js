@@ -2,15 +2,22 @@ import client from '../app.js';
 import { startsWith } from '../helper.js';
 import { t } from '../i18n.js';
 import { timeout } from '../twitchApi.js';
+const Table = require('../dbTable.js');
 
 const DEFAULT_SIDES = 20;
 const NAT_ONE_TIMEOUT_SECONDS = 120;
 const ROLL_COOLDOWN_MS = 15 * 60 * 1000;
 
 const lastRollAt = new Map();
+const natOnesTable = new Table('roll_nat_ones');
 
 // Shared by every channel that runs the !roll dice command (#itzpinky_, #yunarito).
 export function handleMessage(channel, userstate, message) {
+  if (startsWith(message, '!nat1s')) {
+    getNatOnes(channel, userstate, message);
+    return true;
+  }
+
   if (startsWith(message, '!roll')) {
     roll(channel, userstate, message);
     return true;
@@ -61,9 +68,46 @@ function roll(channel, userstate, message) {
   client.say(channel, t(channel, 'roll.result', { username, result, sides }));
 
   if (result === 1) {
-    client.say(channel, t(channel, 'roll.natOne', { username }));
     timeout(username, channel, NAT_ONE_TIMEOUT_SECONDS);
+    announceNatOne(channel, userstate);
   } else if (sides === DEFAULT_SIDES && result === DEFAULT_SIDES) {
     client.say(channel, t(channel, 'roll.natTwenty', { username }));
+  }
+}
+
+// Bumps the user's nat 1 tally, then announces it with the new total.
+async function announceNatOne(channel, userstate) {
+  const username = userstate.username;
+  let count = '?';
+
+  try {
+    await natOnesTable.upsert(
+      { channel, user_id: userstate['user-id'], username, count: 1 },
+      { increment: ['count'], overwrite: ['username'] }
+    );
+    const row = await natOnesTable.findOne({ channel, user_id: userstate['user-id'] });
+    count = row.count;
+  } catch (err) {
+    console.error(`Error counting nat 1 for ${username} in ${channel}:`, err);
+  }
+
+  client.say(channel, t(channel, 'roll.natOne', { username, count }));
+}
+
+async function getNatOnes(channel, userstate, message) {
+  const target = (cleanMessage(message).split(/\s+/)[1] || userstate.username).replace('@', '').toLowerCase();
+
+  try {
+    const row = await natOnesTable.findOne({ channel, username: target });
+
+    if (!row || row.count === 0) {
+      client.say(channel, t(channel, 'roll.natOneNone', { username: target }));
+      return;
+    }
+
+    client.say(channel, t(channel, 'roll.natOneCount', { username: target, count: row.count }));
+  } catch (err) {
+    console.error(`Error fetching nat 1s for ${target} in ${channel}:`, err);
+    client.say(channel, t(channel, 'errors.generic'));
   }
 }
